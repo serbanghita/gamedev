@@ -50,6 +50,18 @@ export function removeBit(bitmasks: bigint, bit: bigint): bigint {
     return bitmasks;
 }
 
+/**
+ * Check if the bit already exists in the bitmask.
+ *
+ * Bitwise AND (&)
+ *
+ * @param bitmasks
+ * @param bit
+ */
+export function hasBit(bitmasks: bigint, bit: bigint): boolean {
+    return (bitmasks & bit) === bit;
+}
+
 // https://github.com/microsoft/TypeScript/issues/42125
 
 type Bitmask = number | bigint;

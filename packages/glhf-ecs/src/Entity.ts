@@ -1,11 +1,11 @@
-import Component, {ComponentConstructor} from "./Component";
+import Component, {ComponentConstructor, ComponentConstructorWithPrototype, IComponent} from "./Component";
 import {addBit, hasBit} from "@glhf/bitmask/bitmask";
 
 export default class Entity {
     public componentsBitmask: bigint = 0n;
-    public components: {[key: string]: Component} = {};
+    public components: {[key: string]: IComponent} = {};
 
-    public addComponent(declaration: ComponentConstructor, properties?: {}) {
+    public addComponent(declaration: ComponentConstructorWithPrototype, properties?: {}) {
         const instance = new declaration(properties);
         this.components[instance.constructor.name] = instance;
         if (typeof instance.bitmask === "undefined") {
@@ -14,12 +14,12 @@ export default class Entity {
         this.componentsBitmask = addBit(this.componentsBitmask, instance.bitmask);
     }
 
-    public getComponent<Component>(declaration: ComponentConstructor): Component {
-        return this.components[declaration.name] as unknown as Component;
+    public getComponent(declaration: ComponentConstructor): Component {
+        return this.components[declaration.name] as Component;
     }
 
-    public hasComponent(declaration: ComponentConstructor): boolean {
+    public hasComponent(declaration: ComponentConstructorWithPrototype): boolean {
         // return !!this.components[componentDeclaration.name];
-        return hasBit(this.componentsBitmask, declaration.bitmask);
+        return hasBit(this.componentsBitmask, declaration.prototype.bitmask);
     }
 }

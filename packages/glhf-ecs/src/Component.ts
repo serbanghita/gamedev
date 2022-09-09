@@ -1,14 +1,16 @@
-export interface ComponentConstructor {
+export type ComponentConstructor = new (...args: any[]) => {};
+
+export type ComponentConstructorWithPrototype = new (...args: any[]) => {
     bitmask: bigint;
-    new (properties?: {}): Component;
     prototype: Component;
+};
+
+export interface IComponent {
+    bitmask: bigint;
 }
 
 export default abstract class Component {
-    public bitmask: bigint | undefined;
-
-    protected constructor(public properties?: {}) {
-    }
-
-    // public abstract notify(eventName: string, properties: {});
+    // abstract bitmask: bigint;
+    protected constructor(public properties?: {}) {}
 }
+

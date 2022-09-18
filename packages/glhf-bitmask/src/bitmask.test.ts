@@ -1,4 +1,4 @@
-import {addBit, hasBit, removeBit, toggleAllBits, toggleBit} from "./bitmask";
+import {addBit, hasAnyOfBits, hasBit, removeBit, toggleAllBits, toggleBit} from "./bitmask";
 
 const FIRST = 1n << 0n;
 const SECOND = 1n << 1n;
@@ -69,6 +69,18 @@ test('hasBit', () => {
     bitmask = removeBit(bitmask, CAN_FLY);
 
     expect(hasBit(bitmask, CAN_FLY)).toBe(false);
+});
+
+test('hasAnyOfBits', () => {
+    let bitmask = 0b1101n;
+
+    expect(hasAnyOfBits(bitmask, 0b1n)).toBe(true);
+    expect(hasAnyOfBits(bitmask, 0b10n)).toBe(false);
+    expect(hasAnyOfBits(bitmask, 0b100n)).toBe(true);
+    expect(hasAnyOfBits(bitmask, 0b110n)).toBe(true);
+    expect(hasAnyOfBits(bitmask, 0b1000n)).toBe(true);
+    expect(hasAnyOfBits(bitmask, 0b1010n)).toBe(true);
+    expect(hasAnyOfBits(bitmask, 0b10010n)).toBe(false);
 });
 
 test('toggleAllBits', () => {

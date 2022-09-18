@@ -62,6 +62,18 @@ export function hasBit(bitmasks: bigint, bit: bigint): boolean {
     return (bitmasks & bit) === bit;
 }
 
+/**
+ * Check if the bitmask contains ANY of the bits.
+ * e.g. 1101 - bitmask, 10 - bits => false
+ * e.g. 1101 - bitmask, 11 -> bits => true
+ *
+ * @param bitmask
+ * @param bits
+ */
+export function hasAnyOfBits(bitmask: bigint, bits: bigint): boolean {
+    return (bitmask & bits) !== 0n;
+}
+
 // https://github.com/microsoft/TypeScript/issues/42125
 
 type Bitmask = number | bigint;

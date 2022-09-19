@@ -43,9 +43,10 @@ export class Renderable extends Component {
 }
 
 export function render(entity: Entity) {
-    console.log('render', entity.id);
+    console.log('render', entity);
 }
 
-export function loop(now) {
+export function loop(now: DOMHighResTimeStamp) {
+    console.log('loop', now);
     window.requestAnimationFrame(loop);
 }

@@ -13,8 +13,10 @@ module.exports = {
     coverageDirectory: ".tmp/coverage",
     coverageReporters: ["html", "json", "lcov", "text", "clover"],
     moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
+    modulePaths: ['<rootDir>/src/'],
     moduleNameMapper: {
         "^file\-loader":"<rootDir>/src/__mocks__/fileMock.js",
+        "@glhf/bitmask/bitmask": "<rootDir>/../glhf-bitmask/src/bitmask.ts",
     },
     transform: {
         "\\.ts$": "ts-jest",

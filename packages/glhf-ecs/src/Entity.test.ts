@@ -1,22 +1,20 @@
 import Entity from "./Entity";
 import ComponentRegistry from "./ComponentRegistry";
-import {Body as BodyDeclaration, Position as PositionDeclaration} from "./mocks";
+import {Body} from "./mocks/Body";
+import {Position} from "./mocks/Position";
 
-interface IBodyProps {
-    width: number;
-    height: number;
-}
+describe('Entity', () => {
+    test('addComponent', () => {
+        const reg = ComponentRegistry.getInstance();
+        reg.registerComponent(Body);
+        reg.registerComponent(Position);
 
-test('addComponent', () => {
-    const reg = ComponentRegistry.getInstance();
-    const Body = reg.registerComponent(BodyDeclaration);
-    const Position = reg.registerComponent(PositionDeclaration);
+        const entity = new Entity();
+        entity.addComponent(new Body({width: 10, height: 20})); // 1n
+        entity.addComponent(new Position({x: 1, y: 2})); // 2n
 
-    const entity = new Entity();
-    entity.addComponent(Body, {width: 10, height: 20});
-    entity.addComponent(Position, {x: 1, y: 2});
-
-    expect(entity.componentsBitmask).toBe(2n);
-    expect(entity.getComponent(Body)).toBeInstanceOf(Body);
-    expect(entity.getComponent(Position)).toBeInstanceOf(Position);
+        expect(entity.componentsBitmask).toBe(3n);
+        expect(entity.getComponent(Body)).toBeInstanceOf(Body);
+        expect(entity.getComponent(Position)).toBeInstanceOf(Position);
+    });
 });

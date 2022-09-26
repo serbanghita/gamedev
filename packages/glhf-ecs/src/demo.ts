@@ -4,7 +4,7 @@ import {
     Keyboard as KeyboardDeclaration, loop,
     Position as PositionDeclaration, render,
     Renderable as RenderableDeclaration
-} from "./mocks";
+} from "./mocks/stubs";
 import Entity from "./Entity";
 import Query from "./Query";
 

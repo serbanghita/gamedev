@@ -1,11 +1,12 @@
 import Entity from "./Entity";
-import {ComponentConstructorWithPrototype} from "./Component";
+
 import {addBit, hasAnyOfBits, hasBit} from "@glhf/bitmask/bitmask";
+import Component from "./Component";
 
 export interface IQueryFilters {
-    all?: ComponentConstructorWithPrototype[];
-    any?: ComponentConstructorWithPrototype[];
-    none?: ComponentConstructorWithPrototype[];
+    all?: typeof Component[];
+    any?: typeof Component[];
+    none?: typeof Component[];
 }
 
 export interface IQueryFiltersBitmask {

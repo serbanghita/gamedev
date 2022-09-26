@@ -1,5 +1,5 @@
 // create a singleton class
-import {ComponentConstructor, ComponentConstructorWithPrototype, IComponent} from "./Component";
+import Component from "Component";
 
 export default class ComponentRegistry {
   private bitmask: bigint = 0n;
@@ -13,18 +13,11 @@ export default class ComponentRegistry {
     return ComponentRegistry.instance;
   }
 
-  registerComponent<TBase extends ComponentConstructor>(Base: TBase) {
+  registerComponent(ComponentDeclaration: typeof Component) {
     // @todo: Safety check if Base was already registered.
-    
-    class NewComponent extends Base {
-      constructor(...args: any[]) {
-        super(...args);
-      }
-    }
+    ComponentDeclaration.prototype.bitmask = ++this.bitmask;
 
-    NewComponent.prototype.bitmask = ++this.bitmask;
-
-    return NewComponent as unknown as ComponentConstructorWithPrototype & TBase;
+    return ComponentDeclaration;
   }
 
   getLastBitmask() {

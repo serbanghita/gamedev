@@ -15,7 +15,7 @@ describe('ComponentRegistry', () => {
         reg.registerComponent(Body);
         reg.registerComponent(Position);
 
-        expect(reg.getLastBitmask()).toBe(2n);
+        expect(reg.getLastBitmask()).toBe(4n);
 
         const body1 = new Body({width: 10, height: 20});
         const body2 = new Body({width: 30, height: 40});
@@ -25,13 +25,13 @@ describe('ComponentRegistry', () => {
         const position2 = new Position({x: 3, y: 4});
         const position3 = new Position({x: 5, y: 6});
 
-        expect(body1.bitmask).toBe(1n);
-        expect(body2.bitmask).toBe(1n);
-        expect(body3.bitmask).toBe(1n);
+        expect(body1.bitmask).toBe(2n);
+        expect(body2.bitmask).toBe(2n);
+        expect(body3.bitmask).toBe(2n);
 
-        expect(position1.bitmask).toBe(2n);
-        expect(position2.bitmask).toBe(2n);
-        expect(position3.bitmask).toBe(2n);
+        expect(position1.bitmask).toBe(4n);
+        expect(position2.bitmask).toBe(4n);
+        expect(position3.bitmask).toBe(4n);
 
         // Extra safety check that the properties of the class were successfully set.
         expect(body1.properties.width).toBe(10);

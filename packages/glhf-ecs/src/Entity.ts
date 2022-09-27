@@ -5,6 +5,8 @@ export default class Entity {
     public componentsBitmask: bigint = 0n;
     public components: {[key: string]: Component} = {};
 
+    constructor(public id: string) {}
+
     public addComponent<T extends Component>(instance: T) {
 
         this.components[instance.constructor.name] = instance;

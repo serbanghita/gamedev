@@ -9,11 +9,11 @@ describe('Entity', () => {
         reg.registerComponent(Body);
         reg.registerComponent(Position);
 
-        const entity = new Entity();
+        const entity = new Entity("test");
         entity.addComponent(new Body({width: 10, height: 20})); // 1n
         entity.addComponent(new Position({x: 1, y: 2})); // 2n
 
-        expect(entity.componentsBitmask).toBe(3n);
+        expect(entity.componentsBitmask).toBe(6n);
         expect(entity.getComponent(Body)).toBeInstanceOf(Body);
         expect(entity.getComponent(Position)).toBeInstanceOf(Position);
     });

@@ -16,34 +16,37 @@ export interface IQueryFiltersBitmask {
 }
 
 export default class Query {
-    public filtersAsBitmasks: IQueryFiltersBitmask = {
-        all: 0n,
-        any: 0n,
-        none: 0n
-    };
+    public all: bigint = 0n;
+    public any: bigint = 0n;
+    public none: bigint = 0n;
+
+    public records: Entity[] = [];
     public result: Entity[] = [];
 
-    constructor(public allEntities: Entity[], public filters: IQueryFilters) {
-        this.setFiltersAsBitmasks();
-        this.setResult();
+    constructor(public name: string = "", public filters: IQueryFilters) {
+        this.processFilters();
     }
 
-    public setFiltersAsBitmasks(): void {
+    public setRecords(records: Entity[]): void {
+        this.records = records;
+    }
+
+    private processFilters(): void {
         if (this.filters.all) {
             this.filters.all.forEach((component) => {
-                this.filtersAsBitmasks.all = addBit(this.filtersAsBitmasks.all, component.prototype.bitmask);
+                this.all = addBit(this.all, component.prototype.bitmask);
             });
         }
 
         if (this.filters.any) {
             this.filters.any.forEach((component) => {
-                this.filtersAsBitmasks.any = addBit(this.filtersAsBitmasks.any, component.prototype.bitmask);
+                this.any = addBit(this.any, component.prototype.bitmask);
             });
         }
 
         if (this.filters.none) {
             this.filters.none.forEach((component) => {
-                this.filtersAsBitmasks.none = addBit(this.filtersAsBitmasks.none, component.prototype.bitmask);
+                this.none = addBit(this.none, component.prototype.bitmask);
             });
         }
     }
@@ -51,20 +54,25 @@ export default class Query {
     /**
      * Set only the entities that correspond to the filters given.
      */
-    public setResult(): Entity[] {
+    public execute(): Entity[] {
 
-        this.result = this.allEntities.filter((entity) => {
+        this.result = this.records.filter((entity) => {
             // Reject all entities that have a component(s) that is in the none filter.
-            if (this.filtersAsBitmasks.none !== 0n && hasBit(entity.componentsBitmask, this.filtersAsBitmasks.none)) {
+            if (this.none !== 0n && hasAnyOfBits(entity.componentsBitmask, this.none)) {
                 return false;
             }
+
             // Include any entity that has all the components in the "any" filter.
-            if (this.filtersAsBitmasks.any !== 0n && hasAnyOfBits(entity.componentsBitmask, this.filtersAsBitmasks.any)) {
+            if (this.any !== 0n && hasAnyOfBits(entity.componentsBitmask, this.any)) {
                 return true;
             }
 
             // Check all bits.
-            return hasBit(entity.componentsBitmask, this.filtersAsBitmasks.all);
+            if (this.all !== 0n && !hasBit(entity.componentsBitmask, this.all)) {
+                return false;
+            }
+
+            return true;
         });
 
          return this.result;

@@ -23,7 +23,7 @@ export default class Query {
     public records: Entity[] = [];
     public result: Entity[] = [];
 
-    constructor(public name: string = "", public filters: IQueryFilters) {
+    constructor(public id: string = "", public filters: IQueryFilters) {
         this.processFilters();
     }
 
@@ -56,25 +56,43 @@ export default class Query {
      */
     public execute(): Entity[] {
 
-        this.result = this.records.filter((entity) => {
-            // Reject all entities that have a component(s) that is in the none filter.
-            if (this.none !== 0n && hasAnyOfBits(entity.componentsBitmask, this.none)) {
-                return false;
-            }
-
-            // Include any entity that has all the components in the "any" filter.
-            if (this.any !== 0n && hasAnyOfBits(entity.componentsBitmask, this.any)) {
-                return true;
-            }
-
-            // Check all bits.
-            if (this.all !== 0n && !hasBit(entity.componentsBitmask, this.all)) {
-                return false;
-            }
-
-            return true;
-        });
+        this.result = this.records.filter((entity) => this.match(entity));
 
          return this.result;
+    }
+
+    private match(entity: Entity): boolean {
+        // Reject all entities that have a component(s) that is in the none filter.
+        if (this.none !== 0n && hasAnyOfBits(entity.componentsBitmask, this.none)) {
+            return false;
+        }
+
+        // Include any entity that has all the components in the "any" filter.
+        if (this.any !== 0n && hasAnyOfBits(entity.componentsBitmask, this.any)) {
+            return true;
+        }
+
+        // Check all bits.
+        if (this.all !== 0n && !hasBit(entity.componentsBitmask, this.all)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public candidate(entity: Entity) {
+        if (this.match(entity)) {
+            this.result.push(entity);
+            return true;
+        }
+
+        return false;
+    }
+
+    public remove(entity: Entity) {
+        const index = this.result.indexOf(entity);
+        if (index !== -1) {
+            this.result.splice(index, 1);
+        }
     }
 }

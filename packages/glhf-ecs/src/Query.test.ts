@@ -69,5 +69,29 @@ describe(("Query"), () => {
         q.execute();
         expect(q.result).toHaveLength(0);
     });
+
+    test('candidate', () => {
+        const q = new Query("only entities with a body", { all: [Body] });
+        q.setRecords([dino]);
+        q.execute();
+        expect(q.result).toHaveLength(1);
+        q.candidate(player);
+        expect(q.result).toHaveLength(2);
+        q.candidate(camera);
+        expect(q.result).toHaveLength(2);
+
+        expect(q.result).toEqual(expect.arrayContaining([dino, player]));
+    });
+
+    test('remove', () => {
+        const q = new Query("only entities with a body", { all: [Body] });
+        q.setRecords([dino, player]);
+        q.execute();
+        expect(q.result).toHaveLength(2);
+
+        q.remove(player);
+        expect(q.result).toHaveLength(1);
+        expect(q.result).toEqual(expect.arrayContaining([dino]));
+    });
 });
 

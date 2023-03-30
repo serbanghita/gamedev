@@ -5,7 +5,7 @@ import {Body} from "../src/mocks/Body";
 import {Position} from "../src/mocks/Position";
 import {Keyboard} from "../src/mocks/Keyboard";
 import {Renderable} from "../src/mocks/Renderable";
-import {loop, render} from "../src/mocks/stubs";
+import {render} from "../src/mocks/stubs";
 
 const reg = ComponentRegistry.getInstance();
 reg.registerComponent(Body);
@@ -24,12 +24,14 @@ player.addComponent(new Position({ x: 3, y: 4 }));
 player.addComponent(new Keyboard({ up: "w", down: "s", left: "a", right: "d" }));
 player.addComponent(new Renderable({}));
 
-const q = new Query("all entities to render to screen", { all: [Renderable] });
-q.setRecords([dino, player]);
-q.execute();
+const q = new Query("all entities to render to screen", [dino, player], { all: [Renderable] });
 
-loop(() => {
-    q.result.forEach(entity => {
+const loop = (now: DOMHighResTimeStamp) => {
+    q.execute().forEach(entity => {
         render(entity);
     });
-});
+
+    window.requestAnimationFrame(loop);
+};
+
+window.requestAnimationFrame(loop);

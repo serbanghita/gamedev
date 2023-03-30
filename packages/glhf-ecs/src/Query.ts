@@ -19,19 +19,25 @@ export default class Query {
     public all: bigint = 0n;
     public any: bigint = 0n;
     public none: bigint = 0n;
+    private hasExecuted: boolean = false;
 
-    public records: Entity[] = [];
-    public result: Entity[] = [];
 
-    constructor(public id: string = "", public filters: IQueryFilters) {
-        this.processFilters();
+    /**
+     * Create a "query" of entities.
+     *
+     * @param id
+     * @param dataSet Initial "dataset" upon which we execute the query.
+     *                Dataset will be cloned and filtered *after* the first query.
+     *                After the first query:
+     *                  +addition is performed via candidate(Entity) method.
+     *                  -removal is performed via remove(Entity) method.
+     * @param filters
+     */
+    constructor(public id: string = "", public dataSet: Entity[], public filters: IQueryFilters) {
+        this.processFiltersAsBitMasks();
     }
 
-    public setRecords(records: Entity[]): void {
-        this.records = records;
-    }
-
-    private processFilters(): void {
+    private processFiltersAsBitMasks(): void {
         if (this.filters.all) {
             this.filters.all.forEach((component) => {
                 this.all = addBit(this.all, component.prototype.bitmask);
@@ -55,10 +61,12 @@ export default class Query {
      * Set only the entities that correspond to the filters given.
      */
     public execute(): Entity[] {
+        if (!this.hasExecuted) {
+            this.dataSet = this.dataSet.filter((entity) => this.match(entity));
+            this.hasExecuted = true;
+        }
 
-        this.result = this.records.filter((entity) => this.match(entity));
-
-         return this.result;
+        return this.dataSet;
     }
 
     private match(entity: Entity): boolean {
@@ -82,7 +90,7 @@ export default class Query {
 
     public candidate(entity: Entity) {
         if (this.match(entity)) {
-            this.result.push(entity);
+            this.dataSet.push(entity);
             return true;
         }
 
@@ -90,9 +98,9 @@ export default class Query {
     }
 
     public remove(entity: Entity) {
-        const index = this.result.indexOf(entity);
+        const index = this.dataSet.indexOf(entity);
         if (index !== -1) {
-            this.result.splice(index, 1);
+            this.dataSet.splice(index, 1);
         }
     }
 }

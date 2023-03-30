@@ -32,66 +32,58 @@ describe(("Query"), () => {
     const entities = [dino, player, camera];
 
     test('all', () => {
-        const q = new Query("all", { all: [Renderable] });
-        q.setRecords(entities);
-        q.execute();
-        expect(q.result).toHaveLength(2);
-        expect(q.result).toEqual(expect.arrayContaining([dino, player]));
+        const q = new Query("all", entities,{ all: [Renderable] });
+
+        expect(q.execute()).toHaveLength(2);
+        expect(q.execute()).toEqual(expect.arrayContaining([dino, player]));
     });
 
     test('any', () => {
-        const q = new Query("any", { any: [Renderable, Position] });
-        q.setRecords(entities);
-        q.execute();
-        expect(q.result).toHaveLength(3);
-        expect(q.result).toEqual(expect.arrayContaining([dino, player, camera]));
+        const q = new Query("any", entities, { any: [Renderable, Position] });
+
+        expect(q.execute()).toHaveLength(3);
+        expect(q.execute()).toEqual(expect.arrayContaining([dino, player, camera]));
     });
 
     test('none', () => {
-        const q = new Query("none", { none: [Keyboard] });
-        q.setRecords(entities);
-        q.execute();
-        expect(q.result).toHaveLength(2);
-        expect(q.result).toEqual(expect.arrayContaining([dino, camera]));
+        const q = new Query("none", entities, { none: [Keyboard] });
+
+        expect(q.execute()).toHaveLength(2);
+        expect(q.execute()).toEqual(expect.arrayContaining([dino, camera]));
     });
 
     test('all(1) + none', () => {
-        const q = new Query("all(1) + none", { all: [Body], none: [Keyboard] });
-        q.setRecords(entities);
-        q.execute();
-        expect(q.result).toHaveLength(1);
-        expect(q.result).toEqual(expect.arrayContaining([dino]));
+        const q = new Query("all(1) + none", entities, { all: [Body], none: [Keyboard] });
+
+        expect(q.execute()).toHaveLength(1);
+        expect(q.execute()).toEqual(expect.arrayContaining([dino]));
     });
 
     test('all(2) + none', () => {
-        const q = new Query("all(2) + none", { all: [Body, Position], none: [Renderable] });
-        q.setRecords(entities);
-        q.execute();
-        expect(q.result).toHaveLength(0);
+        const q = new Query("all(2) + none", entities,{ all: [Body, Position], none: [Renderable] });
+
+        expect(q.execute()).toHaveLength(0);
     });
 
     test('candidate', () => {
-        const q = new Query("only entities with a body", { all: [Body] });
-        q.setRecords([dino]);
-        q.execute();
-        expect(q.result).toHaveLength(1);
-        q.candidate(player);
-        expect(q.result).toHaveLength(2);
-        q.candidate(camera);
-        expect(q.result).toHaveLength(2);
+        const q = new Query("only entities with a body", [dino],{ all: [Body] });
 
-        expect(q.result).toEqual(expect.arrayContaining([dino, player]));
+        expect(q.execute()).toHaveLength(1);
+        q.candidate(player);
+        expect(q.execute()).toHaveLength(2);
+        q.candidate(camera);
+        expect(q.execute()).toHaveLength(2);
+
+        expect(q.execute()).toEqual(expect.arrayContaining([dino, player]));
     });
 
     test('remove', () => {
-        const q = new Query("only entities with a body", { all: [Body] });
-        q.setRecords([dino, player]);
-        q.execute();
-        expect(q.result).toHaveLength(2);
+        const q = new Query("only entities with a body", [dino, player],{ all: [Body] });
 
+        expect(q.execute()).toHaveLength(2);
         q.remove(player);
-        expect(q.result).toHaveLength(1);
-        expect(q.result).toEqual(expect.arrayContaining([dino]));
+        expect(q.execute()).toHaveLength(1);
+        expect(q.execute()).toEqual(expect.arrayContaining([dino]));
     });
 });
 

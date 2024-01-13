@@ -3,37 +3,41 @@ import System from "./System";
 import Query from "./Query";
 
 export default class World {
-    private queries: {[id: string]: Query} = Object.create(null);
-    public entities: {[key: string]: Entity} = Object.create(null);
-    public systems: {[key: string]: System} = Object.create(null);
+    private queries: Map<string, Query> = new Map();
+    public entities: Map<string, Entity> = new Map();
+    public systems: Map<string, System> = new Map();
 
     public registerQuery(query: Query) {
-        if (this.queries[query.id]) {
+        if (this.queries.has(query.id)) {
             throw new Error(`A query with the id "${query.id}" already exists.`);
         }
 
-        this.queries[query.id] = query;
+        this.queries.set(query.id, query);
     }
 
     public registerEntity(entity: Entity) {
-        if (this.entities[entity.id]) {
+        if (this.entities.has(entity.id)) {
             throw new Error(`Entity with the id "${entity.id}" already exists.`);
         }
 
-        this.entities[entity.id] = entity;
+        this.entities.set(entity.id, entity);
         this.notifyQueriesOfCandidacy(entity);
         return entity;
     }
 
     private notifyQueriesOfCandidacy(entity: Entity) {
         for (const id in this.queries) {
-            this.queries[id].candidate(entity);
+            if (this.queries.has(id)) {
+                this.queries.get(id)?.candidate(entity);
+            }
         }
     }
 
     private notifyQueriesOfRemoval(entity: Entity) {
         for (const id in this.queries) {
-            this.queries[id].remove(entity);
+            if (this.queries.has(id)) {
+                this.queries.get(id)?.remove(entity);
+            }
         }
     }
 }

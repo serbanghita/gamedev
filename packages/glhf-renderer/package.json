@@ -1,5 +1,5 @@
 {
-  "name": "glhf-ecs",
+  "name": "glhf-renderer",
   "version": "1.0.0",
   "scripts": {
     "tsc": "tsc",

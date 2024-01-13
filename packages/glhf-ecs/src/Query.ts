@@ -1,6 +1,6 @@
 import Entity from "./Entity";
 
-import {addBit, hasAnyOfBits, hasBit} from "@glhf/bitmask/bitmask";
+import {addBit, hasAnyOfBits, hasBit} from "../../glhf-bitmask/src/bitmask";
 import Component from "./Component";
 
 export interface IQueryFilters {

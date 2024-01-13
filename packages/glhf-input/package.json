@@ -1,14 +1,11 @@
 {
-  "name": "glhf-ecs",
+  "name": "glhf-input",
   "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "tsc": "tsc",
-    "build": "webpack --mode development",
-    "dev": "webpack --mode development --watch",
-    "test": "jest"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Serban Ghita",
-  "license": "MIT",
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
@@ -24,5 +21,7 @@
     "jest": "^28.1.3",
     "ts-jest": "^28.0.8",
     "ts-node": "^10.9.1"
-  }
+  },
+  "author": "",
+  "license": "ISC"
 }

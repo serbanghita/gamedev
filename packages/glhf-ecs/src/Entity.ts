@@ -1,5 +1,5 @@
 import Component from "./Component";
-import {addBit, hasBit} from "@glhf/bitmask/bitmask";
+import {addBit, hasBit} from "../../glhf-bitmask/src/bitmask";
 
 export default class Entity {
     public componentsBitmask: bigint = 0n;

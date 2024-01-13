@@ -1,1 +1,4 @@
 .idea
+.tmp
+node_modules
+packages/glhf-demo/*

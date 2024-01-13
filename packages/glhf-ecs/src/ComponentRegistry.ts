@@ -1,5 +1,5 @@
 // create a singleton class
-import Component from "Component";
+import Component from "./Component";
 
 export default class ComponentRegistry {
   private bitmask: bigint = 1n;
@@ -13,14 +13,14 @@ export default class ComponentRegistry {
     return ComponentRegistry.instance;
   }
 
-  registerComponent(ComponentDeclaration: typeof Component) {
+  public registerComponent(ComponentDeclaration: typeof Component) {
     // @todo: Safety check if Base was already registered.
     ComponentDeclaration.prototype.bitmask = (this.bitmask <<= 1n);
 
     return ComponentDeclaration;
   }
 
-  getLastBitmask() {
+  public getLastBitmask() {
     return this.bitmask;
   }
 }

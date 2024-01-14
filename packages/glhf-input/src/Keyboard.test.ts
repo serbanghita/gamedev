@@ -20,20 +20,28 @@ describe("Keyboard", () => {
         input.bindKey('a', InputActions.MOVE_LEFT);
 
         // Simulate key press.
-        input.keyDownListener({code: 'w', preventDefault: () => {}, stopPropagation: () => {}});
-        input.keyDownListener({code: 'w', preventDefault: () => {}, stopPropagation: () => {}});
-        input.keyDownListener({code: 'a', preventDefault: () => {}, stopPropagation: () => {}});
-        input.keyDownListener({code: 'w', preventDefault: () => {}, stopPropagation: () => {}});
-        input.keyDownListener({code: 'a', preventDefault: () => {}, stopPropagation: () => {}});
+        input.keyDownCallback({key: 'w', preventDefault: () => {}, stopPropagation: () => {}});
+        input.keyDownCallback({key: 'w', preventDefault: () => {}, stopPropagation: () => {}});
+        input.keyDownCallback({key: 'a', preventDefault: () => {}, stopPropagation: () => {}});
+        input.keyDownCallback({key: 'w', preventDefault: () => {}, stopPropagation: () => {}});
+        input.keyDownCallback({key: 'a', preventDefault: () => {}, stopPropagation: () => {}});
 
         expect(input.ongoingActions.has(InputActions.MOVE_UP)).toBe(true);
         expect(input.ongoingActions.has(InputActions.MOVE_LEFT)).toBe(true);
         expect(input.ongoingActions.size).toEqual(2);
 
         // Simulate key-up.
-        input.keyUpListener({code: 'w', preventDefault: () => {}, stopPropagation: () => {}});
-        input.keyUpListener({code: 'a', preventDefault: () => {}, stopPropagation: () => {}});
+        input.keyUpCallback({key: 'w', preventDefault: () => {}, stopPropagation: () => {}});
+        input.keyUpCallback({key: 'a', preventDefault: () => {}, stopPropagation: () => {}});
 
         expect(input.ongoingActions.size).toEqual(0);
+    });
+
+    it('areKeysPressed', () => {
+        const input = new Keyboard();
+        input.bindKey('w', InputActions.MOVE_UP);
+        input.keyDownCallback({key: 'w', preventDefault: () => {}, stopPropagation: () => {}});
+
+        expect(input.areKeysPressed()).toBe(true);
     });
 });

@@ -16,12 +16,17 @@ export default class Entity {
         this.componentsBitmask = addBit(this.componentsBitmask, instance.bitmask);
     }
 
-    public getComponent(declaration: typeof Component): Component {
-        return this.components[declaration.name] as Component;
+    public getComponent<T extends typeof Component>(declaration: T): InstanceType<T> {
+        const instance = this.components[declaration.name] as InstanceType<T>;
+        if (!instance) {
+            throw new Error(`Component requested ${declaration.name} is non-existent.`);
+        }
+
+        return instance;
     }
 
-    public hasComponent(declaration: Component): boolean {
+    public hasComponent(declaration: typeof Component): boolean {
         // return !!this.components[componentDeclaration.name];
-        return hasBit(this.componentsBitmask, declaration.bitmask);
+        return hasBit(this.componentsBitmask, declaration.prototype.bitmask);
     }
 }

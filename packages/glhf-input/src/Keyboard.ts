@@ -27,12 +27,17 @@ export default class Keyboard {
         this.boundKeys.delete(keyCode);
     }
 
+    public areKeysPressed()
+    {
+        return this.ongoingActions.size > 0;
+    }
+
     public isBoundKey(keyCode: string) {
         return this.boundKeys.has(keyCode);
     }
 
-    public keyDownListener(e: { key: string; preventDefault: () => void; stopPropagation: () => void; }) {
-        console.log("keyDownListener", e.key);
+    public keyDownCallback(e: { key: string; preventDefault: () => void; stopPropagation: () => void; }) {
+        // console.log("keyDownCallback", e.key);
         e.preventDefault();
         e.stopPropagation();
         if (this.isBoundKey(e.key)) {
@@ -41,8 +46,8 @@ export default class Keyboard {
         }
     };
 
-    public keyUpListener(e: { key: string; preventDefault: () => void; stopPropagation: () => void; }) {
-        console.log("keyUpListener", e.key);
+    public keyUpCallback(e: { key: string; preventDefault: () => void; stopPropagation: () => void; }) {
+        // console.log("keyUpCallback", e.key);
         e.preventDefault();
         e.stopPropagation();
         if (this.isBoundKey(e.key)) {
@@ -52,7 +57,7 @@ export default class Keyboard {
     };
 
     public listen() {
-        window.addEventListener("keydown", this.keyDownListener.bind(this), { capture: false });
-        window.addEventListener("keyup", this.keyDownListener.bind(this), { capture: false });
+        window.addEventListener("keydown", this.keyDownCallback.bind(this), { capture: false });
+        window.addEventListener("keyup", this.keyUpCallback.bind(this), { capture: false });
     }
 }

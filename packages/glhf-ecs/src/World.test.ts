@@ -1,7 +1,7 @@
 import Entity from "./Entity";
-import {Position} from "./mocks/Position";
+import Position from "../../glhf-component/src/Position";
 import World from "./World";
-import {Renderable} from "./mocks/Renderable";
+import Renderable from "./../../glhf-component/src/Renderable";
 import Query from "./Query";
 import ComponentRegistry from "./ComponentRegistry";
 

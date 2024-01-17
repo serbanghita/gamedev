@@ -1,5 +1,6 @@
 import Entity from "./Entity";
 import World from "./World";
+import Query from "./Query";
 
 export type SystemConstructor = new (world: World, properties?: {}) => System;
 
@@ -8,10 +9,7 @@ interface ISystemProps {
 }
 
 export default abstract class System {
-    protected constructor(protected world: World, public properties: ISystemProps){
-        this.world = world;
-        this.properties = properties;
-    }
+    protected abstract query: Query;
 
-    public abstract update(now: number, entities: Entity[]): void;
+    public abstract update(now: number): void;
 }

@@ -2,10 +2,10 @@ import Query from "./Query";
 import ComponentRegistry from "./ComponentRegistry";
 
 import Entity from "./Entity";
-import {Body} from "./mocks/Body";
-import {Position} from "./mocks/Position";
-import {Keyboard} from "./mocks/Keyboard";
-import {Renderable} from "./mocks/Renderable";
+import Body from "../../glhf-component/src/Body";
+import Position from "../../glhf-component/src/Position";
+import Keyboard from "../../glhf-component/src/Keyboard";
+import Renderable from "../../glhf-component/src/Renderable";
 
 describe(("Query"), () => {
 

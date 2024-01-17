@@ -1,6 +1,6 @@
 import ComponentRegistry from "./ComponentRegistry";
-import {Body} from "./mocks/Body";
-import {Position} from "./mocks/Position";
+import Body from "../../glhf-component/src/Body";
+import Position from "../../glhf-component/src/Position";
 
 describe('ComponentRegistry', () => {
     test('constructor', () => {

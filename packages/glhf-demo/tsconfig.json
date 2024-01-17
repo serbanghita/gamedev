@@ -14,7 +14,9 @@
 //    }
   },
   "include": [
-    "src/index.ts"
+    "src/index.ts",
+//    "../../packages/glhf-component/src",
+//    "../../packages/glhf-input/src",
   ],
   "exclude": [
     "node_modules",

@@ -1,11 +1,11 @@
-import Component from "../Component";
+import Component from "../../glhf-ecs/src/Component";
 
 export interface IBodyProps {
     width: number;
     height: number;
 }
 
-export class Body extends Component {
+export default class Body extends Component {
     constructor(public properties: IBodyProps) {
         super(properties);
     }

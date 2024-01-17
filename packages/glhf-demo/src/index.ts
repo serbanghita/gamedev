@@ -1,14 +1,18 @@
 import ComponentRegistry from "../../glhf-ecs/src/ComponentRegistry";
 import Entity from "../../glhf-ecs/src/Entity";
 import Query from "../../glhf-ecs/src/Query";
-import {Body} from "../../glhf-ecs/src/mocks/Body";
-import {Position} from "../../glhf-ecs/src/mocks/Position";
-import {Keyboard} from "../../glhf-ecs/src/mocks/Keyboard";
-import {Renderable} from "../../glhf-ecs/src/mocks/Renderable";
+import Body from "../../glhf-component/src/Body";
+import Position from "../../glhf-component/src/Position";
+import Direction, {Directions} from "../../glhf-component/src/Direction";
+import Keyboard from "../../glhf-component/src/Keyboard";
+import Renderable from "../../glhf-component/src/Renderable";
+import SpriteSheet, {ISpriteSheetAnimationsFrame} from "../../glhf-component/src/SpriteSheet";
 import {clearCtx, createCanvas, getCtx, renderImage} from "../../glhf-renderer/src/canvas";
 import {createWrapperElement} from "../../glhf-renderer/src/ui";
 import {loadLocalImage} from "../../glhf-assets/src";
 import {default as KeyboardInput, InputActions} from "../../glhf-input/src/Keyboard";
+import MoveWithKeyboardSystem from "./MoveWithKeyboardSystem";
+import RenderSystem from "./RenderSystem";
 
 // 0. Create the UI and canvas.
 const $wrapper = createWrapperElement('game-wrapper', 640, 480);
@@ -20,7 +24,8 @@ document.body.appendChild($wrapper);
 
 // 1. Load sprite sheets IMGs.
 const kilSheetData = require("./assets/sprites/kil.png");
-const kilSheet = loadLocalImage(kilSheetData);
+const kilSheetAnimations = require("./assets/sprites/kil_animations.json") as ISpriteSheetAnimationsFrame[];
+
 
 // 2. Load JSON animations for sprite sheets.
 // 3. Load JSON map declarations (Tiled).
@@ -38,8 +43,11 @@ input.listen();
 const reg = ComponentRegistry.getInstance();
 reg.registerComponent(Body);
 reg.registerComponent(Position);
+reg.registerComponent(Direction);
 reg.registerComponent(Keyboard);
 reg.registerComponent(Renderable);
+reg.registerComponent(SpriteSheet);
+
 
 const dino = new Entity("dino");
 dino.addComponent(new Body({ width: 10, height: 20 }));
@@ -49,83 +57,37 @@ dino.addComponent(new Body({ width: 10, height: 20 }));
 const player = new Entity("player");
 player.addComponent(new Body({ width: 30, height: 40 }));
 player.addComponent(new Position({ x: 0, y: 0 }));
+player.addComponent(new Direction({ x: Directions.NONE, y: Directions.NONE }));
 player.addComponent(new Keyboard({ up: "w", down: "s", left: "a", right: "d" }));
 player.addComponent(new Renderable({}));
+player.addComponent(new SpriteSheet({
+    name: 'kil',
+    offset_x: 128,
+    offset_y: 0,
+    img: loadLocalImage(kilSheetData),
+    frames: kilSheetAnimations,
+    animationCurrentFrame: (kilSheetAnimations.find((animationFrame) => animationFrame.defaultAnimation) as ISpriteSheetAnimationsFrame)['name'],
+    animationDefaultFrame: (kilSheetAnimations.find((animationFrame) => animationFrame.defaultAnimation) as ISpriteSheetAnimationsFrame)['name'],
+}));
 
-const q = new Query("all entities to render to screen", [dino, player], { all: [Renderable, Position] });
+const entities = [dino, player];
 
-enum Directions {
-    NONE, UP, DOWN, LEFT, RIGHT
-}
+const queryWithEntitiesToBeRendered = new Query("all entities to render to screen", entities, { all: [Renderable, SpriteSheet, Position] });
+const queryWithEntitiesWithKeyboardInput = new Query("all entities with keyboard input", entities, { all: [Keyboard] });
 
-function getDirectionFromKeyboardActions(actions: Set<InputActions>) {
-    const direction: Set<Directions> = new Set([]);
-
-    if (actions.has(InputActions.MOVE_UP)) {
-        direction.add(Directions.UP);
-    }
-
-    if (actions.has(InputActions.MOVE_DOWN)) {
-        direction.add(Directions.DOWN);
-    }
-
-    if (actions.has(InputActions.MOVE_LEFT)) {
-        direction.add(Directions.LEFT);
-    }
-
-    if (actions.has(InputActions.MOVE_RIGHT)) {
-        direction.add(Directions.RIGHT);
-    }
-
-    return direction;
-}
-
-function move(entity: Entity) {
-    if (entity.hasComponent(Keyboard)) {
-        if (input.areKeysPressed()) {
-            const direction = getDirectionFromKeyboardActions(input.ongoingActions);
-            console.log(direction);
-
-            const position = entity.getComponent(Position);
-            if (direction.has(Directions.UP)) {
-                position.properties.y -= 1;
-            }
-            if (direction.has(Directions.DOWN)) {
-                position.properties.y += 1;
-            }
-            if (direction.has(Directions.LEFT)) {
-                position.properties.x -= 1;
-            }
-            if (direction.has(Directions.RIGHT)) {
-                position.properties.x += 1;
-            }
-
-        }
-
-
-    }
-}
+// @todo: It should accept an array of inputs (e.g. keyboards, gamepads, mouse)
+const moveSystem = new MoveWithKeyboardSystem(queryWithEntitiesWithKeyboardInput, input);
+const renderSystem = new RenderSystem(queryWithEntitiesToBeRendered, $foreground)
 
 const loop = (now: DOMHighResTimeStamp) => {
-    q.execute().forEach(entity => {
-        // Assume that we are in a system.
-        move(entity);
-
-
-        clearCtx(getCtx($foreground), 0, 0, 640, 480);
-
-        const position = entity.getComponent(Position);
-
-        renderImage(
-            getCtx($foreground),
-            kilSheet,
-            128, 0,
-            64, 96,
-            position.properties.x, position.properties.y,
-            64, 96,
-        );
-
-    });
+    moveSystem.update(now);
+    renderSystem.update(now);
+    // q.execute().forEach(entity => {
+    //     // Assume that we are in a system.
+    //     move(entity);
+    //     render(entity);
+    //
+    // });
 
     window.requestAnimationFrame(loop);
 };
@@ -134,6 +96,6 @@ window.requestAnimationFrame(loop);
 
 
 // @ts-ignore
-window['engine'] = {
-    'q': q
-};
+// window['engine'] = {
+//     'q': q
+// };

@@ -1,4 +1,4 @@
-import { Position } from "./mocks/Position";
+import Position from "../../glhf-component/src/Position"
 
 test('properties', () => {
     const position1 = new Position({ x: 10, y: 20 });

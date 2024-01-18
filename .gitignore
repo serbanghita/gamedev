@@ -1,4 +1,7 @@
 .idea
 .tmp
 node_modules
-packages/glhf-demo/*
+packages/glhf-demo/assets/*
+/packages/glhf-demo/build
+/packages/glhf-demo/src/assets/sprites/kil.png
+/packages/glhf-demo/src/assets/sprites/kil_animations.json

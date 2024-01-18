@@ -1,0 +1,25 @@
+{
+  "name": "glhf-demo",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "webpack --mode development",
+    "dev": "webpack serve --mode development"
+  },
+  "author": "Serban Ghita",
+  "license": "ISC",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "eslint": "^8.22.0",
+    "source-map-loader": "^4.0.0",
+    "ts-loader": "^9.3.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^4.15.1"
+  }
+}

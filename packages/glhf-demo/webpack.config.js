@@ -9,7 +9,7 @@ module.exports = {
     },
 
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "inline-source-map",
+    devtool: "source-map",
 
     devServer: {
         open: true,
@@ -38,7 +38,7 @@ module.exports = {
             },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+            // { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
 
             {
                 test: /\.png/,

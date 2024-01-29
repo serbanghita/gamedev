@@ -12,9 +12,11 @@ import {clearCtx, createCanvas, getCtx, renderImage} from "../../glhf-renderer/s
 import {createWrapperElement} from "../../glhf-renderer/src/ui";
 import {loadLocalImage} from "../../glhf-assets/src";
 import {default as KeyboardInput, InputActions} from "../../glhf-input/src/Keyboard";
-import MoveWithKeyboardSystem from "./MoveWithKeyboardSystem";
-import RenderSystem from "./RenderSystem";
-import PreRenderSystem from "./PreRenderSystem";
+import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
+import RenderSystem from "./system/RenderSystem";
+import PreRenderSystem from "./system/PreRenderSystem";
+import {PlayerState} from "./component/PlayerState";
+import PlayerStateSystem from "./system/PlayerStateSystem";
 
 // 0. Create the UI and canvas.
 const $wrapper = createWrapperElement('game-wrapper', 640, 480);
@@ -39,6 +41,7 @@ input.bindKey('w', InputActions.MOVE_UP);
 input.bindKey('s', InputActions.MOVE_DOWN);
 input.bindKey('a', InputActions.MOVE_LEFT);
 input.bindKey('d', InputActions.MOVE_RIGHT);
+input.bindKey('q', InputActions.ACTION_1);
 input.listen();
 
 // Register all "Components".
@@ -65,7 +68,6 @@ player.addComponent(new Keyboard({ up: "w", down: "s", left: "a", right: "d" }))
 player.addComponent(new Renderable({}));
 
 
-
 const defaultAnimationFrameName = (kilSheetAnimations.find((animationFrame) => animationFrame.defaultAnimation) as ISpriteSheetAnimation)['name'];
 
 player.addComponent(new SpriteSheet({
@@ -79,10 +81,10 @@ player.addComponent(new SpriteSheet({
     animationDefaultFrame: '',
 }));
 player.addComponent(new State({
-    updateStateName: 'idle',
-    updateStateTick: 0,
-    animationFrameName: defaultAnimationFrameName,
-    animationFrameTick: 0
+    state: PlayerState.idle,
+    stateTick: 0,
+    animationState: defaultAnimationFrameName,
+    animationTick: 0
 }))
 
 const entities = [dino, player];
@@ -95,13 +97,15 @@ const preRenderSystem = new PreRenderSystem(queryWithEntitiesToBeRendered);
 preRenderSystem.update(0);
 
 // @todo: It should accept an array of inputs (e.g. keyboards, gamepads, mouse)
-const moveSystem = new MoveWithKeyboardSystem(queryWithEntitiesWithKeyboardInput, input);
+const moveSystem = new PlayerKeyboardSystem(queryWithEntitiesWithKeyboardInput, input);
+const playerStateSystem = new PlayerStateSystem(queryWithEntitiesWithKeyboardInput);
 const renderSystem = new RenderSystem(queryWithEntitiesToBeRendered, $foreground)
 
 
 
 const loop = (now: DOMHighResTimeStamp) => {
     moveSystem.update(now);
+    playerStateSystem.update(now);
     renderSystem.update(now);
     // q.execute().forEach(entity => {
     //     // Assume that we are in a system.

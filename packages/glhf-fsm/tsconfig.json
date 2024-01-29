@@ -6,19 +6,8 @@
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
     "strict": true,                                      /* Enable all strict type-checking options. */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
-    "rootDirs": ["src"],
-    "baseUrl": "src",
-    "sourceMap": true,
-//    "paths": {
-//        "@glhf/bitmask/*": ["../../glhf-bitmask/src/*"],
-//        "@glhf/ecs/*": ["../../glhf-ecs/src/*"],
-//    }
+    "rootDir": "src"
   },
-  "include": [
-    "src/index.ts",
-//    "../../packages/glhf-component/src",
-//    "../../packages/glhf-input/src",
-  ],
   "exclude": [
     "node_modules",
     "build"

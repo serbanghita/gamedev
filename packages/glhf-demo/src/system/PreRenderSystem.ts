@@ -1,7 +1,7 @@
-import Query from "../../glhf-ecs/src/Query";
-import System from "../../glhf-ecs/src/System";
-import Entity from "../../glhf-ecs/src/Entity";
-import SpriteSheet, {IAnimation, IAnimationFrame} from "../../glhf-component/src/SpriteSheet";
+import Query from "../../../glhf-ecs/src/Query";
+import System from "../../../glhf-ecs/src/System";
+import Entity from "../../../glhf-ecs/src/Entity";
+import SpriteSheet, {IAnimation, IAnimationFrame} from "../../../glhf-component/src/SpriteSheet";
 
 export default class PreRenderSystem extends System {
     public constructor(protected query: Query) {

@@ -47,7 +47,7 @@ export default class Keyboard {
     };
 
     public keyUpCallback(e: { key: string; preventDefault: () => void; stopPropagation: () => void; }) {
-        // console.log("keyUpCallback", e.key);
+        console.log("keyUpCallback", e.key);
         e.preventDefault();
         e.stopPropagation();
         if (this.isBoundKey(e.key)) {

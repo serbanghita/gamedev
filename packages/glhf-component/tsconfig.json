@@ -9,16 +9,7 @@
     "rootDirs": ["src"],
     "baseUrl": "src",
     "sourceMap": true,
-//    "paths": {
-//        "@glhf/bitmask/*": ["../../glhf-bitmask/src/*"],
-//        "@glhf/ecs/*": ["../../glhf-ecs/src/*"],
-//    }
   },
-  "include": [
-    "src/index.ts",
-//    "../../packages/glhf-component/src",
-//    "../../packages/glhf-input/src",
-  ],
   "exclude": [
     "node_modules",
     "build"

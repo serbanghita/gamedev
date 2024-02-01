@@ -14,10 +14,10 @@ describe("World", () => {
 
     it("registerEntity - entity already exist", () => {
         const a = new Entity("a");
-        a.addComponent(new Position({x: 1, y: 2}));
+        a.addComponent(Position, {x: 1, y: 2});
         const b = new Entity("b");
-        b.addComponent(new Position({x: 10, y: 20}));
-        b.addComponent(new Renderable({}));
+        b.addComponent(Position, {x: 10, y: 20});
+        b.addComponent(Renderable);
 
         const world = new World();
         world.registerEntity(a);
@@ -28,10 +28,10 @@ describe("World", () => {
 
     it("registerEntity - counting", () => {
         const a = new Entity("a");
-        a.addComponent(new Position({x: 1, y: 2}));
+        a.addComponent(Position, {x: 1, y: 2});
         const b = new Entity("b");
-        b.addComponent(new Position({x: 10, y: 20}));
-        b.addComponent(new Renderable({}));
+        b.addComponent(Position, {x: 10, y: 20});
+        b.addComponent(Renderable);
 
         const world = new World();
         world.registerEntity(a);
@@ -42,10 +42,10 @@ describe("World", () => {
 
     it('registerEntity - notifies queries', () => {
         const a = new Entity("a");
-        a.addComponent(new Position({x: 1, y: 2}));
+        a.addComponent(Position, {x: 1, y: 2});
         const b = new Entity("b");
-        b.addComponent(new Position({x: 10, y: 20}));
-        b.addComponent(new Renderable({}));
+        b.addComponent(Position, {x: 10, y: 20});
+        b.addComponent(Renderable);
 
         const q1 = new Query("query1", [], { all: [Renderable] });
         const q2 = new Query("query2", [], { all: [Position] });

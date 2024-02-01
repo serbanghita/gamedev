@@ -9,7 +9,7 @@ interface ISystemProps {
 }
 
 export default abstract class System {
-    protected abstract query: Query;
+    public abstract query: Query;
 
     public abstract update(now: number): void;
 }

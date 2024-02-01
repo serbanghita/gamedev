@@ -7,6 +7,7 @@ import Position from "../../../glhf-component/src/Position";
 import State from "../../../glhf-component/src/State";
 import Direction, {Directions} from "../../../glhf-component/src/Direction";
 import {PlayerState} from "../component/PlayerState";
+import IsWalking from "../component/IsWalking";
 
 export function getPrimaryDirectionLiteral(direction: Direction): string {
     let result = 'down';
@@ -26,7 +27,7 @@ export function getPrimaryDirectionLiteral(direction: Direction): string {
 }
 
 export default class PlayerKeyboardSystem extends System {
-    public constructor(protected query: Query, protected input: KeyboardInput) {
+    public constructor(public query: Query, protected input: KeyboardInput) {
         super();
     }
 
@@ -55,8 +56,8 @@ export default class PlayerKeyboardSystem extends System {
             return false;
         }
 
-        const state = entity.getComponent(State);
-        state.properties.state = PlayerState.club_attack;
+        // const state = entity.getComponent(State);
+        // state.properties.state = PlayerState.club_attack;
 
         return true;
     }
@@ -65,6 +66,10 @@ export default class PlayerKeyboardSystem extends System {
 
         if (!entity.hasComponent(Keyboard) || !this.input.areKeysPressed()) {
             return false;
+        }
+
+        if (!entity.hasComponent(IsWalking)) {
+            entity.addComponent(IsWalking);
         }
 
         const directionFromInput = this.getDirectionFromKeyboardActions();
@@ -101,12 +106,7 @@ export default class PlayerKeyboardSystem extends System {
             if (this.doClubAttack(entity)) {
                 return;
             }
-            const isMoving = this.doMove(entity);
-            if (isMoving) {
-                const state = entity.getComponent(State);
-                state.properties.state = PlayerState.walk;
-            }
-
+            this.doMove(entity);
         });
     }
 }

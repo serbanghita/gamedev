@@ -1,10 +1,7 @@
 import Component from "../../glhf-ecs/src/Component";
 
 export interface IStateProps {
-    state: string;
-    stateTick: number;
-    animationState: string;
-    animationTick: number;
+    name: string;
 }
 
 export default class State extends Component {

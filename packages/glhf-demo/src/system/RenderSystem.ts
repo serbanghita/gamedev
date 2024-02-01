@@ -5,10 +5,12 @@ import Position from "../../../glhf-component/src/Position";
 import Direction from "../../../glhf-component/src/Direction";
 import SpriteSheet, { IAnimation } from "../../../glhf-component/src/SpriteSheet";
 import State from "../../../glhf-component/src/State";
+import IsWalking from "../component/IsWalking";
+import IsIdle from "../component/IsIdle";
 
 export default class RenderSystem extends System {
 
-    public constructor(protected query: Query, protected $foreground: HTMLCanvasElement) {
+    public constructor(public query: Query, protected $foreground: HTMLCanvasElement) {
         super();
     }
 
@@ -19,7 +21,15 @@ export default class RenderSystem extends System {
             const position = entity.getComponent(Position);
             const spriteSheet = entity.getComponent(SpriteSheet);
 
-            const state = entity.getComponent(State);
+            let state;
+            if (entity.hasComponent(IsWalking)) {
+                state = entity.getComponent(IsWalking);
+            } else if (entity.hasComponent(IsIdle)) {
+                state = entity.getComponent(IsIdle);
+            } else {
+                throw new Error(`Entity ${entity.id} has no default state to render.`);
+            }
+
 
             const animation = spriteSheet.properties.animations.get(state.properties.animationState) as IAnimation;
             if (state.properties.animationTick === animation.frames.length) {

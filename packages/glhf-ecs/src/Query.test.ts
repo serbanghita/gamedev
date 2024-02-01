@@ -16,18 +16,18 @@ describe(("Query"), () => {
     reg.registerComponent(Renderable);
 
     const dino = new Entity("dino");
-    dino.addComponent(new Body({ width: 10, height: 20 }));
-    dino.addComponent(new Position({ x: 1, y: 2 }));
-    dino.addComponent(new Renderable({}));
+    dino.addComponent(Body, { width: 10, height: 20 });
+    dino.addComponent(Position, { x: 1, y: 2 });
+    dino.addComponent(Renderable);
 
     const player = new Entity("player");
-    player.addComponent(new Body({ width: 30, height: 40 }));
-    player.addComponent(new Position({ x: 3, y: 4 }));
-    player.addComponent(new Keyboard({ up: "w", down: "s", left: "a", right: "d" }));
-    player.addComponent(new Renderable({}));
+    player.addComponent(Body, { width: 30, height: 40 });
+    player.addComponent(Position, { x: 3, y: 4 });
+    player.addComponent(Keyboard, { up: "w", down: "s", left: "a", right: "d" });
+    player.addComponent(Renderable);
 
     const camera = new Entity("camera");
-    camera.addComponent(new Position({ x: 0, y: 0 }));
+    camera.addComponent(Position, { x: 0, y: 0 });
 
     const entities = [dino, player, camera];
 

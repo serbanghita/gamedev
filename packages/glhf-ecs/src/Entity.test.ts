@@ -10,8 +10,8 @@ describe('Entity', () => {
         reg.registerComponent(Position);
 
         const entity = new Entity("test");
-        entity.addComponent(new Body({width: 10, height: 20})); // 1n
-        entity.addComponent(new Position({x: 1, y: 2})); // 2n
+        entity.addComponent(Body, {width: 10, height: 20}); // 1n
+        entity.addComponent(Position, {x: 1, y: 2}); // 2n
 
         expect(entity.componentsBitmask).toBe(6n);
         expect(entity.getComponent(Body)).toBeInstanceOf(Body);
@@ -23,7 +23,7 @@ describe('Entity', () => {
         reg.registerComponent(Body);
 
         const entity = new Entity("test");
-        entity.addComponent(new Body({width: 10, height: 20})); // 1n
+        entity.addComponent(Body, {width: 10, height: 20}); // 1n
 
         expect(entity.getComponent(Body)).toBeInstanceOf(Body);
         expect(entity.getComponent(Body)).toEqual({
@@ -36,7 +36,7 @@ describe('Entity', () => {
         reg.registerComponent(Body);
 
         const entity = new Entity("test");
-        entity.addComponent(new Body({width: 10, height: 20})); // 1n
+        entity.addComponent(Body, {width: 10, height: 20}); // 1n
 
         expect(() => entity.getComponent(Position)).toThrow('Component requested Position is non-existent.')
     });
@@ -47,8 +47,8 @@ describe('Entity', () => {
         reg.registerComponent(Position);
 
         const entity = new Entity("test");
-        entity.addComponent(new Body({width: 10, height: 20})); // 1n
-        entity.addComponent(new Position({x: 1, y: 2})); // 2n
+        entity.addComponent(Body, {width: 10, height: 20}); // 1n
+        entity.addComponent(Position, {x: 1, y: 2}); // 2n
 
         expect(entity.hasComponent(Body)).toBe(true);
         expect(entity.hasComponent(Position)).toBe(true);

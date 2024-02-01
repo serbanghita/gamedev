@@ -1,6 +1,6 @@
 import ComponentRegistry from "../../glhf-ecs/src/ComponentRegistry";
 import Entity from "../../glhf-ecs/src/Entity";
-import Query from "../../glhf-ecs/src/Query";
+import World from "../../glhf-ecs/src/World";
 import Body from "../../glhf-component/src/Body";
 import Position from "../../glhf-component/src/Position";
 import Direction, {Directions} from "../../glhf-component/src/Direction";
@@ -16,7 +16,11 @@ import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
 import RenderSystem from "./system/RenderSystem";
 import PreRenderSystem from "./system/PreRenderSystem";
 import {PlayerState} from "./component/PlayerState";
-import PlayerStateSystem from "./system/PlayerStateSystem";
+import IsIdle from "./component/IsIdle";
+import IsWalking from "./component/IsWalking";
+import IdleSystem from "./system/IdleSystem";
+import WalkingSystem from "./system/WalkingSystem";
+import StateSystem from "./system/StateSystem";
 
 // 0. Create the UI and canvas.
 const $wrapper = createWrapperElement('game-wrapper', 640, 480);
@@ -52,25 +56,33 @@ reg.registerComponent(Direction);
 reg.registerComponent(Keyboard);
 reg.registerComponent(Renderable);
 reg.registerComponent(SpriteSheet);
+reg.registerComponent(IsIdle);
+reg.registerComponent(IsWalking);
 reg.registerComponent(State);
 
 
 const dino = new Entity("dino");
-dino.addComponent(new Body({ width: 10, height: 20 }));
+dino.addComponent(Body, { width: 10, height: 20 });
 // dino.addComponent(new Position({ x: 1, y: 2 }));
 // dino.addComponent(new Renderable({}));
 
 const player = new Entity("player");
-player.addComponent(new Body({ width: 30, height: 40 }));
-player.addComponent(new Position({ x: 0, y: 0 }));
-player.addComponent(new Direction({ x: Directions.NONE, y: Directions.NONE }));
-player.addComponent(new Keyboard({ up: "w", down: "s", left: "a", right: "d" }));
-player.addComponent(new Renderable({}));
+player.addComponent(Body, { width: 30, height: 40 });
+player.addComponent(Position, { x: 0, y: 0 });
+player.addComponent(Direction, { x: Directions.NONE, y: Directions.NONE });
+player.addComponent(Keyboard, { up: "w", down: "s", left: "a", right: "d" });
+player.addComponent(Renderable);
+player.addComponent(IsIdle, {
+    state: 'idle',
+    animationState: 'idle_up',
+    stateTick: 0,
+    animationTick: 0
+});
 
 
 const defaultAnimationFrameName = (kilSheetAnimations.find((animationFrame) => animationFrame.defaultAnimation) as ISpriteSheetAnimation)['name'];
 
-player.addComponent(new SpriteSheet({
+player.addComponent(SpriteSheet, {
     name: 'kil',
     offset_x: 128,
     offset_y: 0,
@@ -79,40 +91,43 @@ player.addComponent(new SpriteSheet({
     animations: new Map(),
     animationCurrentFrame: '',
     animationDefaultFrame: '',
-}));
-player.addComponent(new State({
+});
+player.addComponent(State, {
     state: PlayerState.idle,
     stateTick: 0,
     animationState: defaultAnimationFrameName,
     animationTick: 0
-}))
+});
 
 const entities = [dino, player];
 
-const queryWithEntitiesToBeRendered = new Query("all entities to render to screen", entities, { all: [Renderable, SpriteSheet, Position] });
-const queryWithEntitiesWithKeyboardInput = new Query("all entities with keyboard input", entities, { all: [Keyboard] });
+const world = new World();
+world.registerQuery("renderable", { all: [Renderable, SpriteSheet, Position] });
+world.registerQuery("keyboard", { all: [Keyboard] });
+world.registerQuery("idle", {all: [IsIdle]});
+world.registerQuery("walking", {all: [IsWalking]});
+
+world.registerEntity(dino);
+world.registerEntity(player);
+
 
 // Pre-loop system run.
-const preRenderSystem = new PreRenderSystem(queryWithEntitiesToBeRendered);
+const preRenderSystem = new PreRenderSystem(world.getQuery("renderable"));
 preRenderSystem.update(0);
-
-// @todo: It should accept an array of inputs (e.g. keyboards, gamepads, mouse)
-const moveSystem = new PlayerKeyboardSystem(queryWithEntitiesWithKeyboardInput, input);
-const playerStateSystem = new PlayerStateSystem(queryWithEntitiesWithKeyboardInput);
-const renderSystem = new RenderSystem(queryWithEntitiesToBeRendered, $foreground)
+const inputSystem = new PlayerKeyboardSystem(world.getQuery("keyboard"), input);
+const idleSystem = new IdleSystem(world.getQuery("idle"));
+const walkingSystem = new WalkingSystem(world.getQuery("walking"));
+const renderSystem = new RenderSystem(world.getQuery("renderable"), $foreground);
+const stateSystem = new StateSystem(world.getQuery("renderable")); // @todo: Make this work on all entities.
 
 
 
 const loop = (now: DOMHighResTimeStamp) => {
-    moveSystem.update(now);
-    playerStateSystem.update(now);
+    inputSystem.update(now);
+    idleSystem.update(now);
+    walkingSystem.update(now);
+    stateSystem.update(now);
     renderSystem.update(now);
-    // q.execute().forEach(entity => {
-    //     // Assume that we are in a system.
-    //     move(entity);
-    //     render(entity);
-    //
-    // });
 
     window.requestAnimationFrame(loop);
 };
@@ -124,3 +139,5 @@ window.requestAnimationFrame(loop);
 // window['engine'] = {
 //     'q': q
 // };
+
+

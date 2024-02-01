@@ -20,20 +20,16 @@ export default class Query {
     public any: bigint = 0n;
     public none: bigint = 0n;
     private hasExecuted: boolean = false;
+    public dataSet: Entity[] = [];
 
 
     /**
-     * Create a "query" of entities.
+     * Create a "query" of Entities that contain certain Components set.
      *
      * @param id
-     * @param dataSet Initial "dataset" upon which we execute the query.
-     *                Dataset will be cloned and filtered *after* the first query.
-     *                After the first query:
-     *                  +addition is performed via candidate(Entity) method.
-     *                  -removal is performed via remove(Entity) method.
      * @param filters
      */
-    constructor(public id: string = "", public dataSet: Entity[], public filters: IQueryFilters) {
+    constructor(public id: string = "", public filters: IQueryFilters) {
         this.processFiltersAsBitMasks();
     }
 

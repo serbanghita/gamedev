@@ -7,6 +7,11 @@ interface Component {
 
 class Component {
     constructor(public properties: {}) {}
+
+    // Lazy init / Re-init.
+    init(properties: {}) {
+        this.properties = properties;
+    }
 }
 
 export default Component;

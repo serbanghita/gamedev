@@ -1,15 +1,17 @@
 import Entity from "./Entity";
 import System from "./System";
 import Query, {IQueryFilters} from "./Query";
+import Component from "./Component";
+import { hasBit } from "../../glhf-bitmask/src/bitmask";
 
 export default class World {
-    private queries: Map<string, Query> = new Map();
-    public entities: Map<string, Entity> = new Map();
-    public systems: Map<string, System> = new Map();
+    public queries = new Map<string, Query>();
+    public entities = new Map<string, Entity>();
+    public systems = new Map<string, System>();
 
-    public registerQuery(id: string, filters: IQueryFilters): Query
+    public createQuery(id: string, filters: IQueryFilters): Query
     {
-        const query = new Query(id, filters);
+        const query = new Query(this, id, filters);
 
         if (this.queries.has(query.id)) {
             throw new Error(`A query with the id "${query.id}" already exists.`);
@@ -17,7 +19,14 @@ export default class World {
 
         this.queries.set(query.id, query);
 
+        query.init();
+
         return query;
+    }
+
+    public removeQuery(id: string)
+    {
+        this.queries.delete(id);
     }
 
     public getQuery(id: string): Query
@@ -29,28 +38,77 @@ export default class World {
         return query;
     }
 
-    public registerEntity(entity: Entity): Entity {
-        if (this.entities.has(entity.id)) {
-            throw new Error(`Entity with the id "${entity.id}" already exists.`);
+    public createEntity(id: string): Entity {
+        if (this.entities.has(id)) {
+            throw new Error(`Entity with the id "${id}" already exists.`);
         }
 
+        const entity = new Entity(this, id);
+
         this.entities.set(entity.id, entity);
-        this.notifyQueriesOfCandidacy(entity);
+        this.notifyQueriesOfEntityCandidacy(entity);
 
         return entity;
     }
 
-    private notifyQueriesOfCandidacy(entity: Entity) {
+    public getEntity(id: string)
+    {
+        return this.entities.get(id);
+    }
+
+    public removeEntity(id: string) {
+        const entity = this.entities.get(id);
+
+        if (!entity) {
+            return;
+        }
+
+        this.notifyQueriesOfEntityRemoval(entity);
+    }
+
+    public notifyQueriesOfEntityCandidacy(entity: Entity) {
         this.queries.forEach((query) => {
             query.candidate(entity);
         });
     }
 
-    private notifyQueriesOfRemoval(entity: Entity) {
+    public notifyQueriesOfEntityRemoval(entity: Entity) {
         for (const id in this.queries) {
             if (this.queries.has(id)) {
                 this.queries.get(id)?.remove(entity);
             }
         }
+    }
+
+    /**
+     * 1. Finds all Queries that have the Component in their filter.
+     * 2. Add candidacy of the Entity to the list of Entities inside the Query.
+     *
+     * @param entity
+     * @param component
+     */
+    public notifyQueriesOfEntityComponentAddition(entity: Entity, component: Component)
+    {
+        this.queries.forEach(query => {
+            if (hasBit(query.all, component.bitmask)) {
+                query.add(entity);
+            }
+        });
+    }
+
+    /**
+     * 1. Finds all Queries that have the Component in their filter.
+     * 2. Remove the Entity from the list of Entities inside the Query.
+     *
+     * @param entity
+     * @param component
+     */
+    public notifyQueriesOfEntityComponentRemoval(entity: Entity, component: Component)
+    {
+        this.queries.forEach(query => {
+            if (hasBit(query.all, component.bitmask)) {
+                query.remove(entity);
+            }
+        });
     }
 }

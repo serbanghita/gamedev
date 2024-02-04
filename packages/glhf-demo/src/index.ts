@@ -33,7 +33,7 @@ document.body.appendChild($wrapper);
 // 1. Load sprite sheets IMGs.
 const kilSheetData = require("./assets/sprites/kil.png");
 const kilSheetAnimations = require("./assets/sprites/kil_animations.json") as ISpriteSheetAnimation[];
-
+const kilDefaultAnimationFrameName = (kilSheetAnimations.find((animationFrame) => animationFrame.defaultAnimation) as ISpriteSheetAnimation)['name'];
 
 // 2. Load JSON animations for sprite sheets.
 // 3. Load JSON map declarations (Tiled).
@@ -60,55 +60,45 @@ reg.registerComponent(IsIdle);
 reg.registerComponent(IsWalking);
 reg.registerComponent(State);
 
-
-const dino = new Entity("dino");
-dino.addComponent(Body, { width: 10, height: 20 });
-// dino.addComponent(new Position({ x: 1, y: 2 }));
-// dino.addComponent(new Renderable({}));
-
-const player = new Entity("player");
-player.addComponent(Body, { width: 30, height: 40 });
-player.addComponent(Position, { x: 0, y: 0 });
-player.addComponent(Direction, { x: Directions.NONE, y: Directions.NONE });
-player.addComponent(Keyboard, { up: "w", down: "s", left: "a", right: "d" });
-player.addComponent(Renderable);
-player.addComponent(IsIdle, {
-    state: 'idle',
-    animationState: 'idle_up',
-    stateTick: 0,
-    animationTick: 0
-});
-
-
-const defaultAnimationFrameName = (kilSheetAnimations.find((animationFrame) => animationFrame.defaultAnimation) as ISpriteSheetAnimation)['name'];
-
-player.addComponent(SpriteSheet, {
-    name: 'kil',
-    offset_x: 128,
-    offset_y: 0,
-    img: loadLocalImage(kilSheetData),
-    animationsDeclaration: kilSheetAnimations,
-    animations: new Map(),
-    animationCurrentFrame: '',
-    animationDefaultFrame: '',
-});
-player.addComponent(State, {
-    state: PlayerState.idle,
-    stateTick: 0,
-    animationState: defaultAnimationFrameName,
-    animationTick: 0
-});
-
-const entities = [dino, player];
-
+// Create the current "World" (scene).
 const world = new World();
-world.registerQuery("renderable", { all: [Renderable, SpriteSheet, Position] });
-world.registerQuery("keyboard", { all: [Keyboard] });
-world.registerQuery("idle", {all: [IsIdle]});
-world.registerQuery("walking", {all: [IsWalking]});
 
-world.registerEntity(dino);
-world.registerEntity(player);
+world.createEntity("dino")
+    .addComponent(Body, { width: 10, height: 20 });
+
+world.createEntity("player")
+    .addComponent(Body, { width: 30, height: 40 })
+    .addComponent(Position, { x: 0, y: 0 })
+    .addComponent(Direction, { x: Directions.NONE, y: Directions.NONE })
+    .addComponent(Keyboard, { up: "w", down: "s", left: "a", right: "d" })
+    .addComponent(Renderable)
+    .addComponent(IsIdle, {
+        state: 'idle',
+        animationState: 'idle_up',
+        stateTick: 0,
+        animationTick: 0
+    })
+    .addComponent(SpriteSheet, {
+        name: 'kil',
+        offset_x: 128,
+        offset_y: 0,
+        img: loadLocalImage(kilSheetData),
+        animationsDeclaration: kilSheetAnimations,
+        animations: new Map(),
+        animationCurrentFrame: '',
+        animationDefaultFrame: '',
+    }).addComponent(State, {
+        state: PlayerState.idle,
+        stateTick: 0,
+        animationState: kilDefaultAnimationFrameName,
+        animationTick: 0
+    });
+
+
+world.createQuery("renderable", { all: [Renderable, SpriteSheet, Position] });
+world.createQuery("keyboard", { all: [Keyboard] });
+world.createQuery("idle", {all: [IsIdle]});
+world.createQuery("walking", {all: [IsWalking]});
 
 
 // Pre-loop system run.
@@ -119,7 +109,6 @@ const idleSystem = new IdleSystem(world.getQuery("idle"));
 const walkingSystem = new WalkingSystem(world.getQuery("walking"));
 const renderSystem = new RenderSystem(world.getQuery("renderable"), $foreground);
 const stateSystem = new StateSystem(world.getQuery("renderable")); // @todo: Make this work on all entities.
-
 
 
 const loop = (now: DOMHighResTimeStamp) => {

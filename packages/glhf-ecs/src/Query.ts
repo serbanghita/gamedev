@@ -2,6 +2,7 @@ import Entity from "./Entity";
 
 import {addBit, hasAnyOfBits, hasBit} from "../../glhf-bitmask/src/bitmask";
 import Component from "./Component";
+import World from "./World";
 
 export interface IQueryFilters {
     all?: typeof Component[];
@@ -16,20 +17,21 @@ export interface IQueryFiltersBitmask {
 }
 
 export default class Query {
-    public all: bigint = 0n;
-    public any: bigint = 0n;
-    public none: bigint = 0n;
-    private hasExecuted: boolean = false;
+    public all = 0n;
+    public any = 0n;
+    public none = 0n;
+    private hasExecuted = false;
     public dataSet: Entity[] = [];
 
 
     /**
      * Create a "query" of Entities that contain certain Components set.
      *
+     * @param world
      * @param id
      * @param filters
      */
-    constructor(public id: string = "", public filters: IQueryFilters) {
+    constructor(public world: World, public id: string, public filters: IQueryFilters) {
         this.processFiltersAsBitMasks();
     }
 
@@ -51,6 +53,13 @@ export default class Query {
                 this.none = addBit(this.none, component.prototype.bitmask);
             });
         }
+    }
+
+    public init()
+    {
+        this.world.entities.forEach(entity => {
+            this.candidate(entity);
+        });
     }
 
     /**
@@ -91,6 +100,11 @@ export default class Query {
         }
 
         return false;
+    }
+
+    public add(entity: Entity)
+    {
+        this.dataSet.push(entity);
     }
 
     public remove(entity: Entity) {

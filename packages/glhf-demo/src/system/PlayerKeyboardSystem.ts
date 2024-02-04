@@ -8,6 +8,7 @@ import State from "../../../glhf-component/src/State";
 import Direction, {Directions} from "../../../glhf-component/src/Direction";
 import {PlayerState} from "../component/PlayerState";
 import IsWalking from "../component/IsWalking";
+import IsIdle from "../component/IsIdle";
 
 export function getPrimaryDirectionLiteral(direction: Direction): string {
     let result = 'down';
@@ -69,7 +70,12 @@ export default class PlayerKeyboardSystem extends System {
         }
 
         if (!entity.hasComponent(IsWalking)) {
-            entity.addComponent(IsWalking);
+            entity.addComponent(IsWalking, {
+                state: 'walking',
+                animationState: '',
+                stateTick: 0,
+                animationTick: 0
+            });
         }
 
         const directionFromInput = this.getDirectionFromKeyboardActions();
@@ -106,7 +112,22 @@ export default class PlayerKeyboardSystem extends System {
             if (this.doClubAttack(entity)) {
                 return;
             }
-            this.doMove(entity);
+
+            if (this.doMove(entity)) {
+                if (entity.hasComponent(IsIdle)) {
+                    entity.removeComponent(IsIdle);
+                }
+            } else {
+                if (entity.hasComponent(IsWalking)) {
+                    entity.removeComponent(IsWalking);
+                    entity.addComponent(IsIdle, {
+                        state: 'idle',
+                        animationState: '',
+                        stateTick: 0,
+                        animationTick: 0
+                    });
+                }
+            }
         });
     }
 }

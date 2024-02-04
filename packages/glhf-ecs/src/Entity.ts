@@ -1,14 +1,15 @@
 import Component from "./Component";
 import {addBit, hasBit, removeBit} from "../../glhf-bitmask/src/bitmask";
+import World from "./World";
 
 export default class Entity {
-    public componentsBitmask: bigint = 0n;
+    public componentsBitmask = 0n;
     // Cache of Component instances.
-    public components: Map<string, Component> = new Map();
+    public components = new Map<string, Component>();
 
-    constructor(public id: string) {}
+    constructor(public world: World, public id: string) {}
 
-    public addComponent<T extends typeof Component>(declaration: T, properties: {} = {})
+    public addComponent<T extends typeof Component>(declaration: T, properties: Record<string, any> = {}): Entity
     {
         let instance = this.components.get(declaration.name);
         // If the Component's instance is already in our cache, just re-use the instance and lazy init it.
@@ -25,6 +26,10 @@ export default class Entity {
         }
 
         this.componentsBitmask = addBit(this.componentsBitmask, instance.bitmask);
+
+        this.onAddComponent(instance);
+
+        return this;
     }
 
     public getComponent<T extends typeof Component>(declaration: T): InstanceType<T>
@@ -48,14 +53,29 @@ export default class Entity {
         return instance;
     }
 
-    public removeComponent<T extends typeof Component>(declaration: T)
+    public removeComponent<T extends typeof Component>(declaration: T): Entity
     {
         const component = this.getComponent(declaration);
 
         this.componentsBitmask = removeBit(this.componentsBitmask, component.bitmask);
+
+        this.onRemoveComponent(component);
+
+        return this;
     }
 
     public hasComponent(declaration: typeof Component): boolean {
         return hasBit(this.componentsBitmask, declaration.prototype.bitmask);
+    }
+
+    private onAddComponent(newComponent: Component)
+    {
+        this.world.notifyQueriesOfEntityComponentAddition(this, newComponent);
+        return this;
+    }
+
+    private onRemoveComponent(oldComponent: Component)
+    {
+        this.world.notifyQueriesOfEntityComponentRemoval(this, oldComponent);
     }
 }

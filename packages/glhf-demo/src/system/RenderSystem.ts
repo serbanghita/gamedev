@@ -32,7 +32,7 @@ export default class RenderSystem extends System {
 
 
             const animation = spriteSheet.properties.animations.get(state.properties.animationState) as IAnimation;
-            if (state.properties.animationTick === animation.frames.length) {
+            if (state.properties.animationTick >= animation.frames.length) {
                 state.properties.animationTick = 0;
             }
 

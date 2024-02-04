@@ -2,14 +2,21 @@ import Entity from "./Entity";
 import ComponentRegistry from "./ComponentRegistry";
 import Body from "../../glhf-component/src/Body";
 import Position from "../../glhf-component/src/Position";
+import World from "./World";
 
 describe('Entity', () => {
+
+    let world: World;
+    beforeEach(() => {
+        world = new World();
+    });
+
     it('addComponent', () => {
         const reg = ComponentRegistry.getInstance();
         reg.registerComponent(Body);
         reg.registerComponent(Position);
 
-        const entity = new Entity("test");
+        const entity = new Entity(world,"test");
         entity.addComponent(Body, {width: 10, height: 20}); // 1n
         entity.addComponent(Position, {x: 1, y: 2}); // 2n
 
@@ -22,7 +29,7 @@ describe('Entity', () => {
         const reg = ComponentRegistry.getInstance();
         reg.registerComponent(Body);
 
-        const entity = new Entity("test");
+        const entity = new Entity(world, "test");
         entity.addComponent(Body, {width: 10, height: 20}); // 1n
 
         expect(entity.getComponent(Body)).toBeInstanceOf(Body);
@@ -35,7 +42,7 @@ describe('Entity', () => {
         const reg = ComponentRegistry.getInstance();
         reg.registerComponent(Body);
 
-        const entity = new Entity("test");
+        const entity = new Entity(world, "test");
         entity.addComponent(Body, {width: 10, height: 20}); // 1n
 
         expect(() => entity.getComponent(Position)).toThrow('Component requested Position is non-existent.')
@@ -46,7 +53,7 @@ describe('Entity', () => {
         reg.registerComponent(Body);
         reg.registerComponent(Position);
 
-        const entity = new Entity("test");
+        const entity = new Entity(world,"test");
         entity.addComponent(Body, {width: 10, height: 20}); // 1n
         entity.addComponent(Position, {x: 1, y: 2}); // 2n
 

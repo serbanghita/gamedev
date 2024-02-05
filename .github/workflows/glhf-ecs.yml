@@ -9,9 +9,13 @@ on:
   pull_request:
     branches: [ "main" ]
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ./packages/glhf-ecs
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,10 +23,6 @@ jobs:
         node-version: [18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./packages/glhf-ecs
 
     steps:
     - uses: actions/checkout@v3

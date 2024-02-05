@@ -3,12 +3,12 @@ import Body from "../../glhf-component/src/Body";
 import Position from "../../glhf-component/src/Position";
 
 describe('ComponentRegistry', () => {
-    test('constructor', () => {
+    it('constructor', () => {
         const reg = ComponentRegistry.getInstance();
         expect(reg).toBeInstanceOf(ComponentRegistry);
     });
 
-    test('registerComponent', () => {
+    it('registerComponent', () => {
         const reg = ComponentRegistry.getInstance();
         expect(reg).toBeInstanceOf(ComponentRegistry);
 

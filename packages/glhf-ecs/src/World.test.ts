@@ -1,8 +1,6 @@
-import Entity from "./Entity";
 import Position from "../../glhf-component/src/Position";
 import World from "./World";
 import Renderable from "./../../glhf-component/src/Renderable";
-import Query from "./Query";
 import ComponentRegistry from "./ComponentRegistry";
 
 describe("World", () => {
@@ -12,48 +10,46 @@ describe("World", () => {
         reg.registerComponent(Renderable);
     });
 
-    it("registerEntity - entity already exist", () => {
-        const a = new Entity("a");
+    it("createEntity - entity already exist", () => {
+        const world = new World();
+
+        const a = world.createEntity("a");
         a.addComponent(Position, {x: 1, y: 2});
-        const b = new Entity("b");
+        const b = world.createEntity("b");
         b.addComponent(Position, {x: 10, y: 20});
         b.addComponent(Renderable);
 
-        const world = new World();
-        world.registerEntity(a);
         expect(() => {
-            world.registerEntity(a);
+            world.createEntity("a");
         }).toThrowError('Entity with the id "a" already exists.');
     });
 
-    it("registerEntity - counting", () => {
-        const a = new Entity("a");
+    it("createEntity - counting", () => {
+        const world = new World();
+
+        const a = world.createEntity("a");
         a.addComponent(Position, {x: 1, y: 2});
-        const b = new Entity("b");
+        const b = world.createEntity("b");
         b.addComponent(Position, {x: 10, y: 20});
         b.addComponent(Renderable);
-
-        const world = new World();
-        world.registerEntity(a);
-        world.registerEntity(b);
 
         expect(world.entities.size).toEqual(2);
     });
 
-    it('registerEntity - notifies queries', () => {
-        const a = new Entity("a");
+    it('createEntity - notifies queries', () => {
+        const world = new World();
+
+        world.createQuery("query1", { all: [Renderable] });
+        world.createQuery("query2", { all: [Position] });
+
+        const a = world.createEntity("a");
         a.addComponent(Position, {x: 1, y: 2});
-        const b = new Entity("b");
+        const b = world.createEntity("b");
         b.addComponent(Position, {x: 10, y: 20});
         b.addComponent(Renderable);
 
-        const q1 = new Query("query1", [], { all: [Renderable] });
-        const q2 = new Query("query2", [], { all: [Position] });
-
-        const world = new World();
-
-        world.registerQuery(q1);
-        world.registerQuery(q2);
+        expect(world.getQuery("query1").dataSet.length).toEqual(1);
+        expect(world.getQuery("query2").dataSet.length).toEqual(2);
     });
 
 });

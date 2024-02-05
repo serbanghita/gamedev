@@ -4,4 +4,7 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint', '@stylistic/ts'],
     root: true,
+    rules: {
+        "@typescript-eslint/no-inferrable-types": "off"
+    }
 };

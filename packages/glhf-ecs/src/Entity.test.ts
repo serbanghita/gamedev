@@ -17,8 +17,11 @@ describe('Entity', () => {
         reg.registerComponent(Position);
 
         const entity = new Entity(world,"test");
+        const spy = jest.spyOn(world, 'notifyQueriesOfEntityComponentAddition');
         entity.addComponent(Body, {width: 10, height: 20}); // 1n
+        expect(spy).toHaveBeenCalledWith(entity, entity.getComponent(Body));
         entity.addComponent(Position, {x: 1, y: 2}); // 2n
+        expect(spy).toHaveBeenCalledWith(entity, entity.getComponent(Position));
 
         expect(entity.componentsBitmask).toBe(6n);
         expect(entity.getComponent(Body)).toBeInstanceOf(Body);
@@ -36,6 +39,29 @@ describe('Entity', () => {
         expect(entity.getComponent(Body)).toEqual({
             properties: { width: 10, height: 20}
         })
+    });
+
+    it('getComponentByName', () => {
+        const reg = ComponentRegistry.getInstance();
+        reg.registerComponent(Body);
+
+        const entity = new Entity(world, "test");
+        entity.addComponent(Body, {width: 10, height: 20});
+
+        expect(entity.getComponentByName('Body')).toBeInstanceOf(Body);
+    });
+
+    it('removeComponent', () => {
+        const reg = ComponentRegistry.getInstance();
+        reg.registerComponent(Body);
+
+        const entity = new Entity(world, "test");
+        const spy = jest.spyOn(world, 'notifyQueriesOfEntityComponentRemoval');
+        entity.addComponent(Body, {width: 10, height: 20});
+        entity.removeComponent(Body);
+        expect(spy).toHaveBeenCalledWith(entity, entity.getComponent(Body));
+
+        expect(entity.hasComponent(Body)).toBe(false);
     });
 
     it('getComponent exception', () => {

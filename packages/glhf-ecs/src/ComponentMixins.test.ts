@@ -1,7 +1,8 @@
 // https://www.typescriptlang.org/docs/handbook/mixins.html#how-does-a-mixin-work
 describe("Component mixins", () => {
-    type Constructor = new (...args: any[]) => {};
-    type ConstructorWithParams<T = {}> = new (...args: any[]) => T;
+    // type Constructor = new (...args: any[]) => {};
+    // eslint-disable-next-line
+    type ConstructorWithParams<T = NonNullable<unknown>> = new (...args: any[]) => T;
 
     class Position {
         constructor(
@@ -20,7 +21,7 @@ describe("Component mixins", () => {
     class Renderable {
         constructor(
             public name: string = "",
-            public properties: {} = {}
+            public properties: NonNullable<unknown> = {}
         ) {
         }
     }
@@ -33,12 +34,13 @@ describe("Component mixins", () => {
 
     function registerComponent<TBase extends ConstructorWithParams>(Base: TBase) {
         const bits = newBitmask();
+
         return class NewComponent extends Base {
             public bits = bits;
         }
     }
 
-    test("bits", () => {
+    it("bits", () => {
         // In theory, I can obtain "Position" instead of "PositionC"
         // if I use `import {Position as PositionDeclaration} from "./Position"`
         const PositionC = registerComponent(Position);

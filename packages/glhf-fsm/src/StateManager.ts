@@ -1,84 +1,66 @@
-export enum StateStatus {
-    NOT_STARTED = 0,
-    STARTED = 1,
-    RUNNING = 2,
-    PERFORMING_ACTION = 3,
-    FINISHED = 4
-}
+import State, {StateStatus} from "./State";
 
-export interface IStateInstance {
-    status: StateStatus;
-
-    enter(...args: any[]): boolean;
-    exit(): void;
-    update(): boolean;
-}
-
-interface IStateInQueue {
+type StateInQueue = {
     id: string;
     args: any[];
 }
 
-export interface IState {
-    id: string;
-    priority: number;
-    instance: IStateInstance;
-}
-
 export default class StateManager {
 
-    private defaultStateId: string = "";
-    private states: Map<string, IState> = new Map();
-    public currentState: IState | null = null;
-    private queue: IStateInQueue[] = [];
+    private defaultState: State | undefined;
+    public currentState: State | undefined;
+    private states: Map<string, State> = new Map();
 
-    public registerState(id: string, priority: number, instance: IStateInstance) {
-        this.states.set(id, { id, priority, instance });
-    }
+    private queue: Map<string, StateInQueue> = new Map();
 
-    public getCurrentStateName(): string {
-        if (!this.currentState) {
-            throw new Error('There is no current state being set.');
+    public registerState(state: State) {
+        this.states.set(state.id, state);
+        if (state.isDefault) {
+            this.defaultState = state;
         }
-        return this.currentState.id;
     }
 
-    public getCurrentStateInstance(): IStateInstance {
-        if (!this.currentState) {
-            throw new Error('There is no current state being set.');
-        }
-        return this.currentState.instance;
-    }
-
-    public setDefaultStateId(stateId: string) {
-        this.defaultStateId = stateId;
-    }
-
-    public getDefaultState(): IState
+    public getState(id: string): State
     {
-        const state = this.states.get(this.defaultStateId);
+        const state = this.states.get(id);
         if (!state) {
-            throw new Error('No "default" state has been set.');
+            throw new Error(`Requested state ${id} is not registered.`);
         }
 
         return state;
     }
 
-    public unregisterState(stateName: string) {
+    public getDefaultState(): State
+    {
+        if (!this.defaultState) {
+            throw new Error('No "default" state has been set.');
+        }
+
+        return this.defaultState;
+    }
+
+    public getCurrentState(): State {
+        if (!this.currentState) {
+            throw new Error('No "current" state has been set yet.');
+        }
+        return this.currentState;
+    }
+
+    public unregisterStateWithName(stateName: string) {
         this.states.delete(stateName);
     }
 
     public queueState(id: string, ...args: any[]): StateManager {
-        this.queue.push({id, args});
+        this.queue.set(id, {id, args});
         return this;
     }
 
-    public deleteQueue() {
-        this.queue = [];
+    public emptyQueue() {
+        this.queue.clear();
     }
 
     public hasQueue(): boolean {
-        return this.queue.length > 0;
+        return this.queue.size > 0;
     }
 
     public triggerState(id: string, ...args: any[]): boolean {
@@ -90,22 +72,22 @@ export default class StateManager {
         }
 
         // If there's no currentState set, that means we can start executing the new requested state.
-        if (this.currentState === null) {
+        if (!this.currentState) {
             this.currentState = newState;
-            this.currentState.instance.enter.apply(this.currentState.instance, args);
+            this.currentState.enter.apply(this.currentState, args);
             return true;
         }
 
         // Exit current state if it's "Finished" or the new state has higher priority.
-        if (this.currentState.instance.status === StateStatus.FINISHED ||
+        if (this.currentState.status === StateStatus.FINISHED ||
             (
                 newState.priority <= this.currentState.priority &&
                 newState.id !== this.currentState.id
             )
         ) {
-            this.currentState.instance.exit(); // @todo: Should we just "exit" and then wait for the next tick?
+            this.currentState.exit(); // @todo: Should we just "exit" and then wait for the next tick?
             this.currentState = newState;
-            this.currentState.instance.enter.apply(this.currentState.instance, args);
+            this.currentState.enter.apply(this.currentState, args);
             return true;
         } else {
             return false;
@@ -115,21 +97,24 @@ export default class StateManager {
     public update(): void {
 
         // console.log(this.entity.className, this.currentState);
-        if (this.currentState !== null && this.currentState.instance.status !== StateStatus.FINISHED) {
-            this.currentState.instance.update();
+        if (this.currentState && this.currentState.status !== StateStatus.FINISHED) {
+            this.currentState.update();
         } else {
             // Can be overridden ...
             if (this.hasQueue()) {
                 // First item or the next one in the queue.
-                if (this.currentState?.instance.status === StateStatus.FINISHED) {
-                    const queuedItem = this.queue.splice(0, 1)[0];
-                    this.triggerState(queuedItem.id, ...queuedItem.args);
-                    return;
+                if (this.currentState?.status === StateStatus.FINISHED) {
+                    const [queuedStateId, queuedStateValue] = this.queue.entries().next().value;
+                    this.queue.delete(queuedStateId);
+                    const wasSuccessful = this.triggerState(queuedStateId, ...queuedStateValue.args);
+                    if (wasSuccessful) {
+                        return;
+                    }
                 }
             }
 
             this.currentState = this.getDefaultState();
-            this.currentState.instance.enter();
+            this.currentState.enter();
         }
     }
 

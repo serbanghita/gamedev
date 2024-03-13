@@ -1,5 +1,6 @@
 {
   "name": "glhf-fsm",
+  "description": "Finite State Machine that supports registering custom states, state priority and queued states.",
   "version": "1.0.0",
   "scripts": {
     "tsc": "tsc",

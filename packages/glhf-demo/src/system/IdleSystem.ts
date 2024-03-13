@@ -1,26 +1,62 @@
 import Direction from "../../../glhf-component/src/Direction";
-import Query from "../../../glhf-ecs/src/Query";
 import System from "../../../glhf-ecs/src/System";
-import {getPrimaryDirectionLiteral} from "./PlayerKeyboardSystem";
+import Entity from "../../../glhf-ecs/src/Entity";
 import IsIdle from "../component/IsIdle";
+import {StateStatus} from "../state/state-status";
 
 export default class IdleSystem extends System {
-    public constructor(public query: Query) {
-        super();
+
+    private onEnter(entity: Entity, component: IsIdle)
+    {
+        component.properties.tick = 0;
+        component.properties.animationTick = 0;
+        component.properties.status = StateStatus.STARTED;
+    }
+
+    private onUpdate(entity: Entity, component: IsIdle)
+    {
+        // Loop. @todo: move logic
+        // if (component.properties.tick === 10) {
+        //     this.onEnter(entity, component);
+        // }
+
+        const direction = entity.getComponent(Direction);
+        const directionLiteral = direction.properties.literal || '';
+
+        // console.log(`idle_${directionLiteral}`);
+
+        component.properties.animationStateName = directionLiteral ? `idle_${directionLiteral}` : 'idle';
+        component.properties.tick++;
+        if (component.properties.tick % 15 === 0) {
+            component.properties.animationTick += 1;
+        }
+
+        // console.log(component.properties.animationTick);
+    }
+
+    private onExit(entity: Entity, component: IsIdle) {
+        component.properties.status = StateStatus.FINISHED;
     }
 
     public update(now: number): void {
-        this.query.execute().forEach(entity => {
-            const direction = entity.getComponent(Direction);
-            const state = entity.getComponent(IsIdle);
-            const dir = getPrimaryDirectionLiteral(direction);
+        this.query.execute().forEach((entity: Entity) => {
 
-            console.log(`idle_${dir}`);
+            const component = entity.getComponent(IsIdle);
 
-            state.properties.state = 'idle';
-            state.properties.animationState = `idle_${dir}`;
-            state.properties.stateTick++;
-            state.properties.animationTick++;
+            console.log('IsIdle', entity.id);
+
+            if (component.properties.status === StateStatus.FINISHED) {
+                entity.removeComponent(IsIdle);
+                return;
+            }
+
+            if (component.properties.status === StateStatus.NOT_STARTED) {
+                this.onEnter(entity, component);
+            }
+
+            this.onUpdate(entity, component);
+
+            return true;
         });
     }
 

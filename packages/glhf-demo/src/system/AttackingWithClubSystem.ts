@@ -1,32 +1,36 @@
 import Direction, { Directions } from "../../../glhf-component/src/Direction";
 import System from "../../../glhf-ecs/src/System";
-import IsWalking from "../component/IsWalking";
 import {StateStatus} from "../state/state-status";
-import Entity from "@glhf/ecs/Entity";
+import Entity from "../../../glhf-ecs/src/Entity";
+import IsAttackingWithClub from "../component/IsAttackingWithClub";
 
-export default class WalkingSystem extends System {
+export default class AttackingWithClubSystem extends System {
 
-    private onEnter(entity: Entity, component: IsWalking)
+    private onEnter(entity: Entity, component: IsAttackingWithClub)
     {
         component.properties.tick = 0;
         component.properties.animationTick = 0;
         component.properties.status = StateStatus.STARTED;
     }
 
-    private onUpdate(entity: Entity, component: IsWalking)
+    private onUpdate(entity: Entity, component: IsAttackingWithClub)
     {
         const direction = entity.getComponent(Direction);
 
+        if (component.properties.animationTick === 5) {
+            this.onExit(entity, component);
+        }
+
         if (direction.properties.y === Directions.UP) {
-            component.properties.animationStateName = 'walk_up';
+            component.properties.animationStateName = 'club_attack_one_up';
         } else if (direction.properties.y === Directions.DOWN) {
-            component.properties.animationStateName = 'walk_down';
+            component.properties.animationStateName = 'club_attack_one_down';
         }
 
         if (direction.properties.x === Directions.LEFT) {
-            component.properties.animationStateName = 'walk_left';
+            component.properties.animationStateName = 'club_attack_one_left';
         } else if (direction.properties.x === Directions.RIGHT) {
-            component.properties.animationStateName = 'walk_right';
+            component.properties.animationStateName = 'club_attack_one_right';
         }
 
         component.properties.tick++;
@@ -37,18 +41,18 @@ export default class WalkingSystem extends System {
         // console.log(component.properties.animationTick);
     }
 
-    private onExit(entity: Entity, component: IsWalking) {
+    private onExit(entity: Entity, component: IsAttackingWithClub) {
         component.properties.status = StateStatus.FINISHED;
     }
 
     public update(now: number): void {
         this.query.execute().forEach(entity => {
-            const component = entity.getComponent(IsWalking);
+            const component = entity.getComponent(IsAttackingWithClub);
 
-            console.log('IsWalking', entity.id);
+            console.log('IsAttackingWithClub', entity.id);
 
             if (component.properties.status === StateStatus.FINISHED) {
-                entity.removeComponent(IsWalking);
+                entity.removeComponent(IsAttackingWithClub);
                 return;
             }
 

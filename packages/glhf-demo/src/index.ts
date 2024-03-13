@@ -1,5 +1,4 @@
 import ComponentRegistry from "../../glhf-ecs/src/ComponentRegistry";
-import Entity from "../../glhf-ecs/src/Entity";
 import World from "../../glhf-ecs/src/World";
 import Body from "../../glhf-component/src/Body";
 import Position from "../../glhf-component/src/Position";
@@ -15,12 +14,13 @@ import {default as KeyboardInput, InputActions} from "../../glhf-input/src/Keybo
 import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
 import RenderSystem from "./system/RenderSystem";
 import PreRenderSystem from "./system/PreRenderSystem";
-import {PlayerState} from "./component/PlayerState";
 import IsIdle from "./component/IsIdle";
 import IsWalking from "./component/IsWalking";
 import IdleSystem from "./system/IdleSystem";
 import WalkingSystem from "./system/WalkingSystem";
-import StateSystem from "./system/StateSystem";
+import CurrentState from "./component/CurrentState";
+import IsAttackingWithClub from "./component/IsAttackingWithClub";
+import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
 
 // 0. Create the UI and canvas.
 const $wrapper = createWrapperElement('game-wrapper', 640, 480);
@@ -45,23 +45,23 @@ input.bindKey('w', InputActions.MOVE_UP);
 input.bindKey('s', InputActions.MOVE_DOWN);
 input.bindKey('a', InputActions.MOVE_LEFT);
 input.bindKey('d', InputActions.MOVE_RIGHT);
-input.bindKey('q', InputActions.ACTION_1);
+input.bindKey(' ', InputActions.ACTION_1);
 input.listen();
-
-// Register all "Components".
-const reg = ComponentRegistry.getInstance();
-reg.registerComponent(Body);
-reg.registerComponent(Position);
-reg.registerComponent(Direction);
-reg.registerComponent(Keyboard);
-reg.registerComponent(Renderable);
-reg.registerComponent(SpriteSheet);
-reg.registerComponent(IsIdle);
-reg.registerComponent(IsWalking);
-reg.registerComponent(State);
 
 // Create the current "World" (scene).
 const world = new World();
+
+// Register all "Components".
+world.registerComponent(Body)
+    .registerComponent(Position)
+    .registerComponent(Direction)
+    .registerComponent(Keyboard)
+    .registerComponent(Renderable)
+    .registerComponent(SpriteSheet)
+    .registerComponent(IsIdle)
+    .registerComponent(IsWalking)
+    .registerComponent(IsAttackingWithClub)
+    .registerComponent(CurrentState);
 
 world.createEntity("dino")
     .addComponent(Body, { width: 10, height: 20 });
@@ -72,12 +72,6 @@ world.createEntity("player")
     .addComponent(Direction, { x: Directions.NONE, y: Directions.NONE })
     .addComponent(Keyboard, { up: "w", down: "s", left: "a", right: "d" })
     .addComponent(Renderable)
-    .addComponent(IsIdle, {
-        state: 'idle',
-        animationState: 'idle_up',
-        stateTick: 0,
-        animationTick: 0
-    })
     .addComponent(SpriteSheet, {
         name: 'kil',
         offset_x: 128,
@@ -87,36 +81,34 @@ world.createEntity("player")
         animations: new Map(),
         animationCurrentFrame: '',
         animationDefaultFrame: '',
-    }).addComponent(State, {
-        state: PlayerState.idle,
-        stateTick: 0,
-        animationState: kilDefaultAnimationFrameName,
-        animationTick: 0
-    });
+    }).addComponent(IsIdle, {
+        animationStateName: kilDefaultAnimationFrameName,
+    }).addComponent(CurrentState, { stateName: 'IsIdle' })
 
+world.createQuery("keyboard-query", { all: [Keyboard] });
+world.createQuery("idle-query", {all: [IsIdle]});
+world.createQuery("walking-query", {all: [IsWalking]});
+world.createQuery("attacking-with-club-query", {all: [IsAttackingWithClub]});
+world.createQuery("renderable-query", { all: [Renderable, SpriteSheet, Position] });
 
-world.createQuery("renderable", { all: [Renderable, SpriteSheet, Position] });
-world.createQuery("keyboard", { all: [Keyboard] });
-world.createQuery("idle", {all: [IsIdle]});
-world.createQuery("walking", {all: [IsWalking]});
+world.registerSystem("pre-render-system", PreRenderSystem)
+    .registerSystem("input-system", PlayerKeyboardSystem)
+    .registerSystem("idle-system", IdleSystem)
+    .registerSystem("walking-system", WalkingSystem)
+    .registerSystem("attacking-with-club-system", AttackingWithClubSystem)
+    .registerSystem("render-system", RenderSystem);
 
+world.createSystem("pre-render-system", "renderable-query")
+    .createSystem("input-system", "keyboard-query", input)
+    .createSystem("idle-system", "idle-query")
+    .createSystem("walking-system", "walking-query")
+    .createSystem("attacking-with-club-system", "attacking-with-club-query")
+    .createSystem("render-system", "renderable-query", $foreground)
 
-// Pre-loop system run.
-const preRenderSystem = new PreRenderSystem(world.getQuery("renderable"));
-preRenderSystem.update(0);
-const inputSystem = new PlayerKeyboardSystem(world.getQuery("keyboard"), input);
-const idleSystem = new IdleSystem(world.getQuery("idle"));
-const walkingSystem = new WalkingSystem(world.getQuery("walking"));
-const renderSystem = new RenderSystem(world.getQuery("renderable"), $foreground);
-const stateSystem = new StateSystem(world.getQuery("renderable")); // @todo: Make this work on all entities.
-
+world.getSystem("pre-render-system").update(0);
 
 const loop = (now: DOMHighResTimeStamp) => {
-    inputSystem.update(now);
-    idleSystem.update(now);
-    walkingSystem.update(now);
-    stateSystem.update(now);
-    renderSystem.update(now);
+    world.systems.forEach(system => system.update(now));
 
     window.requestAnimationFrame(loop);
 };
@@ -125,8 +117,8 @@ window.requestAnimationFrame(loop);
 
 
 // @ts-ignore
-// window['engine'] = {
-//     'q': q
-// };
+window['engine'] = {
+    world
+};
 
 

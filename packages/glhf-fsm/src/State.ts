@@ -16,6 +16,7 @@ export default class State
 
     enter(...args: any[]): boolean {
         this.status = StateStatus.STARTED;
+        this.tick = 0;
         return true;
     }
 

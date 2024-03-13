@@ -3,8 +3,13 @@ import System from "./System";
 import Query, {IQueryFilters} from "./Query";
 import Component from "./Component";
 import { hasBit } from "../../glhf-bitmask/src/bitmask";
+import StateManager from "../../glhf-fsm/src/StateManager";
+import ComponentRegistry from "./ComponentRegistry";
 
 export default class World {
+    protected systemRegistry: Map<string, typeof System> = new Map<string, typeof System>();
+    protected componentRegistry: ComponentRegistry = ComponentRegistry.getInstance();
+
     public queries = new Map<string, Query>();
     public entities = new Map<string, Entity>();
     public systems = new Map<string, System>();
@@ -43,7 +48,7 @@ export default class World {
             throw new Error(`Entity with the id "${id}" already exists.`);
         }
 
-        const entity = new Entity(this, id);
+        const entity = new Entity(this, new StateManager(), id);
 
         this.entities.set(entity.id, entity);
         this.notifyQueriesOfEntityCandidacy(entity);
@@ -64,6 +69,47 @@ export default class World {
         }
 
         this.notifyQueriesOfEntityRemoval(entity);
+    }
+
+    public registerSystem(id: string, declaration: typeof System): World
+    {
+        this.systemRegistry.set(id, declaration);
+
+        return this;
+    }
+
+    public createSystem(systemId: string, queryId: string, ...args: any[]): World
+    {
+        const declaration = this.systemRegistry.get(systemId);
+        if (!declaration) {
+            throw new Error(`There is no system registered with the id ${systemId}`);
+        }
+
+        const queryInstance = this.queries.get(queryId);
+        if (!queryInstance) {
+            throw new Error(`There is no query registered with the id ${queryId}`);
+        }
+
+        this.systems.set(systemId, new declaration(this, queryInstance, ...args));
+
+        return this;
+    }
+
+    public getSystem(id: string)
+    {
+        const system = this.systems.get(id);
+
+        if (!system) {
+            throw new Error(`There is no system instance with the id ${id}`)
+        }
+
+        return system;
+    }
+
+    public registerComponent(declaration: typeof Component): World
+    {
+        this.componentRegistry.registerComponent(declaration);
+        return this;
     }
 
     public notifyQueriesOfEntityCandidacy(entity: Entity) {

@@ -1,133 +1,168 @@
-import Entity from "../../../glhf-ecs/src/Entity";
+import Entity from "@glhf/ecs/Entity";
 import Query from "../../../glhf-ecs/src/Query";
 import System from "../../../glhf-ecs/src/System";
 import {InputActions, default as KeyboardInput} from "../../../glhf-input/src/Keyboard";
 import Keyboard from "../../../glhf-component/src/Keyboard";
 import Position from "../../../glhf-component/src/Position";
-import State from "../../../glhf-component/src/State";
 import Direction, {Directions} from "../../../glhf-component/src/Direction";
-import {PlayerState} from "../component/PlayerState";
 import IsWalking from "../component/IsWalking";
 import IsIdle from "../component/IsIdle";
-
-export function getPrimaryDirectionLiteral(direction: Direction): string {
-    let result = 'down';
-    if (direction.properties.y === Directions.UP) {
-        result = 'up';
-    } else if (direction.properties.y === Directions.DOWN) {
-        result = 'down';
-    }
-
-    if (direction.properties.x === Directions.LEFT) {
-        result = 'left';
-    } else if (direction.properties.x === Directions.RIGHT) {
-        result = 'right';
-    }
-
-    return result;
-}
+import World from "../../../glhf-ecs/src/World";
+import {StateStatus} from "../state/state-status";
+import IsAttackingWithClub from "../component/IsAttackingWithClub";
 
 export default class PlayerKeyboardSystem extends System {
-    public constructor(public query: Query, protected input: KeyboardInput) {
-        super();
+    private directionsFromInput: Set<Directions> = new Set([]);
+    private directionLiteral: 'up' | 'down' | 'left' | 'right' | '' = '';
+
+    public constructor(public world: World, public query: Query, protected input: KeyboardInput) {
+        super(world, query);
     }
 
-    private getDirectionFromKeyboardActions() {
-        const direction: Set<Directions> = new Set([]);
+    private setDirectionFromKeyboardActions() {
         const actions = this.input.ongoingActions;
+        this.directionsFromInput.clear();
+        this.directionLiteral = '';
+        let isDirty = false;
 
         if (actions.has(InputActions.MOVE_UP)) {
-            direction.add(Directions.UP);
+            this.directionsFromInput.add(Directions.UP);
+            this.directionLiteral = 'up';
+            isDirty = true;
         } else if (actions.has(InputActions.MOVE_DOWN)) {
-            direction.add(Directions.DOWN);
+            this.directionsFromInput.add(Directions.DOWN);
+            this.directionLiteral = 'down';
+            isDirty = true;
         }
 
         if (actions.has(InputActions.MOVE_LEFT)) {
-            direction.add(Directions.LEFT);
+            this.directionsFromInput.add(Directions.LEFT);
+            this.directionLiteral = 'left';
+            isDirty = true;
         } else if (actions.has(InputActions.MOVE_RIGHT)) {
-            direction.add(Directions.RIGHT);
+            this.directionsFromInput.add(Directions.RIGHT);
+            this.directionLiteral = 'right';
+            isDirty = true;
         }
 
-        return direction;
+        return isDirty;
     }
 
-    private doClubAttack(entity: Entity)
+    private doAction1(entity: Entity)
     {
+        // if (entity.hasComponent(IsAction)) {
+        //     return false;
+        // }
+
         if (!entity.hasComponent(Keyboard) || !this.input.areKeysPressed() || !this.input.ongoingActions.has(InputActions.ACTION_1)) {
             return false;
         }
 
-        // const state = entity.getComponent(State);
-        // state.properties.state = PlayerState.club_attack;
+        // entity.addComponent(IsAction, {
+        //     action: "AttackingWithClub",
+        //     direction: this.directionLiteral,
+        //     status: 'STARTED'
+        // });
+        //
+        // // @todo: make dynamic from Keyboard settings.
+        // entity.addComponent(AttackingWithClub, {
+        //     state: 'AttackingWithClub',
+        //     animationState: `club_swipe_down_from_${this.directionLiteral}`,
+        //     stateTick: 0,
+        //     animationTick: 0
+        // });
 
         return true;
     }
 
-    private doMove(entity: Entity) {
+    private onEnter(entity: Entity, component: IsWalking)
+    {
+        component.properties.tick = 0;
+        component.properties.animationTick = 0;
+        component.properties.status = StateStatus.STARTED;
+    }
 
+    private onUpdate(entity: Entity, component: IsWalking)
+    {
         if (!entity.hasComponent(Keyboard) || !this.input.areKeysPressed()) {
+            this.onExit(entity, component);
             return false;
         }
 
-        if (!entity.hasComponent(IsWalking)) {
-            entity.addComponent(IsWalking, {
-                state: 'walking',
-                animationState: '',
-                stateTick: 0,
-                animationTick: 0
-            });
+        const direction = entity.getComponent(Direction);
+
+        if (this.setDirectionFromKeyboardActions()) {
+            direction.properties.literal = this.directionLiteral;
         }
 
-        const directionFromInput = this.getDirectionFromKeyboardActions();
-
-        const direction = entity.getComponent(Direction);
         const position = entity.getComponent(Position);
-        const speed = 3;
+        const speed = 1;
 
-        if (directionFromInput.has(Directions.UP)) {
+        if (this.directionsFromInput.has(Directions.UP)) {
             position.properties.y -= speed;
             direction.properties.y = Directions.UP;
-        } else if (directionFromInput.has(Directions.DOWN)) {
+        } else if (this.directionsFromInput.has(Directions.DOWN)) {
             position.properties.y += speed;
             direction.properties.y = Directions.DOWN;
         } else {
             direction.properties.y = Directions.NONE;
         }
 
-        if (directionFromInput.has(Directions.LEFT)) {
+        if (this.directionsFromInput.has(Directions.LEFT)) {
             position.properties.x -= speed;
             direction.properties.x = Directions.LEFT;
-        } else if (directionFromInput.has(Directions.RIGHT)) {
+        } else if (this.directionsFromInput.has(Directions.RIGHT)) {
             position.properties.x += speed;
             direction.properties.x = Directions.RIGHT;
         } else {
             direction.properties.x = Directions.NONE;
         }
+    }
 
-        return true;
+    private onExit(entity: Entity, component: IsWalking) {
+        component.properties.status = StateStatus.FINISHED;
+        if (entity.hasComponent(IsWalking)) {
+            entity.removeComponent(IsWalking);
+        }
     }
 
     public update(now: number): void {
         this.query.execute().forEach((entity) => {
-            if (this.doClubAttack(entity)) {
+
+            if (this.input.ongoingActions.has(InputActions.ACTION_1)) {
+                entity.removeComponent(IsWalking);
+                entity.addComponent(IsAttackingWithClub);
                 return;
             }
 
-            if (this.doMove(entity)) {
-                if (entity.hasComponent(IsIdle)) {
-                    entity.removeComponent(IsIdle);
-                }
-            } else {
+            if (!this.input.areMovementKeysPressed()) {
                 if (entity.hasComponent(IsWalking)) {
                     entity.removeComponent(IsWalking);
-                    entity.addComponent(IsIdle, {
-                        state: 'idle',
-                        animationState: '',
-                        stateTick: 0,
-                        animationTick: 0
-                    });
+                    entity.addComponent(IsIdle);
                 }
+                return;
             }
+
+            if (!entity.hasComponent(IsWalking)) {
+                entity.addComponent(IsWalking);
+                entity.removeComponent(IsIdle);
+            }
+
+            const component = entity.getComponent(IsWalking);
+
+            if (component.properties.status === StateStatus.FINISHED) {
+                entity.removeComponent(IsWalking);
+                return;
+            }
+
+            if (component.properties.status === StateStatus.NOT_STARTED) {
+                this.onEnter(entity, component);
+            }
+
+            this.onUpdate(entity, component);
+
+            return true;
+
         });
     }
 }

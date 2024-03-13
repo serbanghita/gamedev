@@ -13,11 +13,13 @@ export default class StateManager {
 
     private queue: Map<string, StateInQueue> = new Map();
 
-    public registerState(state: State) {
+    public registerState(state: State): StateManager {
         this.states.set(state.id, state);
         if (state.isDefault) {
             this.defaultState = state;
         }
+
+        return this;
     }
 
     public getState(id: string): State

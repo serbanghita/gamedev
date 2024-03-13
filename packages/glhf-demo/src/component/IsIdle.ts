@@ -1,14 +1,32 @@
 import Component from "../../../glhf-ecs/src/Component";
+import {StateStatus} from "../state/state-status";
+import {extend} from "../utils";
 
-interface IsIdleState {
-    state: string;
-    animationState: string;
-    stateTick: number;
+interface IsIdleProps {
+    stateName: string;
+    animationStateName: string;
     animationTick: number;
+    tick: number;
+    status: StateStatus;
+    [key: string]: any;
 }
 
 export default class IsIdle extends Component {
-    constructor(public properties: IsIdleState) {
+    constructor(public properties: IsIdleProps) {
         super(properties);
+
+        this.init(properties);
+    }
+
+    public init(properties: IsIdleProps) {
+        const defaultProps = {
+            stateName: 'idle',
+            animationStateName: 'idle_down',
+            animationTick: 0,
+            tick: 0,
+            status: StateStatus.NOT_STARTED
+        };
+
+        this.properties = extend(defaultProps, properties);
     }
 }

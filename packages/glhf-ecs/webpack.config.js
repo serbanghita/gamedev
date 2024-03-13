@@ -1,23 +1,14 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./demo/demo.ts",
+    entry: "./src/index.ts",
     output: {
         filename: "bundle.js",
-        path: path.resolve(__dirname, "build/js"),
-        publicPath: "/js/"
+        path: path.resolve(__dirname, "build")
     },
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "inline-source-map",
-
-    devServer: {
-        open: true,
-        static: {
-            directory: path.join(__dirname, 'build'),
-            serveIndex: true,
-        },
-    },
 
     watch: false,
 

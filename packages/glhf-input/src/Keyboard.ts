@@ -32,6 +32,14 @@ export default class Keyboard {
         return this.ongoingActions.size > 0;
     }
 
+    public areMovementKeysPressed()
+    {
+        return this.ongoingActions.has(InputActions.MOVE_UP) ||
+            this.ongoingActions.has(InputActions.MOVE_DOWN) ||
+            this.ongoingActions.has(InputActions.MOVE_LEFT) ||
+            this.ongoingActions.has(InputActions.MOVE_RIGHT);
+    }
+
     public isBoundKey(keyCode: string) {
         return this.boundKeys.has(keyCode);
     }

@@ -1,15 +1,14 @@
-import Entity from "./Entity";
 import World from "./World";
 import Query from "./Query";
 
-export type SystemConstructor = new (world: World, properties?: {}) => System;
+// export type SystemConstructor = new (world: World, properties?: {}) => System;
 
-interface ISystemProps {
-    fps: number;
-}
+export default class System {
+    public constructor(public world: World, public query: Query, ...args: any[]) {
+    }
 
-export default abstract class System {
-    public abstract query: Query;
-
-    public abstract update(now: number): void;
+    public update(now: number): void
+    {
+        throw new Error(`System update() must be implemented.`)
+    }
 }

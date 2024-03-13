@@ -1,9 +1,3 @@
-export const enum PlayerState {
-    idle = 'idle',
-    walk = 'walk',
-    club_attack = 'club_attack'
-}
-
 export const enum PlayerAnimationState {
     "idle" = "idle",
     "walk_left" = "walk_left",

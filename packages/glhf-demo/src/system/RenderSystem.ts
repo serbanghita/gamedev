@@ -2,16 +2,16 @@ import Query from "../../../glhf-ecs/src/Query";
 import System from "../../../glhf-ecs/src/System";
 import {clearCtx, getCtx, renderImage} from "../../../glhf-renderer/src/canvas";
 import Position from "../../../glhf-component/src/Position";
-import Direction from "../../../glhf-component/src/Direction";
 import SpriteSheet, { IAnimation } from "../../../glhf-component/src/SpriteSheet";
-import State from "../../../glhf-component/src/State";
+import World from "../../../glhf-ecs/src/World";
 import IsWalking from "../component/IsWalking";
 import IsIdle from "../component/IsIdle";
+import IsAttackingWithClub from "../component/IsAttackingWithClub";
 
 export default class RenderSystem extends System {
 
-    public constructor(public query: Query, protected $foreground: HTMLCanvasElement) {
-        super();
+    public constructor(public world: World, public query: Query, protected $foreground: HTMLCanvasElement) {
+        super(world, query);
     }
 
     public update(now: number): void {
@@ -21,25 +21,28 @@ export default class RenderSystem extends System {
             const position = entity.getComponent(Position);
             const spriteSheet = entity.getComponent(SpriteSheet);
 
-            let state;
-            if (entity.hasComponent(IsWalking)) {
-                state = entity.getComponent(IsWalking);
+            let component;
+
+            if (entity.hasComponent(IsAttackingWithClub)) {
+                component = entity.getComponent(IsAttackingWithClub);
+            } else if (entity.hasComponent(IsWalking)) {
+                component = entity.getComponent(IsWalking);
             } else if (entity.hasComponent(IsIdle)) {
-                state = entity.getComponent(IsIdle);
+                component = entity.getComponent(IsIdle);
             } else {
                 throw new Error(`Entity ${entity.id} has no default state to render.`);
             }
 
 
-            const animation = spriteSheet.properties.animations.get(state.properties.animationState) as IAnimation;
-            if (state.properties.animationTick >= animation.frames.length) {
-                state.properties.animationTick = 0;
+            const animation = spriteSheet.properties.animations.get(component.properties.animationStateName) as IAnimation;
+            if (component.properties.animationTick >= animation.frames.length) {
+                component.properties.animationTick = 0;
             }
 
-            const animationFrame = animation.frames[state.properties.animationTick];
+            const animationFrame = animation.frames[component.properties.animationTick];
 
             if (!animationFrame) {
-                throw new Error(`Cannot find animation frame ${state.properties.animationTick} for "${state.properties.animationState}".`);
+                throw new Error(`Cannot find animation frame ${component.properties.animationTick} for "${component.properties.animationStateName}".`);
             }
 
             renderImage(

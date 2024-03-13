@@ -4,13 +4,14 @@ export enum Directions {
     NONE, LEFT, RIGHT, UP, DOWN
 }
 
-export interface IDirectionProps {
+export type DirectionProps = {
     x: Directions.LEFT | Directions.RIGHT | Directions.NONE
-    y: Directions.UP | Directions.DOWN | Directions.NONE
+    y: Directions.UP | Directions.DOWN | Directions.NONE,
+    literal: 'up' | 'down' | 'left' | 'right' | ''
 }
 
 export default class Direction extends Component {
-    constructor(public properties: IDirectionProps) {
+    constructor(public properties: DirectionProps) {
         super(properties);
     }
 }

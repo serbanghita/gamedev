@@ -2,7 +2,7 @@ import Component from "../../../glhf-ecs/src/Component";
 import {StateStatus} from "../state/state-status";
 import {extend} from "../utils";
 
-interface IsWalkingProps {
+interface IsAttackingWithClubProps {
     stateName: string;
     animationStateName: string;
     animationTick: number;
@@ -11,17 +11,17 @@ interface IsWalkingProps {
     [key: string]: any;
 }
 
-export default class IsWalking extends Component {
-    constructor(public properties: IsWalkingProps) {
+export default class IsAttackingWithClub extends Component {
+    constructor(public properties: IsAttackingWithClubProps) {
         super(properties);
 
         this.init(properties);
     }
 
-    public init(properties: IsWalkingProps) {
+    public init(properties: IsAttackingWithClubProps) {
         const defaultProps = {
-            stateName: 'walking',
-            animationStateName: 'walk_down',
+            stateName: 'club_attack_one',
+            animationStateName: 'club_attack_one_down',
             animationTick: 0,
             tick: 0,
             status: StateStatus.NOT_STARTED

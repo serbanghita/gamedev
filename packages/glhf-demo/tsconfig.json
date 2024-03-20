@@ -12,6 +12,9 @@
     "paths": {
         "@glhf/bitmask/*": ["../../glhf-bitmask/src/*"],
         "@glhf/ecs/*": ["../../glhf-ecs/src/*"],
+        "@glhf/component/*": ["../../glhf-component/src/*"],
+        "@glhf/input/*": ["../../glhf-input/src/*"],
+        "@glhf/renderer/*": ["../../glhf-renderer/src/*"],
     }
   },
   "include": [

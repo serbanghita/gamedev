@@ -1,4 +1,5 @@
 const path = require("path");
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
     entry: "./src/index.ts",
@@ -26,7 +27,10 @@ module.exports = {
     },
 
     resolve: {
-        extensions: [".ts", ".json", ".js"]
+        extensions: [".ts", ".json", ".js"],
+        // https://github.com/dividab/tsconfig-paths-webpack-plugin
+        // This plugin helps Webpack reading modules from tsconfig.json "paths".
+        plugins: [new TsconfigPathsPlugin({})]
     },
 
     module: {

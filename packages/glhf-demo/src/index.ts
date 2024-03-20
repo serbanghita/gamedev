@@ -1,14 +1,12 @@
-import ComponentRegistry from "../../glhf-ecs/src/ComponentRegistry";
 import World from "../../glhf-ecs/src/World";
 import Body from "../../glhf-component/src/Body";
 import Position from "../../glhf-component/src/Position";
 import Direction, {Directions} from "../../glhf-component/src/Direction";
 import Keyboard from "../../glhf-component/src/Keyboard";
 import Renderable from "../../glhf-component/src/Renderable";
-import State from "../../glhf-component/src/State";
 import SpriteSheet, {ISpriteSheetAnimation} from "../../glhf-component/src/SpriteSheet";
-import {clearCtx, createCanvas, getCtx, renderImage} from "../../glhf-renderer/src/canvas";
-import {createWrapperElement} from "../../glhf-renderer/src/ui";
+import {createCanvas} from "@glhf/renderer/canvas";
+import {createWrapperElement} from "@glhf/renderer/ui";
 import {loadLocalImage} from "../../glhf-assets/src";
 import {default as KeyboardInput, InputActions} from "../../glhf-input/src/Keyboard";
 import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";

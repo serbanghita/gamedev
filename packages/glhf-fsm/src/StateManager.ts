@@ -49,7 +49,12 @@ export default class StateManager {
     }
 
     public unregisterStateWithName(stateName: string) {
+        const state = this.states.get(stateName);
+        if (!state) { return; }
         this.states.delete(stateName);
+        if (this.defaultState?.id === state.id) {
+            this.defaultState = undefined;
+        }
     }
 
     public queueState(id: string, ...args: any[]): StateManager {

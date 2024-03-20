@@ -1,14 +1,14 @@
 import Component from "./Component";
-import {addBit, hasBit, removeBit} from "../../glhf-bitmask/src/bitmask";
+import {addBit, hasBit, removeBit} from "@glhf/bitmask/bitmask";
 import World from "./World";
-import StateManager from "../../glhf-fsm/src/StateManager";
 
 export default class Entity {
+    // Bitmask for storing Entity's components.
     public componentsBitmask = 0n;
     // Cache of Component instances.
     public components = new Map<string, Component>();
 
-    constructor(public world: World, public fsm: StateManager, public id: string) {}
+    constructor(public world: World, public id: string) {}
 
     public addComponent<T extends typeof Component>(declaration: T, properties: Record<string, any> = {}): Entity
     {

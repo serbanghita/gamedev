@@ -1,6 +1,7 @@
 .idea
 .tmp
 node_modules
+.nx/cache
 packages/glhf-demo/assets/*
 /packages/glhf-demo/build
 /packages/glhf-demo/src/assets/sprites/kil.png

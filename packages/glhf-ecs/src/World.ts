@@ -2,8 +2,7 @@ import Entity from "./Entity";
 import System from "./System";
 import Query, {IQueryFilters} from "./Query";
 import Component from "./Component";
-import { hasBit } from "../../glhf-bitmask/src/bitmask";
-import StateManager from "../../glhf-fsm/src/StateManager";
+import { hasBit } from "@glhf/bitmask/bitmask";
 import ComponentRegistry from "./ComponentRegistry";
 
 export default class World {
@@ -48,7 +47,7 @@ export default class World {
             throw new Error(`Entity with the id "${id}" already exists.`);
         }
 
-        const entity = new Entity(this, new StateManager(), id);
+        const entity = new Entity(this, id);
 
         this.entities.set(entity.id, entity);
         this.notifyQueriesOfEntityCandidacy(entity);

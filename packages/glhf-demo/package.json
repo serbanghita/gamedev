@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "build": "webpack --mode development",
-    "dev": "webpack serve --mode development"
+    "dev": "webpack serve --mode development",
+    "test": "echo \"Error: no test specified for glhf-demo yet.\""
   },
   "author": "Serban Ghita",
   "license": "ISC",

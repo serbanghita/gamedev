@@ -128,7 +128,7 @@ describe('StateManager', () => {
         sm.unregisterStateWithName('idle');
 
         expect(() => sm.getState('idle')).toThrowError('Requested state idle is not registered.');
-        expect(() => sm.getDefaultState()).toThrowError('No "default" state has been set.');
+            expect(() => sm.getDefaultState()).toThrowError('No "default" state has been set.');
         expect(() => sm.getCurrentState()).toThrowError('No "current" state has been set yet.');
     });
 

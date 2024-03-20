@@ -5,7 +5,7 @@
     "tsc": "tsc",
     "build": "webpack --mode development",
     "dev": "webpack --mode development --watch",
-    "test": "jest"
+    "test": "echo \"Error: no test specified for glhf-renderer yet.\""
   },
   "author": "Serban Ghita",
   "license": "MIT",

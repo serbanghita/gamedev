@@ -40,6 +40,10 @@ export default class RenderSystem extends System {
             }
 
             const animationFrame = animation.frames[component.properties.animationTick];
+            const hitboxOffset = animation.hitboxOffset;
+
+            const destPositionX = hitboxOffset?.x ? position.properties.x - hitboxOffset.x : position.properties.x;
+            const destPositionY = hitboxOffset?.y ? position.properties.y - hitboxOffset.y : position.properties.y;
 
             if (!animationFrame) {
                 throw new Error(`Cannot find animation frame ${component.properties.animationTick} for "${component.properties.animationStateName}".`);
@@ -54,8 +58,8 @@ export default class RenderSystem extends System {
                 animationFrame.width,
                 animationFrame.height,
                 // dest
-                position.properties.x,
-                position.properties.y,
+                destPositionX,
+                destPositionY,
                 animationFrame.width,
                 animationFrame.height
             );

@@ -1,4 +1,4 @@
-import World from "../../glhf-ecs/src/World";
+import World from "@glhf/ecs/World";
 import Body from "../../glhf-component/src/Body";
 import Position from "../../glhf-component/src/Position";
 import Direction, {Directions} from "../../glhf-component/src/Direction";
@@ -19,6 +19,7 @@ import WalkingSystem from "./system/WalkingSystem";
 import CurrentState from "./component/CurrentState";
 import IsAttackingWithClub from "./component/IsAttackingWithClub";
 import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
+import {getDefaultAnimationName} from "@glhf/renderer/animation";
 
 // 0. Create the UI and canvas.
 const $wrapper = createWrapperElement('game-wrapper', 640, 480);
@@ -29,9 +30,11 @@ $wrapper.appendChild($background);
 document.body.appendChild($wrapper);
 
 // 1. Load sprite sheets IMGs.
-const kilSheetData = require("./assets/sprites/kil.png");
-const kilSheetAnimations = require("./assets/sprites/kil_animations.json") as ISpriteSheetAnimation[];
-const kilDefaultAnimationFrameName = (kilSheetAnimations.find((animationFrame) => animationFrame.defaultAnimation) as ISpriteSheetAnimation)['name'];
+const kilSheetImg = require("./assets/sprites/kil.png");
+const kilSheetAnimations = require("./assets/sprites/kil.animations.json") as ISpriteSheetAnimation[];
+
+const dinoBossSheetImg = require("./assets/sprites/dino-boss.png");
+const dinoBossSheetAnimations = require("./assets/sprites/dino-boss.animations.json") as ISpriteSheetAnimation[];
 
 // 2. Load JSON animations for sprite sheets.
 // 3. Load JSON map declarations (Tiled).
@@ -61,12 +64,12 @@ world.registerComponent(Body)
     .registerComponent(IsAttackingWithClub)
     .registerComponent(CurrentState);
 
-world.createEntity("dino")
-    .addComponent(Body, { width: 10, height: 20 });
+// world.createEntity("dino")
+//     .addComponent(Body, { width: 16, height: 16 });
 
 world.createEntity("player")
-    .addComponent(Body, { width: 30, height: 40 })
-    .addComponent(Position, { x: 0, y: 0 })
+    .addComponent(Body, { width: 16, height: 16 })
+    .addComponent(Position, { x: 100, y: 100 })
     .addComponent(Direction, { x: Directions.NONE, y: Directions.NONE })
     .addComponent(Keyboard, { up: "w", down: "s", left: "a", right: "d" })
     .addComponent(Renderable)
@@ -74,14 +77,33 @@ world.createEntity("player")
         name: 'kil',
         offset_x: 128,
         offset_y: 0,
-        img: loadLocalImage(kilSheetData),
+        img: loadLocalImage(kilSheetImg),
         animationsDeclaration: kilSheetAnimations,
         animations: new Map(),
         animationCurrentFrame: '',
         animationDefaultFrame: '',
     }).addComponent(IsIdle, {
-        animationStateName: kilDefaultAnimationFrameName,
-    }).addComponent(CurrentState, { stateName: 'IsIdle' })
+        animationStateName: getDefaultAnimationName(kilSheetAnimations),
+    });
+
+world.createEntity("dino-boss")
+    .addComponent(Body, { width: 16, height: 16 })
+    .addComponent(Position, { x: 200, y: 100 })
+    .addComponent(Direction, { x: Directions.NONE, y: Directions.NONE })
+    .addComponent(Renderable)
+    .addComponent(Keyboard, { up: "i", down: "k", left: "j", right: "l" })
+    .addComponent(SpriteSheet, {
+        name: 'dino-boss',
+        offset_x: 128,
+        offset_y: 0,
+        img: loadLocalImage(dinoBossSheetImg),
+        animationsDeclaration: dinoBossSheetAnimations,
+        animations: new Map(),
+        animationCurrentFrame: '',
+        animationDefaultFrame: '',
+    }).addComponent(IsIdle, {
+    animationStateName: getDefaultAnimationName(dinoBossSheetAnimations),
+});
 
 world.createQuery("keyboard-query", { all: [Keyboard] });
 world.createQuery("idle-query", {all: [IsIdle]});

@@ -43,7 +43,7 @@ export default class IdleSystem extends System {
 
             const component = entity.getComponent(IsIdle);
 
-            console.log('IsIdle', entity.id);
+            // console.log('IsIdle', entity.id);
 
             if (component.properties.status === StateStatus.FINISHED) {
                 console.log('IsIdle finished and removed');

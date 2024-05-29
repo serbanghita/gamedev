@@ -15,9 +15,9 @@ export default class RenderSystem extends System {
     }
 
     public update(now: number): void {
+        clearCtx(getCtx(this.$foreground), 0, 0, 640, 480);
+        
         this.query.execute().forEach(entity => {
-            clearCtx(getCtx(this.$foreground), 0, 0, 640, 480);
-
             const position = entity.getComponent(Position);
             const spriteSheet = entity.getComponent(SpriteSheet);
 

@@ -145,7 +145,7 @@ export default class PlayerKeyboardSystem extends System {
 
             if (!entity.hasComponent(IsWalking)) {
                 entity.addComponent(IsWalking);
-                entity.removeComponent(IsIdle);
+                // entity.removeComponent(IsIdle);
             }
 
             const component = entity.getComponent(IsWalking);

@@ -45,7 +45,7 @@ export default class WalkingSystem extends System {
         this.query.execute().forEach(entity => {
             const component = entity.getComponent(IsWalking);
 
-            console.log('IsWalking', entity.id);
+            // console.log('IsWalking', entity.id);
 
             if (component.properties.status === StateStatus.FINISHED) {
                 entity.removeComponent(IsWalking);

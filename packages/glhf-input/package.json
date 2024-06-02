@@ -1,9 +1,9 @@
 {
   "name": "glhf-input",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Library for managing Input (Keyboard, Mouse, Controllers)",
   "scripts": {
+    "build": "echo \"Error: no build specified for glhf-input yet.\"",
     "test": "echo \"Error: no test specified for glhf-input yet.\""
   },
   "dependencies": {
@@ -22,6 +22,6 @@
     "ts-jest": "^28.0.8",
     "ts-node": "^10.9.1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
+  "license": "MIT"
 }

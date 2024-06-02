@@ -4,7 +4,7 @@ import Component from "./Component";
 export default class ComponentRegistry {
   private bitmask: bigint = 1n;
   private static instance: ComponentRegistry;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   private constructor() {}
 
   public static getInstance(): ComponentRegistry {

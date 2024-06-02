@@ -3,10 +3,10 @@
   "description": "Finite State Machine that supports registering custom states, state priority and queued states.",
   "version": "1.0.0",
   "scripts": {
-    "tsc": "tsc",
+    "build": "echo \"Error: no build specified for glhf-assets yet.\"",
     "test": "jest"
   },
-  "author": "Serban Ghita",
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "license": "MIT",
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.33.1",

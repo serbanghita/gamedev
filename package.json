@@ -1,11 +1,31 @@
 {
   "name": "glhf",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Game library for 2d games written in Typescript.",
+  "keywords": [
+    "game engine",
+    "engine",
+    "game library"
+  ],
+  "homepage": "https://github.com/serbanghita/glhf",
+  "license": "MIT",
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {},
+  "scripts": {
+    "build": "nx run-many -t build",
+    "test": "nx run-many -t test",
+    "lint": "nx run-many -t lint"
+  },
   "devDependencies": {
-    "lerna": "^8.1.2"
-  }
+    "@nx/esbuild": "^19.1.1",
+    "@nx/eslint": "^19.1.1",
+    "esbuild": "^0.19.2",
+    "eslint": "~8.57.0",
+    "jest": "^29.4.1",
+    "nx": "19.1.1"
+  },
+  "nx": {},
+  "dependencies": {}
 }

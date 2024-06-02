@@ -1,11 +1,11 @@
 {
   "name": "glhf-component",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Generic components for the ECS library",
   "scripts": {
+    "build": "echo \"Error: no build specified for glhf-component yet.\"",
     "test": "echo \"Error: no test specified for glhf-component yet.\""
   },
-  "author": "Serban Ghita",
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "license": "MIT"
 }

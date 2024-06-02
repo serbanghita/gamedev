@@ -17,7 +17,7 @@ describe('Entity', () => {
         reg.registerComponent(Position);
 
         const entity = new Entity(world,"test");
-        const spy = jest.spyOn(world, 'notifyQueriesOfEntityComponentAddition');
+        const spy = vi.spyOn(world, 'notifyQueriesOfEntityComponentAddition');
         entity.addComponent(Body, {width: 10, height: 20}); // 1n
         expect(spy).toHaveBeenCalledWith(entity, entity.getComponent(Body));
         entity.addComponent(Position, {x: 1, y: 2}); // 2n
@@ -56,7 +56,7 @@ describe('Entity', () => {
         reg.registerComponent(Body);
 
         const entity = new Entity(world, "test");
-        const spy = jest.spyOn(world, 'notifyQueriesOfEntityComponentRemoval');
+        const spy = vi.spyOn(world, 'notifyQueriesOfEntityComponentRemoval');
         entity.addComponent(Body, {width: 10, height: 20});
         entity.removeComponent(Body);
         expect(spy).toHaveBeenCalledWith(entity, entity.getComponent(Body));

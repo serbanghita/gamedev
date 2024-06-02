@@ -74,15 +74,21 @@ export function hasAnyOfBits(bitmask: bigint, bits: bigint): boolean {
     return (bitmask & bits) !== 0n;
 }
 
-// https://github.com/microsoft/TypeScript/issues/42125
+
 
 type Bitmask = number | bigint;
 
-export function toggleAllBits(bitmask: any): Bitmask {
+// https://github.com/microsoft/TypeScript/issues/42125
+// https://github.com/microsoft/TypeScript/issues/39569#issuecomment-657235599
+export function toggleAllBits(bitmask: number): number;
+export function toggleAllBits(bitmask: bigint): bigint;
+export function toggleAllBits(bitmask: Bitmask): Bitmask {
     const oneBit = (typeof bitmask === "bigint" ? 1n : 1) as typeof bitmask;
     let start = oneBit;
     while(start <= bitmask) {
+        // @ts-expect-error See the GH links above.
         bitmask ^= start;
+        // @ts-expect-error See the GH links above.
         start = start << oneBit;
     }
     return bitmask;

@@ -2,10 +2,11 @@
   "name": "glhf-assets",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
+    "build": "echo \"Error: no build specified for glhf-assets yet.\"",
     "test": "echo \"Error: no test specified for glhf-assets yet.\""
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
+  "license": "MIT"
 }

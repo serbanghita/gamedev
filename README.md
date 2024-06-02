@@ -27,6 +27,12 @@ Library is currently under development. \
 You can see the progress by following me at https://www.youtube.com/@SerbanTV \
 Catch me on the [Discord server](https://discord.gg/Vur9NaF) to discuss stuff about game dev, ECS, etc.
 
+## New repo
+
+```
+npm install --save-dev eslint @eslint/js @types/eslint__js typescript typescript-eslint
+```
+
 ## Bootstrapping a game (wip)
 
 ```ts

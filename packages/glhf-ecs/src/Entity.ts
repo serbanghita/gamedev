@@ -10,7 +10,7 @@ export default class Entity {
 
     constructor(public world: World, public id: string) {}
 
-    public addComponent<T extends typeof Component>(declaration: T, properties: Record<string, any> = {}): Entity
+    public addComponent<T extends typeof Component>(declaration: T, properties: Record<string, never> = {}): Entity
     {
         let instance = this.components.get(declaration.name);
         // If the Component's instance is already in our cache, just re-use the instance and lazy init it.

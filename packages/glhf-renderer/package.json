@@ -2,7 +2,6 @@
   "name": "glhf-renderer",
   "version": "1.0.0",
   "scripts": {
-    "tsc": "tsc",
     "build": "webpack --mode development",
     "dev": "webpack --mode development --watch",
     "test": "echo \"Error: no test specified for glhf-renderer yet.\""

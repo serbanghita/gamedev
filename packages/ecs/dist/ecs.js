@@ -14,7 +14,6 @@
 
   // src/ComponentRegistry.ts
   var ComponentRegistry = class _ComponentRegistry {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     constructor() {
       this.bitmask = 1n;
     }
@@ -33,7 +32,7 @@
     }
   };
 
-  // ../glhf-bitmask/src/bitmask.ts
+  // ../bitmask/src/bitmask.ts
   function addBit(bitmasks, bit) {
     bitmasks |= bit;
     return bitmasks;
@@ -190,10 +189,12 @@
 
   // src/System.ts
   var System = class {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     constructor(world, query, ...args) {
       this.world = world;
       this.query = query;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     update(now) {
       throw new Error(`System update() must be implemented.`);
     }

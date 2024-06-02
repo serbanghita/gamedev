@@ -1,4 +1,4 @@
-import Component from "../../glhf-ecs/src/Component";
+import Component from "../../ecs/src/Component";
 
 export interface IBodyProps {
     width: number;

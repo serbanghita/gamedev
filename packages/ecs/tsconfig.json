@@ -10,7 +10,8 @@
     "baseUrl": "src",
     "types": ["vitest/globals"],
     "paths": {
-        "@glhf/bitmask/*": ["../../glhf-bitmask/src/*"]
+        "@serbanghita-gamedev/bitmask": ["../../bitmask"],
+        "@serbanghita-gamedev/component": ["../../component"]
     }
   },
   "include": [

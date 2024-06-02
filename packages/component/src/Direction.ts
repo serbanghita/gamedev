@@ -1,4 +1,4 @@
-import Component from "../../glhf-ecs/src/Component";
+import Component from "../../ecs/src/Component";
 
 export enum Directions {
     NONE, LEFT, RIGHT, UP, DOWN

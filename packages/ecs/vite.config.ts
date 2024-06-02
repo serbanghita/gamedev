@@ -6,7 +6,8 @@ export default defineConfig({
     plugins: [tsconfigPaths()],
     test: {
         alias: {
-            '@glhf/bitmask/': path.join(__dirname,  '../glhf-bitmask/src/')
+            '@serbanghita-gamedev/bitmask/': path.join(__dirname,  '../bitmask/'),
+            '@serbanghita-gamedev/component/': path.join(__dirname,  '../component/')
         }
     }
 })

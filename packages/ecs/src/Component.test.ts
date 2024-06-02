@@ -1,4 +1,4 @@
-import Position from "../../glhf-component/src/Position"
+import {Position} from "@serbanghita-gamedev/component";
 
 describe('Component', () => {
     it('properties', () => {

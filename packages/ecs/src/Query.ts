@@ -1,6 +1,6 @@
 import Entity from "./Entity";
 
-import {addBit, hasAnyOfBits, hasBit} from "../../glhf-bitmask/src/bitmask";
+import {addBit, hasAnyOfBits, hasBit} from "@serbanghita-gamedev/bitmask";
 import Component from "./Component";
 import World from "./World";
 

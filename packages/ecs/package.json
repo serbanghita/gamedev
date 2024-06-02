@@ -1,9 +1,17 @@
 {
-  "name": "glhf-ecs",
+  "name": "@serbanghita-gamedev/ecs",
   "description": "ECS library",
+  "keywords": [
+    "ecs",
+    "entity component system"
+  ],
   "version": "1.0.0",
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "esbuild ./src/index.ts --bundle --outfile=dist/ecs.js",
     "test": "vitest --globals --config vite.config.ts",

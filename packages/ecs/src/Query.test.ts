@@ -1,9 +1,6 @@
 import Query from "./Query";
 import ComponentRegistry from "./ComponentRegistry";
-import Body from "../../glhf-component/src/Body";
-import Position from "../../glhf-component/src/Position";
-import Keyboard from "../../glhf-component/src/Keyboard";
-import Renderable from "../../glhf-component/src/Renderable";
+import {Body, Position, Keyboard, Renderable} from "@serbanghita-gamedev/component";
 import World from "./World";
 
 describe(("Query"), () => {

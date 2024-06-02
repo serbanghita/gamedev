@@ -1,6 +1,5 @@
 import ComponentRegistry from "./ComponentRegistry";
-import Body from "../../glhf-component/src/Body";
-import Position from "../../glhf-component/src/Position";
+import {Body, Position} from "@serbanghita-gamedev/component";
 
 describe('ComponentRegistry', () => {
     it('constructor', () => {

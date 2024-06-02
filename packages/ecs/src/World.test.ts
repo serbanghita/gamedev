@@ -1,6 +1,5 @@
-import Position from "../../glhf-component/src/Position";
+import {Position, Renderable} from "@serbanghita-gamedev/component";
 import World from "./World";
-import Renderable from "./../../glhf-component/src/Renderable";
 import ComponentRegistry from "./ComponentRegistry";
 
 describe("World", () => {

@@ -1,7 +1,8 @@
 {
-  "name": "glhf-component",
+  "name": "@serbanghita-gamedev/component",
   "version": "1.0.0",
   "description": "Generic components for the ECS library",
+  "main": "./src/index.ts",
   "scripts": {
     "build": "echo \"Error: no build specified for glhf-component yet.\"",
     "test": "echo \"Error: no test specified for glhf-component yet.\""

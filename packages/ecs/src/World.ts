@@ -2,7 +2,7 @@ import Entity from "./Entity";
 import System from "./System";
 import Query, {IQueryFilters} from "./Query";
 import Component from "./Component";
-import { hasBit } from "@glhf/bitmask/bitmask";
+import { hasBit } from "@serbanghita-gamedev/bitmask";
 import ComponentRegistry from "./ComponentRegistry";
 
 export default class World {

@@ -1,5 +1,5 @@
 import Component from "./Component";
-import {addBit, hasBit, removeBit} from "@glhf/bitmask/bitmask";
+import {addBit, hasBit, removeBit} from "@serbanghita-gamedev/bitmask";
 import World from "./World";
 
 export default class Entity {

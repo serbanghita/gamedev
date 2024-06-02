@@ -2,7 +2,7 @@
 .tmp
 node_modules
 .nx/cache
-packages/glhf-demo/assets/*
-packages/glhf-demo/build
+packages/demo/assets/*
+packages/demo/build
 packages/*/src/*.js
 packages/*/src/*.js.map

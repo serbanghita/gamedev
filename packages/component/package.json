@@ -1,12 +1,27 @@
 {
   "name": "@serbanghita-gamedev/component",
-  "version": "1.0.0",
   "description": "Generic components for the ECS library",
+  "keywords": ["ecs", "components"],
+  "version": "0.0.1",
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "main": "./src/index.ts",
   "scripts": {
-    "build": "echo \"Error: no build specified for glhf-component yet.\"",
-    "test": "echo \"Error: no test specified for glhf-component yet.\""
+    "build": "echo \"Error: no build specified for @serbanghita-gamedev/component yet.\"",
+    "test": "echo \"Error: no test specified for @serbanghita-gamedev/component yet.\"",
+    "lint": "eslint ./src"
   },
-  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
-  "license": "MIT"
+  "devDependencies": {
+    "@eslint/js": "^9.4.0",
+    "@types/eslint__js": "^8.42.3",
+    "esbuild": "0.21.4",
+    "eslint": "^9.4.0",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.11.0",
+    "vitest": "^1.6.0"
+  }
 }

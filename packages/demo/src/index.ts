@@ -1,14 +1,10 @@
-import World from "@glhf/ecs/World";
-import Body from "../../glhf-component/src/Body";
-import Position from "../../glhf-component/src/Position";
-import Direction, {Directions} from "../../glhf-component/src/Direction";
-import Keyboard from "../../glhf-component/src/Keyboard";
-import Renderable from "../../glhf-component/src/Renderable";
-import SpriteSheet, {ISpriteSheetAnimation} from "../../glhf-component/src/SpriteSheet";
-import {createCanvas} from "@glhf/renderer/canvas";
-import {createWrapperElement} from "@glhf/renderer/ui";
-import {loadLocalImage} from "../../glhf-assets/src";
-import {default as KeyboardInput, InputActions} from "../../glhf-input/src/Keyboard";
+import World from "../../ecs/src/World";
+import {Body, Position,  Direction, Directions, Keyboard, Renderable, SpriteSheet, ISpriteSheetAnimation} from "@serbanghita-gamedev/component";
+
+import {createCanvas, createWrapperElement} from "@serbanghita-gamedev/renderer";
+
+import {loadLocalImage} from "@serbanghita-gamedev/assets";
+import {Keyboard as KeyboardInput, InputActions} from "@serbanghita-gamedev/input";
 import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
 import RenderSystem from "./system/RenderSystem";
 import PreRenderSystem from "./system/PreRenderSystem";
@@ -19,7 +15,7 @@ import WalkingSystem from "./system/WalkingSystem";
 import CurrentState from "./component/CurrentState";
 import IsAttackingWithClub from "./component/IsAttackingWithClub";
 import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
-import {getDefaultAnimationName} from "@glhf/renderer/animation";
+import {getDefaultAnimationName} from "@serbanghita-gamedev/renderer";
 
 // 0. Create the UI and canvas.
 const $wrapper = createWrapperElement('game-wrapper', 640, 480);
@@ -30,10 +26,14 @@ $wrapper.appendChild($background);
 document.body.appendChild($wrapper);
 
 // 1. Load sprite sheets IMGs.
-const kilSheetImg = require("./assets/sprites/kil.png");
-const kilSheetAnimations = require("./assets/sprites/kil.animations.json") as ISpriteSheetAnimation[];
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const kilSheetImg = require("./assets/sprites/kil.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const kilSheetAnimations = require("./assets/sprites/kil.animations.json") as ISpriteSheetAnimation[];
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const dinoBossSheetImg = require("./assets/sprites/dino-boss.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const dinoBossSheetAnimations = require("./assets/sprites/dino-boss.animations.json") as ISpriteSheetAnimation[];
 
 // 2. Load JSON animations for sprite sheets.
@@ -69,7 +69,7 @@ world.registerComponent(Body)
 
 world.createEntity("player")
     .addComponent(Body, { width: 16, height: 16 })
-    .addComponent(Position, { x: 100, y: 100 })
+    .addComponent(Position, { x: 0, y: 0 })
     .addComponent(Direction, { x: Directions.NONE, y: Directions.NONE })
     .addComponent(Keyboard, { up: "w", down: "s", left: "a", right: "d" })
     .addComponent(Renderable)
@@ -88,7 +88,7 @@ world.createEntity("player")
 
 world.createEntity("dino-boss")
     .addComponent(Body, { width: 16, height: 16 })
-    .addComponent(Position, { x: 200, y: 100 })
+    .addComponent(Position, { x: 100, y: 0 })
     .addComponent(Direction, { x: Directions.NONE, y: Directions.NONE })
     .addComponent(Renderable)
     .addComponent(Keyboard, { up: "i", down: "k", left: "j", right: "l" })
@@ -136,7 +136,7 @@ const loop = (now: DOMHighResTimeStamp) => {
 window.requestAnimationFrame(loop);
 
 
-// @ts-ignore
+// @ts-expect-error I'm too lazy to typehint window.
 window['engine'] = {
     world
 };

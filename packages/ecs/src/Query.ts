@@ -21,7 +21,7 @@ export default class Query {
     public any = 0n;
     public none = 0n;
     private hasExecuted = false;
-    public dataSet: Entity[] = [];
+    public dataSet: Map<string, Entity> = new Map();
 
 
     /**
@@ -65,9 +65,9 @@ export default class Query {
     /**
      * Set only the entities that correspond to the filters given.
      */
-    public execute(): Entity[] {
+    public execute(): Map<string, Entity> {
         if (!this.hasExecuted) {
-            this.dataSet = this.dataSet.filter((entity) => this.match(entity));
+            this.dataSet = new Map([...this.dataSet].filter(([id, entity]) => this.match(entity)));
             this.hasExecuted = true;
         }
 
@@ -95,7 +95,7 @@ export default class Query {
 
     public candidate(entity: Entity) {
         if (this.match(entity)) {
-            this.dataSet.push(entity);
+            this.dataSet.set(entity.id, entity);
             return true;
         }
 
@@ -104,13 +104,10 @@ export default class Query {
 
     public add(entity: Entity)
     {
-        this.dataSet.push(entity);
+        this.dataSet.set(entity.id, entity);
     }
 
     public remove(entity: Entity) {
-        const index = this.dataSet.indexOf(entity);
-        if (index !== -1) {
-            this.dataSet.splice(index, 1);
-        }
+        this.dataSet.delete(entity.id);
     }
 }

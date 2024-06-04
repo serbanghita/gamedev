@@ -1,15 +1,10 @@
-import Entity from "@glhf/ecs/Entity";
-import Query from "../../../glhf-ecs/src/Query";
-import System from "../../../glhf-ecs/src/System";
-import {InputActions, default as KeyboardInput} from "../../../glhf-input/src/Keyboard";
-import Keyboard from "../../../glhf-component/src/Keyboard";
-import Position from "../../../glhf-component/src/Position";
-import Direction, {Directions} from "../../../glhf-component/src/Direction";
+import {Entity, Query, System, World} from "@serbanghita-gamedev/ecs";
+import {InputActions, Keyboard as KeyboardInput} from "@serbanghita-gamedev/input";
+import {Keyboard, Position, Direction, Directions} from "@serbanghita-gamedev/component";
 import IsWalking from "../component/IsWalking";
 import IsIdle from "../component/IsIdle";
-import World from "../../../glhf-ecs/src/World";
-import {StateStatus} from "../state/state-status";
 import IsAttackingWithClub from "../component/IsAttackingWithClub";
+import {StateStatus} from "../state/state-status";
 
 export default class PlayerKeyboardSystem extends System {
     private directionsFromInput: Set<Directions> = new Set([]);

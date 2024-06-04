@@ -1,7 +1,7 @@
-import Direction, { Directions } from "../../../glhf-component/src/Direction";
-import System from "../../../glhf-ecs/src/System";
+import {Direction, Directions } from "@serbanghita-gamedev/component";
+import {Entity, System} from "@serbanghita-gamedev/ecs";
 import {StateStatus} from "../state/state-status";
-import Entity from "../../../glhf-ecs/src/Entity";
+
 import IsAttackingWithClub from "../component/IsAttackingWithClub";
 
 export default class AttackingWithClubSystem extends System {

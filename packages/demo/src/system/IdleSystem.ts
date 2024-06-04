@@ -1,6 +1,5 @@
-import Direction from "../../../glhf-component/src/Direction";
-import System from "../../../glhf-ecs/src/System";
-import Entity from "../../../glhf-ecs/src/Entity";
+import {Direction} from "@serbanghita-gamedev/component";
+import {System, Entity} from "@serbanghita-gamedev/ecs";
 import IsIdle from "../component/IsIdle";
 import {StateStatus} from "../state/state-status";
 

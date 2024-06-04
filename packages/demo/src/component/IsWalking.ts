@@ -1,4 +1,4 @@
-import Component from "../../../glhf-ecs/src/Component";
+import {Component} from "@serbanghita-gamedev/ecs";
 import {StateStatus} from "../state/state-status";
 import {extend} from "../utils";
 
@@ -8,7 +8,7 @@ interface IsWalkingProps {
     animationTick: number;
     tick: number;
     status: StateStatus;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export default class IsWalking extends Component {

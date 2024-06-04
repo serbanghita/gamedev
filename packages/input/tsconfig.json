@@ -12,16 +12,12 @@
       "es2015",
       "dom"
     ]
-    //    "paths": {
-//        "@glhf/bitmask/*": ["../../glhf-bitmask/src/*"],
-//        "@glhf/ecs/*": ["../../glhf-ecs/src/*"],
-//    }
   },
   "include": [
     "src/index.ts"
   ],
   "exclude": [
     "node_modules",
-    "build"
+    "dist"
   ]
 }

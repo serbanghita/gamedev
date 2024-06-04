@@ -5,6 +5,7 @@
     "ecs",
     "entity component system"
   ],
+  "main": "./src/index.ts",
   "version": "1.0.0",
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "license": "MIT",

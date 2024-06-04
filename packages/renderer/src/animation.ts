@@ -1,4 +1,4 @@
-import {ISpriteSheetAnimation} from "../../glhf-component/src/SpriteSheet";
+import {ISpriteSheetAnimation} from "../../component/src";
 
 export function getDefaultAnimationName(animations: ISpriteSheetAnimation[]): string
 {

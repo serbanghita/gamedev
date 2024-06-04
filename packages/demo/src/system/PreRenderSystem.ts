@@ -1,6 +1,5 @@
-import System from "../../../glhf-ecs/src/System";
-import Entity from "../../../glhf-ecs/src/Entity";
-import SpriteSheet, {IAnimation, IAnimationFrame} from "../../../glhf-component/src/SpriteSheet";
+import {System, Entity} from "@serbanghita-gamedev/ecs";
+import {SpriteSheet, IAnimation, IAnimationFrame} from "@serbanghita-gamedev/component";
 
 export default class PreRenderSystem extends System {
 

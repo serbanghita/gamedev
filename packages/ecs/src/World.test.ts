@@ -47,8 +47,8 @@ describe("World", () => {
         b.addComponent(Position, {x: 10, y: 20});
         b.addComponent(Renderable);
 
-        expect(world.getQuery("query1").dataSet.length).toEqual(1);
-        expect(world.getQuery("query2").dataSet.length).toEqual(2);
+        expect(world.getQuery("query1").dataSet).toHaveLength(1);
+        expect(world.getQuery("query2").dataSet).toHaveLength(2);
     });
 
 });

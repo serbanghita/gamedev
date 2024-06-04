@@ -1,9 +1,6 @@
-import Query from "../../../glhf-ecs/src/Query";
-import System from "../../../glhf-ecs/src/System";
-import {clearCtx, getCtx, renderImage} from "../../../glhf-renderer/src/canvas";
-import Position from "../../../glhf-component/src/Position";
-import SpriteSheet, { IAnimation } from "../../../glhf-component/src/SpriteSheet";
-import World from "../../../glhf-ecs/src/World";
+import {System, Query, World} from "@serbanghita-gamedev/ecs";
+import {clearCtx, getCtx, renderImage, renderRectangle} from "@serbanghita-gamedev/renderer";
+import {Position, SpriteSheet, IAnimation } from "@serbanghita-gamedev/component";
 import IsWalking from "../component/IsWalking";
 import IsIdle from "../component/IsIdle";
 import IsAttackingWithClub from "../component/IsAttackingWithClub";
@@ -62,6 +59,21 @@ export default class RenderSystem extends System {
                 destPositionY,
                 animationFrame.width,
                 animationFrame.height
+            );
+
+
+            renderRectangle(
+                getCtx(this.$foreground) as CanvasRenderingContext2D,
+                destPositionX, destPositionY,
+                animationFrame.width,  animationFrame.height,
+                'black'
+            );
+
+            renderRectangle(
+                getCtx(this.$foreground) as CanvasRenderingContext2D,
+                destPositionX + hitboxOffset.x, destPositionY + hitboxOffset.y,
+                16, 16,
+                'red'
             );
         });
     }

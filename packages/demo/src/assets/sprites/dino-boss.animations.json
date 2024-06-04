@@ -1,20 +1,20 @@
 [
   {
     "name": "idle",
-    "parent": "idle_down",
     "defaultAnimation": true,
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    "speedTicks": 3,
-    "hitboxOffset": {"x": 24, "y": 48}
+    "speedTicks": 1,
+    "hitboxOffset": {"x": 24, "y": 68}
   },
   {
-    "name": "idle_up",
+    "name": "idle_down",
+    "parent": "idle",
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    "speedTicks": 3,
+    "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
   {
@@ -22,24 +22,24 @@
     "width": 128,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    "speedTicks": 3,
-    "hitboxOffset": {"x": 56, "y": 48}
+    "speedTicks": 1,
+    "hitboxOffset": {"x": 56, "y": 68}
   },
   {
     "name": "idle_right",
     "width": 128,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    "speedTicks": 3,
-    "hitboxOffset": {"x": 56, "y": 48}
+    "speedTicks": 1,
+    "hitboxOffset": {"x": 56, "y": 68}
   },
   {
-    "name": "idle_down",
+    "name": "idle_up",
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    "speedTicks": 3,
-    "hitboxOffset": {"x": 24, "y": 48}
+    "speedTicks": 1,
+    "hitboxOffset": {"x": 24, "y": 68}
   },
   {
     "name": "walk_left",
@@ -47,7 +47,7 @@
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
-    "hitboxOffset": {"x": 26, "y": 68}
+    "hitboxOffset": {"x": 56, "y": 68}
   },
   {
     "name": "walk_right",
@@ -55,7 +55,7 @@
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
-    "hitboxOffset": {"x": 56, "y": 48}
+    "hitboxOffset": {"x": 56, "y": 68}
   },
   {
     "name": "walk_up",
@@ -63,7 +63,7 @@
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
-    "hitboxOffset": {"x": 24, "y": 48}
+    "hitboxOffset": {"x": 24, "y": 68}
   },
   {
     "name": "walk_down",
@@ -71,7 +71,7 @@
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
-    "hitboxOffset": {"x": 24, "y": 48}
+    "hitboxOffset": {"x": 24, "y": 68}
   },
   {
     "name": "bite_attack_left",

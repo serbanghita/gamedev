@@ -11,7 +11,8 @@
     "types": ["vitest/globals"],
     "paths": {
         "@serbanghita-gamedev/bitmask": ["../../bitmask"],
-        "@serbanghita-gamedev/component": ["../../component"]
+        "@serbanghita-gamedev/component": ["../../component"],
+        "@serbanghita-gamedev/renderer": ["../../renderer"]
     }
   },
   "include": [

@@ -5,7 +5,7 @@ import Query from "./Query";
 
 export default class System {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public constructor(public world: World, public query: Query, ...args: never[]) {
+    public constructor(public world: World, public query: Query, ...args: unknown[]) {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

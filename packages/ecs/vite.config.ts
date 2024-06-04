@@ -5,6 +5,7 @@ import * as path from "node:path";
 export default defineConfig({
     plugins: [tsconfigPaths()],
     test: {
+        globals: true,
         alias: {
             '@serbanghita-gamedev/bitmask/': path.join(__dirname,  '../bitmask/'),
             '@serbanghita-gamedev/component/': path.join(__dirname,  '../component/')

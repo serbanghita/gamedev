@@ -1,8 +1,8 @@
-interface IKeyboardEvent {
-    eventName: string;
-    listener: (e: WindowEventMap) => any;
-    useCapture: boolean;
-}
+// interface IKeyboardEvent {
+//     eventName: string;
+//     listener: (e: WindowEventMap) => any;
+//     useCapture: boolean;
+// }
 
 export enum InputActions {
     MOVE_UP = 1,
@@ -52,7 +52,7 @@ export default class Keyboard {
             const action = this.boundKeys.get(e.key) as InputActions;
             this.ongoingActions.add(action);
         }
-    };
+    }
 
     public keyUpCallback(e: { key: string; preventDefault: () => void; stopPropagation: () => void; }) {
         console.log("keyUpCallback", e.key);
@@ -62,7 +62,7 @@ export default class Keyboard {
             const action = this.boundKeys.get(e.key) as InputActions;
             this.ongoingActions.delete(action);
         }
-    };
+    }
 
     public listen() {
         window.addEventListener("keydown", this.keyDownCallback.bind(this), { capture: false });

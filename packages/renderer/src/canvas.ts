@@ -84,6 +84,26 @@ export function renderTile(
     );
 }
 
+export function renderRectangle(
+    ctx: CanvasRenderingContext2D,
+    x: number, y: number,
+    width: number, height: number,
+    strokeColor: string = 'black', fillColor?: string
+): void {
+    ctx.save();
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = strokeColor;
+    ctx.rect(x, y, width, height);
+    if (fillColor) {
+        ctx.fillStyle = fillColor;
+        ctx.fillRect(x, y, width, height);
+    }
+    ctx.stroke();
+    ctx.closePath();
+    ctx.restore();
+}
+
 export function getCtx(canvas: HTMLCanvasElement) {
     return canvas.getContext("2d");
 }

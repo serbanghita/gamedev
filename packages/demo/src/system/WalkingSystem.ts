@@ -1,8 +1,7 @@
-import Direction, { Directions } from "../../../glhf-component/src/Direction";
-import System from "../../../glhf-ecs/src/System";
+import { Direction, Directions } from "@serbanghita-gamedev/component";
+import { System, Entity } from "@serbanghita-gamedev/ecs";
 import IsWalking from "../component/IsWalking";
 import {StateStatus} from "../state/state-status";
-import Entity from "@glhf/ecs/Entity";
 
 export default class WalkingSystem extends System {
 

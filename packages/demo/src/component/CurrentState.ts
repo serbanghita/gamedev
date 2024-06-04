@@ -1,4 +1,4 @@
-import Component from "../../../glhf-ecs/src/Component";
+import {Component} from "@serbanghita-gamedev/ecs";
 
 interface CurrentStateProps {
     stateName: string;

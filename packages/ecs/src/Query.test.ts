@@ -32,7 +32,8 @@ describe(("Query"), () => {
         q.init();
 
         expect(q.execute()).toHaveLength(2);
-        expect(q.execute()).toEqual(expect.arrayContaining([dino, player]));
+        expect(q.execute().get('dino')).toEqual(dino);
+        expect(q.execute().get('player')).toEqual(player);
     });
 
     it('any', () => {
@@ -40,7 +41,9 @@ describe(("Query"), () => {
         q.init();
 
         expect(q.execute()).toHaveLength(3);
-        expect(q.execute()).toEqual(expect.arrayContaining([dino, player, camera]));
+        expect(q.execute().get('dino')).toEqual(dino);
+        expect(q.execute().get('player')).toEqual(player);
+        expect(q.execute().get('camera')).toEqual(camera);
     });
 
     it('none', () => {
@@ -48,7 +51,8 @@ describe(("Query"), () => {
         q.init();
 
         expect(q.execute()).toHaveLength(2);
-        expect(q.execute()).toEqual(expect.arrayContaining([dino, camera]));
+        expect(q.execute().get('dino')).toEqual(dino);
+        expect(q.execute().get('camera')).toEqual(camera);
     });
 
     it('all(1) + none', () => {
@@ -56,7 +60,7 @@ describe(("Query"), () => {
         q.init();
 
         expect(q.execute()).toHaveLength(1);
-        expect(q.execute()).toEqual(expect.arrayContaining([dino]));
+        expect(q.execute().get('dino')).toEqual(dino);
     });
 
     it('all(2) + none', () => {
@@ -75,7 +79,8 @@ describe(("Query"), () => {
         q.candidate(camera);
         expect(q.execute()).toHaveLength(2);
 
-        expect(q.execute()).toEqual(expect.arrayContaining([dino, player]));
+        expect(q.execute().get('dino')).toEqual(dino);
+        expect(q.execute().get('player')).toEqual(player);
     });
 
     it('remove', () => {
@@ -86,7 +91,7 @@ describe(("Query"), () => {
         expect(q.execute()).toHaveLength(2);
         q.remove(player);
         expect(q.execute()).toHaveLength(1);
-        expect(q.execute()).toEqual(expect.arrayContaining([dino]));
+        expect(q.execute().get('dino')).toEqual(dino);
     });
 });
 

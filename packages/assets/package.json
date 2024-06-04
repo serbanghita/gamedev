@@ -1,12 +1,23 @@
 {
   "name": "@serbanghita-gamedev/assets",
-  "version": "1.0.0",
-  "description": "",
+  "description": "Asset related utils (JSON, Images, etc)",
+  "version": "0.0.1",
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "main": "src/index.ts",
   "scripts": {
     "build": "echo \"Error: no build specified for glhf-assets yet.\"",
     "test": "echo \"Error: no test specified for glhf-assets yet.\""
   },
-  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
-  "license": "MIT"
+  "devDependencies": {
+    "@eslint/js": "^9.4.0",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.4.0",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.11.0"
+  }
 }

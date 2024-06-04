@@ -8,10 +8,10 @@ interface Component {
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 class Component {
-    constructor(public properties: NonNullable<unknown>) {}
+    constructor(public properties: NonNullable<object>) {}
 
     // Lazy init / Re-init.
-    init(properties: NonNullable<unknown>) {
+    init(properties: NonNullable<object>) {
         this.properties = properties;
     }
 }

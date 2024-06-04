@@ -77,7 +77,7 @@ export default class World {
         return this;
     }
 
-    public createSystem(systemId: string, queryId: string, ...args: never[]): World
+    public createSystem(systemId: string, queryId: string, ...args: unknown[]): World
     {
         const declaration = this.systemRegistry.get(systemId);
         if (!declaration) {

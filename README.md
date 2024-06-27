@@ -9,17 +9,18 @@ glhf
 
 ## Packages
 
-* [glhf-assets](./packages/assets) - Helper to load assets files (JSON, Images).
-* [glhf-bitmask](./packages/bitmask) - Bitmask library for fast bitwise operations.
-* [glfh-component](./packages/component) - Generic opinionated ECS Components.
-* [glhf-ecs](./packages/ecs) - ECS Library that implements the following classes Entity, Component, System, Query, World
-* [glhf-fsm](./packages/fsm) - Finite State Machine implementation.
-* [glhf-input](./packages/input) - Implementation of inputs like Keyboard, Mouse and Controller.
-* [glhf-renderer](./packages/renderer) - Rendering UI and Canvas utilities.
+* [assets](./packages/assets) - Helper to load assets files (JSON, Images).
+* [bitmask](./packages/bitmask) - Bitmask library for fast bitwise operations.
+* [component](./packages/component) - Generic opinionated ECS Components.
+* [ecs](./packages/ecs) - ECS Library that implements the following classes Entity, Component, System, Query, World
+* [fsm](./packages/fsm) - Finite State Machine implementation.
+* [input](./packages/input) - Implementation of inputs like Keyboard, Mouse and Controller.
+* [renderer](./packages/renderer) - Rendering UI and Canvas utilities.
+* [matrix](./packages/matrix) - Matrix system for binary grid.
 
 ## Demo
 
-* [glhf-demo](./packages/demo) - A demo of a 2d game implementation using glhf.js library
+* [demo](./packages/demo) - A demo of a 2d game implementation using glhf.js library
 
 ## Development
 

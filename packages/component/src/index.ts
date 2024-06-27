@@ -1,3 +1,4 @@
+export {default as Matrix} from './Matrix';
 export {default as Body} from './Body';
 export {default as Direction, Directions} from './Direction';
 export {default as Keyboard} from './Keyboard';

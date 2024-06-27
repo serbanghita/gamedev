@@ -5,6 +5,7 @@ export interface IKeyboardKeys {
     down: string;
     left: string;
     right: string;
+    action_1: string;
 }
 
 export default class Keyboard extends Component {

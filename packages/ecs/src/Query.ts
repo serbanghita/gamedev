@@ -81,13 +81,13 @@ export default class Query {
         }
 
         // Include any entity that has all the components in the "any" filter.
-        if (this.any !== 0n && hasAnyOfBits(entity.componentsBitmask, this.any)) {
-            return true;
+        if (this.any !== 0n) {
+            return hasAnyOfBits(entity.componentsBitmask, this.any);
         }
 
         // Check all bits.
-        if (this.all !== 0n && !hasBit(entity.componentsBitmask, this.all)) {
-            return false;
+        if (this.all !== 0n) {
+            return hasBit(entity.componentsBitmask, this.all);
         }
 
         return true;

@@ -125,6 +125,9 @@ export default class PlayerKeyboardSystem extends System {
         this.query.execute().forEach((entity) => {
 
             if (this.input.ongoingActions.has(InputActions.ACTION_1)) {
+                if (!entity.getComponent(Keyboard).properties.action_1) {
+                    return;
+                }
                 entity.removeComponent(IsWalking);
                 entity.addComponent(IsAttackingWithClub);
                 return;

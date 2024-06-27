@@ -66,7 +66,7 @@ export default class RenderSystem extends System {
                 getCtx(this.$foreground) as CanvasRenderingContext2D,
                 destPositionX, destPositionY,
                 animationFrame.width,  animationFrame.height,
-                'black'
+                '#cccccc'
             );
 
             renderRectangle(

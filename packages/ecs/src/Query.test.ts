@@ -24,6 +24,8 @@ describe(("Query"), () => {
     player.addComponent(Keyboard, { up: "w", down: "s", left: "a", right: "d" });
     player.addComponent(Renderable);
 
+    world.createEntity("someEntity");
+
     const camera = world.createEntity("camera");
     camera.addComponent(Position, { x: 0, y: 0 });
 

@@ -6,8 +6,12 @@ import { hasBit } from "@serbanghita-gamedev/bitmask";
 import ComponentRegistry from "./ComponentRegistry";
 
 export default class World {
-    protected systemRegistry: Map<string, typeof System> = new Map<string, typeof System>();
-    protected componentRegistry: ComponentRegistry = ComponentRegistry.getInstance();
+    public declarations = {
+        systems: new Map<string, typeof System>(),
+        components: ComponentRegistry.getInstance(),
+        spriteSheetImgs: new Map<string, HTMLImageElement>(),
+        spriteSheetJson: new Map<string, object>(),
+    };
 
     public queries = new Map<string, Query>();
     public entities = new Map<string, Entity>();
@@ -70,16 +74,9 @@ export default class World {
         this.notifyQueriesOfEntityRemoval(entity);
     }
 
-    public registerSystem(id: string, declaration: typeof System): World
-    {
-        this.systemRegistry.set(id, declaration);
-
-        return this;
-    }
-
     public createSystem(systemId: string, queryId: string, ...args: unknown[]): World
     {
-        const declaration = this.systemRegistry.get(systemId);
+        const declaration = this.declarations.systems.get(systemId);
         if (!declaration) {
             throw new Error(`There is no system registered with the id ${systemId}`);
         }
@@ -103,12 +100,6 @@ export default class World {
         }
 
         return system;
-    }
-
-    public registerComponent(declaration: typeof Component): World
-    {
-        this.componentRegistry.registerComponent(declaration);
-        return this;
     }
 
     public notifyQueriesOfEntityCandidacy(entity: Entity) {

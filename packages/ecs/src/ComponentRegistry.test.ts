@@ -51,4 +51,21 @@ describe('ComponentRegistry', () => {
         expect(position3.properties.x).toBe(5);
         expect(position3.properties.y).toBe(6);
     });
+
+    it('registerComponents', () => {
+        const reg = ComponentRegistry.getInstance();
+        reg.registerComponents([Body, Position]);
+
+        expect(reg.getComponent('Body')).toBe(Body);
+        expect(reg.getComponent('Position')).toBe(Position);
+    });
+
+    it('getComponent', () => {
+        const reg = ComponentRegistry.getInstance();
+        reg.registerComponent(Body);
+        reg.registerComponent(Position);
+
+        expect(reg.getComponent('Body')).toBe(Body);
+        expect(reg.getComponent('Position')).toBe(Position);
+    });
 });

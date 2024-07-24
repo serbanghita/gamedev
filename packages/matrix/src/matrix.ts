@@ -12,7 +12,7 @@ export type MatrixConfig = {
 }
 
 export function createMatrix(matrixConfig: MatrixConfig): Array<MatrixTile[]> {
-    const grid = [];
+    const grid: Array<Array<number>> = [];
 
     for (let row = 1; row <= matrixConfig.height; row++) {
         grid[row - 1] = [];
@@ -28,16 +28,23 @@ export function createFlatMatrix(matrixConfig: MatrixConfig) {
     return new Array(matrixConfig.width * matrixConfig.height).fill(MatrixTile.FREE);
 }
 
-export function getXYFromTile(tile: number, matrixConfig: MatrixConfig) {
+export function getTileCoordinates(tile: number, matrixConfig: MatrixConfig) {
     return {
-        x: Math.floor(tile / matrixConfig.width),
-        y: (tile % matrixConfig.width)
+        x: (matrixConfig.tileSize * (tile % matrixConfig.width)),
+        y: (Math.floor(tile / matrixConfig.width) * matrixConfig.tileSize)
     }
 }
 
-export function getTileFromXY<T extends MatrixConfig>(x: number, y: number, matrixConfig: T): number {
+export function getTileRowAndColumn(tile: number, matrixConfig: MatrixConfig) {
+    return {
+        row: Math.floor(tile / matrixConfig.width),
+        column: (tile % matrixConfig.width)
+    }
+}
+
+export function getTileFromCoordinates<T extends MatrixConfig>(x: number, y: number, matrixConfig: T): number {
     const tileIndex = Math.floor(x / matrixConfig.tileSize) +
-        (matrixConfig.width * matrixConfig.tileSize) * Math.floor(y / matrixConfig.tileSize);
+        matrixConfig.width * Math.floor(y / matrixConfig.tileSize);
 
     if (tileIndex < 0 || tileIndex > ((matrixConfig.width * matrixConfig.height) - 1)) {
         throw new Error(`Invalid tile ${tileIndex} resulted from ${x} and ${y}`);

@@ -1,6 +1,5 @@
-[
-  {
-    "name": "idle",
+{
+  "idle": {
     "defaultAnimation": true,
     "width": 48,
     "height": 64,
@@ -8,8 +7,7 @@
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 40}
   },
-  {
-    "name": "idle_down",
+  "idle_down": {
     "parent": "idle",
     "width": 48,
     "height": 64,
@@ -17,133 +15,116 @@
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 40}
   },
-  {
-    "name": "idle_left",
+  "idle_left": {
     "width": 48,
     "height": 64,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 40}
   },
-  {
-    "name": "idle_right",
+  "idle_right": {
     "width": 48,
     "height": 64,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 40}
   },
-  {
-    "name": "idle_up",
+  "idle_up": {
     "width": 48,
     "height": 80,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 54}
   },
-  {
-    "name": "walk_down",
+  "walk_down": {
     "width": 48,
     "height": 64,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
     "speedTicks": 1,
     "hitboxOffset": {"x": 16, "y": 40}
   },
-  {
-    "name": "walk_left",
+  "walk_left": {
     "width": 48,
     "height": 64,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
     "speedTicks": 1,
     "hitboxOffset": {"x": 16, "y": 40}
   },
-  {
-    "name": "walk_right",
+  "walk_right": {
     "width": 48,
     "height": 64,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
     "speedTicks": 1,
     "hitboxOffset": {"x": 16, "y": 40}
   },
-  {
-    "name": "walk_up",
+  "walk_up": {
     "width": 48,
     "height": 80,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
     "speedTicks": 1,
     "hitboxOffset": {"x": 16, "y": 54}
   },
-  {
-    "name": "spin_attack_down",
+  "spin_attack_down": {
     "width": 48,
     "height": 64,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 16, "y": 40}
   },
-  {
-    "name": "spin_attack_left",
+  "spin_attack_left": {
     "width": 48,
     "height": 48,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 16, "y": 24}
   },
-  {
-    "name": "spin_attack_right",
+  "spin_attack_right": {
     "width": 48,
     "height": 48,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 16, "y": 24}
   },
-  {
-    "name": "spin_attack_up",
+  "spin_attack_up": {
     "width": 48,
     "height": 48,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 16, "y": 22}
   },
-  {
-    "name": "idle_question_up",
+  "idle_question_up": {
     "width": 48,
     "height": 80,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 56}
   },
-  {
-    "name": "get_hurt_up",
+  "get_hurt_up": {
     "width": 48,
     "height": 80,
     "frames": [0, 1, 2, 3, 4, 5, 6],
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 56}
   },
-  {
-    "name": "get_hurt_left",
+  "get_hurt_left": {
     "width": 48,
     "height": 80,
     "frames": [0, 1, 2, 3, 4, 5, 6],
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 56}
   },
-  {
-    "name": "get_hurt_right",
+  "get_hurt_right": {
     "width": 48,
     "height": 80,
     "frames": [0, 1, 2, 3, 4, 5, 6],
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 56}
   },
-  {
-    "name": "get_hurt_down",
+  "get_hurt_down": {
     "width": 48,
     "height": 80,
     "frames": [0, 1, 2, 3, 4, 5, 6],
     "speedTicks": 3,
     "hitboxOffset": {"x": 16, "y": 56}
   }
-
-]
+}

@@ -4,16 +4,17 @@ import Query, {IQueryFilters} from "./Query";
 import Component from "./Component";
 import { hasBit } from "@serbanghita-gamedev/bitmask";
 import ComponentRegistry from "./ComponentRegistry";
+import { Animation } from "@serbanghita-gamedev/component";
+
+
 
 export default class World {
     public declarations = {
         systems: new Map<string, typeof System>(),
         components: ComponentRegistry.getInstance(),
-        spriteSheetImgs: new Map<string, HTMLImageElement>(),
-        spriteSheetJson: new Map<string, object>(),
     };
 
-    public queries = new Map<string, Query>();
+public queries = new Map<string, Query>();
     public entities = new Map<string, Entity>();
     public systems = new Map<string, System>();
 

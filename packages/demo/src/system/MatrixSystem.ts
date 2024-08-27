@@ -1,6 +1,6 @@
 import {Query, System, World} from "@serbanghita-gamedev/ecs";
-import {Matrix, Position} from "@serbanghita-gamedev/component";
-import {getTileFromXY} from "@serbanghita-gamedev/matrix";
+import {IsOnMatrix, MatrixConfig, Position} from "@serbanghita-gamedev/component";
+import {getTileFromCoordinates} from "@serbanghita-gamedev/matrix";
 
 export default class MatrixSystem extends System {
 
@@ -9,13 +9,22 @@ export default class MatrixSystem extends System {
     }
 
     public update(now: number): void {
+        const map = this.world.getEntity("map");
+        if (!map) {
+            throw new Error(`"map" entity was not defined in the entities.json`);
+        }
+        const matrixConfig = map.getComponent(MatrixConfig);
+
+
         this.query.execute().forEach(entity => {
 
             const position = entity.getComponent(Position);
-            const matrix = entity.getComponent(Matrix);
+            const isOnMatrix = entity.getComponent(IsOnMatrix);
 
-            getTileFromXY(position.properties.x, position.properties.y, matrix.properties)
+            // Calculate the tile from Position.
+            const tile = getTileFromCoordinates(position.properties.x, position.properties.y, matrixConfig.properties)
 
+            isOnMatrix.properties.tile = tile;
 
         });
     }

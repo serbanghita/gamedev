@@ -1,6 +1,5 @@
-[
-  {
-    "name": "idle",
+{
+  "idle": {
     "defaultAnimation": true,
     "width": 128,
     "height": 128,
@@ -8,8 +7,7 @@
     "speedTicks": 3,
     "hitboxOffset": {"x": 55, "y": 86}
   },
-  {
-    "name": "idle_down",
+  "idle_down": {
     "parent": "idle",
     "width": 128,
     "height": 128,
@@ -17,156 +15,137 @@
     "speedTicks": 3,
     "hitboxOffset": {"x": 55, "y": 86}
   },
-  {
-    "name": "idle_left",
+  "idle_left": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     "speedTicks": 3,
     "hitboxOffset": {"x": 52, "y": 84}
   },
-  {
-    "name": "idle_right",
+  "idle_right": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     "speedTicks": 3,
     "hitboxOffset": {"x": 60, "y": 84}
   },
-  {
-    "name": "idle_up",
+  "idle_up": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     "speedTicks": 3,
     "hitboxOffset": {"x": 55, "y": 84}
   },
-  {
-    "name": "walk_down",
+  "walk_down": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 57, "y": 88}
   },
-  {
-    "name": "walk_left",
+  "walk_left": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 52, "y": 84}
   },
-  {
-    "name": "walk_right",
+  "walk_right": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 60, "y": 84}
   },
-  {
-    "name": "walk_up",
+  "walk_up": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 54, "y": 84}
   },
-  {
-    "name": "get_hurt_up",
+  "get_hurt_up": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 55, "y": 86}
   },
-  {
-    "name": "get_hurt_left",
+  "get_hurt_left": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 52, "y": 84}
   },
-  {
-    "name": "get_hurt_right",
+  "get_hurt_right": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 56, "y": 80}
   },
-  {
-    "name": "get_hurt_down",
+  "get_hurt_down": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 56, "y": 80}
   },
-  {
-    "name": "throw_down",
+  "throw_down": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 3,
     "hitboxOffset": {"x": 56, "y": 80}
   },
-  {
-    "name": "throw_left",
+  "throw_left": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 3,
     "hitboxOffset": {"x": 52, "y": 84}
   },
-  {
-    "name": "throw_right",
+  "throw_right": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 3,
     "hitboxOffset": {"x": 56, "y": 80}
   },
-  {
-    "name": "throw_up",
+  "throw_up": {
     "width": 128,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 3,
     "hitboxOffset": {"x": 55, "y": 86}
   },
-  {
-    "name": "punch_glove_down",
+  "punch_glove_down": {
     "width": 192,
     "height": 192,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 3,
     "hitboxOffset": {"x": 87, "y": 116}
   },
-  {
-    "name": "punch_glove_left",
+  "punch_glove_left": {
     "width": 192,
     "height": 192,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 3,
     "hitboxOffset": {"x": 84, "y": 116}
   },
-  {
-    "name": "punch_glove_right",
+  "punch_glove_right": {
     "width": 192,
     "height": 192,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 3,
     "hitboxOffset": {"x": 92, "y": 116}
   },
-  {
-    "name": "punch_glove_up",
+  "punch_glove_up": {
     "width": 192,
     "height": 192,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 3,
     "hitboxOffset": {"x": 87, "y": 116}
   }
-]
+}

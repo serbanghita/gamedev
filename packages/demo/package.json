@@ -10,10 +10,11 @@
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "license": "All code is MIT, the assets are copywritten.",
   "devDependencies": {
-    "esbuild": "0.21.4",
     "@eslint/js": "^9.4.0",
     "@types/eslint__js": "^8.42.3",
+    "esbuild": "0.21.4",
     "eslint": "^9.4.0",
+    "prettier": "3.3.3",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.11.0"
   }

@@ -1,21 +1,20 @@
 import Component from "../../ecs/src/Component";
 import {loadLocalImage} from "@serbanghita-gamedev/assets";
 
-export interface IAnimation {
-    frames: IAnimationFrame[];
+export type Animation = {
+    frames: AnimationFrame[];
     speed: number;
     hitboxOffset: {x: number, y: number};
 }
 
-export interface IAnimationFrame {
+export type AnimationFrame = {
     width: number;
     height: number;
     x: number;
     y: number;
 }
 
-export interface ISpriteSheetAnimation {
-    name: string;
+export type SpriteSheetAnimation = {
     defaultAnimation?: boolean;
     parent?: string; // An animation based on a previous animation (doesn't count as offset on Y).
     width: number;
@@ -28,13 +27,11 @@ export interface ISpriteSheetAnimation {
     };
 }
 
-export interface ISpriteSheetProperties {
+export type SpriteSheetProperties = {
     name: string;
     offset_x: number;
     offset_y: number;
-    img: HTMLImageElement;
-    animationsDeclaration: ISpriteSheetAnimation[];
-    animations: Map<string, IAnimation>;
+    animations: Map<string, Animation>; // This is added and computed in PreRenderSystem.
     animationCurrentFrame: string;
     animationDefaultFrame: string;
     spriteSheetImgPath: string;
@@ -42,7 +39,7 @@ export interface ISpriteSheetProperties {
 }
 
 export default class SpriteSheet extends Component {
-    constructor(public properties: ISpriteSheetProperties) {
+    constructor(public properties: SpriteSheetProperties) {
         super(properties);
 
         // this.properties.img = loadLocalImage(

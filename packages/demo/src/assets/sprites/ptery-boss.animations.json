@@ -1,6 +1,5 @@
-[
-  {
-    "name": "idle",
+{
+  "idle": {
     "defaultAnimation": true,
     "width": 144,
     "height": 96,
@@ -8,8 +7,7 @@
     "speedTicks": 3,
     "hitboxOffset": {"x": 64, "y": 64}
   },
-  {
-    "name": "idle_down",
+  "idle_down": {
     "parent": "idle",
     "width": 144,
     "height": 96,
@@ -17,92 +15,81 @@
     "speedTicks": 3,
     "hitboxOffset": {"x": 64, "y": 64}
   },
-  {
-    "name": "idle_left",
+  "idle_left": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 64}
   },
-  {
-    "name": "idle_right",
+  "idle_right": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 64}
   },
-  {
-    "name": "idle_up",
+  "idle_up": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 64}
   },
-  {
-    "name": "walk_down",
+  "walk_down": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 64}
   },
-  {
-    "name": "walk_left",
+  "walk_left": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 64}
   },
-  {
-    "name": "walk_right",
+  "walk_right": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 64}
   },
-  {
-    "name": "walk_up",
+  "walk_up": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 64}
   },
-  {
-    "name": "bite_attack_up",
+  "bite_attack_up": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 32}
   },
-  {
-    "name": "bite_attack_left",
+  "bite_attack_left": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 32}
   },
-  {
-    "name": "bite_attack_right",
+  "bite_attack_right": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 32}
   },
-  {
-    "name": "bite_attack_down",
+  "bite_attack_down": {
     "width": 144,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 64, "y": 32}
   }
-]
+}

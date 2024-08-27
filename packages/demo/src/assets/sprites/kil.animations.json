@@ -1,6 +1,5 @@
-[
-  {
-    "name": "idle",
+{
+  "idle": {
     "defaultAnimation": true,
     "width": 64,
     "height": 96,
@@ -8,16 +7,14 @@
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "walk_left",
+  "walk_left": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "idle_left",
+  "idle_left": {
     "parent": "walk_left",
     "width": 64,
     "height": 96,
@@ -25,16 +22,14 @@
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "walk_right",
+  "walk_right": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "idle_right",
+  "idle_right": {
     "parent": "walk_right",
     "width": 64,
     "height": 96,
@@ -42,16 +37,14 @@
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "walk_up",
+  "walk_up": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "idle_up",
+  "idle_up": {
     "parent": "walk_up",
     "width": 64,
     "height": 96,
@@ -59,25 +52,22 @@
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-   {
-     "name": "throw_boomerang_up",
-     "parent": "walk_up",
-     "width": 64,
-     "height": 96,
-     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
-     "speedTicks": 1,
-     "hitboxOffset": {"x": 24, "y": 52}
-   },
-  {
-    "name": "walk_down",
+  "throw_boomerang_up": {
+    "parent": "walk_up",
+    "width": 64,
+    "height": 96,
+    "frames": [0, 1, 2, 3, 4, 5, 6, 7],
+    "speedTicks": 1,
+    "hitboxOffset": {"x": 24, "y": 52}
+  },
+  "walk_down": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "idle_down",
+  "idle_down": {
     "parent": "walk_down",
     "width": 64,
     "height": 96,
@@ -85,277 +75,243 @@
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-   {
-     "name": "throw_boomerang_down",
-     "parent": "walk_down",
-     "width": 64,
-     "height": 96,
-     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
-     "speedTicks": 1,
-     "hitboxOffset": {"x": 24, "y": 52}
-   },
-  {
-    "name": "eat_left",
+  "throw_boomerang_down": {
+    "parent": "walk_down",
+    "width": 64,
+    "height": 96,
+    "frames": [0, 1, 2, 3, 4, 5, 6, 7],
+    "speedTicks": 1,
+    "hitboxOffset": {"x": 24, "y": 52}
+  },
+  "eat_left": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     "speedTicks": 3,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "eat_right",
+  "eat_right": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     "speedTicks": 3,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "get_hurt_left",
+  "get_hurt_left": {
     "width": 96,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 40, "y": 68}
   },
-  {
-    "name": "get_hurt_right",
+  "get_hurt_right": {
     "width": 96,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 40, "y": 68}
   },
-  {
-    "name": "draw_guns",
+  "draw_guns": {
     "width": 96,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 4, 5, 5, 4, 3, 2, 1, 0],
     "speedTicks": 6,
     "hitboxOffset": {"x": 40, "y": 100}
   },
-  {
-    "name": "play_with_boomerang",
+  "play_with_boomerang": {
     "width": 96,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     "speedTicks": 6,
     "hitboxOffset": {"x": 40, "y": 100}
   },
-  {
-    "name": "play_with_bomb",
+  "play_with_bomb": {
     "width": 96,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     "speedTicks": 6,
     "hitboxOffset": {"x": 40, "y": 100}
   },
-  {
-    "name": "thumbs_up",
+  "thumbs_up": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     "speedTicks": 3,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "wave",
+  "wave": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
     "speedTicks": 3,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "teleport_in",
+  "teleport_in": {
     "width": 64,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     "speedTicks": 3,
     "hitboxOffset": {"x": 24, "y": 100}
   },
-  {
-    "name": "teleport_out",
+  "teleport_out": {
     "width": 64,
     "height": 128,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     "speedTicks": 3,
     "hitboxOffset": {"x": 24, "y": 100}
   },
-  {
-    "name": "throw_boomerang_left",
+  "throw_boomerang_left": {
     "width": 96,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 40, "y": 68}
   },
-  {
-    "name": "throw_boomerang_right",
+  "throw_boomerang_right": {
     "width": 96,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6, 7],
     "speedTicks": 1,
     "hitboxOffset": {"x": 40, "y": 68}
   },
-  {
-    "name": "lay_bomb_left",
+  "lay_bomb_left": {
     "width": 96,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6],
     "speedTicks": 3,
     "hitboxOffset": {"x": 28, "y": 68}
   },
-  {
-    "name": "lay_bomb_right",
+  "lay_bomb_right": {
     "width": 96,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5, 6],
     "speedTicks": 3,
     "hitboxOffset": {"x": 28, "y": 68}
   },
-  {
-    "name": "club_attack_one_up",
+  "club_attack_one_up": {
     "width": 128,
     "height": 224,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 56, "y": 130}
   },
-  {
-    "name": "club_attack_two_up",
+  "club_attack_two_up": {
     "width": 128,
     "height": 224,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 56, "y": 130}
   },
-  {
-    "name": "club_attack_one_down",
+  "club_attack_one_down": {
     "width": 128,
     "height": 224,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 56, "y": 132}
   },
-  {
-    "name": "club_attack_two_down",
+  "club_attack_two_down": {
     "width": 128,
     "height": 224,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 56, "y": 132}
   },
-  {
-    "name": "club_attack_one_right",
+  "club_attack_one_right": {
     "width": 192,
     "height": 128,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 88, "y": 84}
   },
-  {
-    "name": "club_attack_two_right",
+  "club_attack_two_right": {
     "width": 192,
     "height": 128,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 88, "y": 84}
   },
-  {
-    "name": "club_attack_one_left",
+  "club_attack_one_left": {
     "width": 192,
     "height": 128,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 88, "y": 84}
   },
-  {
-    "name": "club_attack_two_left",
+  "club_attack_two_left": {
     "width": 192,
     "height": 128,
     "frames": [0, 1, 2, 3, 4],
     "speedTicks": 3,
     "hitboxOffset": {"x": 88, "y": 84}
   },
-  {
-    "name": "get_hurt_down",
+  "get_hurt_down": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
-  {
-    "name": "get_hurt_up",
+  "get_hurt_up": {
     "width": 64,
     "height": 96,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 66}
   },
-  {
-    "name": "club_swipe_down_from_left",
+  "club_swipe_down_from_left": {
     "width": 128,
     "height": 160,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 56, "y": 100}
   },
-  {
-    "name": "club_swipe_down_from_right",
+  "club_swipe_down_from_right": {
     "width": 128,
     "height": 160,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 56, "y": 100}
   },
-  {
-    "name": "club_swipe_right_from_top",
+  "club_swipe_right_from_top": {
     "width": 128,
     "height": 160,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 56, "y": 100}
   },
-  {
-    "name": "club_swipe_right_from_bottom",
+  "club_swipe_right_from_bottom": {
     "width": 128,
     "height": 160,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 56, "y": 100}
   },
-  {
-    "name": "club_swipe_left_from_top",
+  "club_swipe_left_from_top": {
     "width": 128,
     "height": 160,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 56, "y": 100}
   },
-  {
-    "name": "club_swipe_left_from_bottom",
+  "club_swipe_left_from_bottom": {
     "width": 128,
     "height": 160,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 56, "y": 100}
   },
-  {
-    "name": "club_swipe_up_from_left",
+  "club_swipe_up_from_left": {
     "width": 128,
     "height": 160,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 56, "y": 100}
   },
-  {
-    "name": "club_swipe_up_from_right",
+  "club_swipe_up_from_right": {
     "width": 128,
     "height": 160,
     "frames": [0, 1, 2, 3, 4, 5],
     "speedTicks": 1,
     "hitboxOffset": {"x": 56, "y": 100}
   }
-]
+}

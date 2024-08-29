@@ -4,19 +4,15 @@ import Query, {IQueryFilters} from "./Query";
 import Component from "./Component";
 import { hasBit } from "@serbanghita-gamedev/bitmask";
 import ComponentRegistry from "./ComponentRegistry";
-import { Animation } from "@serbanghita-gamedev/component";
-
-
 
 export default class World {
     public declarations = {
-        systems: new Map<string, typeof System>(),
         components: ComponentRegistry.getInstance(),
     };
 
-public queries = new Map<string, Query>();
+    public queries = new Map<string, Query>();
     public entities = new Map<string, Entity>();
-    public systems = new Map<string, System>();
+    public systems = new Map<typeof System, System>();
 
     public createQuery(id: string, filters: IQueryFilters): Query
     {
@@ -75,29 +71,19 @@ public queries = new Map<string, Query>();
         this.notifyQueriesOfEntityRemoval(entity);
     }
 
-    public createSystem(systemId: string, queryId: string, ...args: unknown[]): World
+    public createSystem(system: typeof System, query: Query, ...args: unknown[]): World
     {
-        const declaration = this.declarations.systems.get(systemId);
-        if (!declaration) {
-            throw new Error(`There is no system registered with the id ${systemId}`);
-        }
-
-        const queryInstance = this.queries.get(queryId);
-        if (!queryInstance) {
-            throw new Error(`There is no query registered with the id ${queryId}`);
-        }
-
-        this.systems.set(systemId, new declaration(this, queryInstance, ...args));
+        this.systems.set(system, new System(this, query, ...args));
 
         return this;
     }
 
-    public getSystem(id: string)
+    public getSystem(system: typeof System)
     {
-        const system = this.systems.get(id);
+        const systemInstance = this.systems.get(System);
 
-        if (!system) {
-            throw new Error(`There is no system instance with the id ${id}`)
+        if (!systemInstance) {
+            throw new Error(`There is no system instance with the id ${system.name}`)
         }
 
         return system;

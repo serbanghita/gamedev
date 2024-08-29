@@ -1,4 +1,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+/**
+ * This file statically defines all the assets needed for the game to run:
+ *  - entities & components declarations
+ *  - sprites
+ *  - sprites animations
+ *  - sprites animations pre-processed.
+ *
+ *  Ideally these could be read from /assets/ folder dynamically, but JS + esbuild doesn't support that yet.
+ *  I could write a plugin for esbuild to prepare all files of types PNG and JSON to be statically included prior to bundling.
+ */
+
 // Added manually because esbuild doesn't support dynamic imports
 import { loadLocalImage } from "@serbanghita-gamedev/assets";
 import { Animation, SpriteSheetAnimation } from "@serbanghita-gamedev/component";

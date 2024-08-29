@@ -1,4 +1,4 @@
-import { SPRITES, ANIMATIONS_DECLARATIONS, ENTITIES_DECLARATIONS, EntityDeclaration } from "./assets";
+import { ENTITIES_DECLARATIONS, EntityDeclaration } from "./assets";
 import World from "../../ecs/src/World";
 import { Body, Position, Direction, Keyboard, Renderable, SpriteSheet, IsOnMatrix, MatrixConfig } from "@serbanghita-gamedev/component";
 
@@ -94,23 +94,23 @@ ENTITIES_DECLARATIONS.forEach((entityDeclaration) => {
 });
 
 world.createQuery("MatrixQuery", { all: [IsOnMatrix] });
-world.createQuery("KeyboardQuery", { all: [Keyboard] });
+const KeyboardQuery = world.createQuery("KeyboardQuery", { all: [Keyboard] });
 world.createQuery("IdleQuery", { all: [IsIdle] });
 world.createQuery("WalkingQuery", { all: [IsWalking] });
 world.createQuery("AttackingWithClubQuery", { all: [IsAttackingWithClub] });
-world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Position] });
+const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Position] });
 
-world.declarations.systems.set("PreRenderSystem", PreRenderSystem);
-world.declarations.systems.set("PlayerKeyboardSystem", PlayerKeyboardSystem);
-world.declarations.systems.set("IdleSystem", IdleSystem);
-world.declarations.systems.set("WalkingSystem", WalkingSystem);
-world.declarations.systems.set("MatrixSystem", MatrixSystem);
-world.declarations.systems.set("AttackingWithClubSystem", AttackingWithClubSystem);
-world.declarations.systems.set("RenderSystem", RenderSystem);
+// world.declarations.systems.set("PreRenderSystem", PreRenderSystem); // @todo This should run only once!
+// world.declarations.systems.set("PlayerKeyboardSystem", PlayerKeyboardSystem);
+// world.declarations.systems.set("IdleSystem", IdleSystem);
+// world.declarations.systems.set("WalkingSystem", WalkingSystem);
+// world.declarations.systems.set("MatrixSystem", MatrixSystem);
+// world.declarations.systems.set("AttackingWithClubSystem", AttackingWithClubSystem);
+// world.declarations.systems.set("RenderSystem", RenderSystem);
 
 world
-  .createSystem("PreRenderSystem", "RenderableQuery")
-  .createSystem("PlayerKeyboardSystem", "KeyboardQuery", input)
+  .createSystem(PreRenderSystem, RenderableQuery)
+  .createSystem(PlayerKeyboardSystem, KeyboardQuery, input)
   .createSystem("IdleSystem", "IdleQuery")
   .createSystem("WalkingSystem", "WalkingQuery")
   .createSystem("AttackingWithClubSystem", "AttackingWithClubQuery")

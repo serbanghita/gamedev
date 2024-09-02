@@ -1,5 +1,5 @@
 import Entity from "./Entity";
-import System from "./System";
+import System, { SystemSettings } from "./System";
 import Query, {IQueryFilters} from "./Query";
 import Component from "./Component";
 import { hasBit } from "@serbanghita-gamedev/bitmask";
@@ -71,11 +71,12 @@ export default class World {
         this.notifyQueriesOfEntityRemoval(entity);
     }
 
-    public createSystem(system: typeof System, query: Query, ...args: unknown[]): World
+    public createSystem(systemDeclaration: typeof System, query: Query, ...args: unknown[]): System
     {
-        this.systems.set(system, new System(this, query, ...args));
+        const systemInstance = new systemDeclaration(this, query, ...args);
+        this.systems.set(systemDeclaration, systemInstance);
 
-        return this;
+        return systemInstance;
     }
 
     public getSystem(system: typeof System)
@@ -86,7 +87,7 @@ export default class World {
             throw new Error(`There is no system instance with the id ${system.name}`)
         }
 
-        return system;
+        return systemInstance;
     }
 
     public notifyQueriesOfEntityCandidacy(entity: Entity) {
@@ -133,5 +134,17 @@ export default class World {
                 query.remove(entity);
             }
         });
+    }
+
+    public start() {
+        const onlyOnceSystems = [...this.systems].filter(([k, system]) => system.settings.runTimes === 1);
+
+        const loop = (now: DOMHighResTimeStamp) => {
+            this.systems.forEach((system) => system.update(now));
+
+            window.requestAnimationFrame(loop);
+        };
+
+        window.requestAnimationFrame(loop);
     }
 }

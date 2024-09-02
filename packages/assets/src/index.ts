@@ -1,4 +1,4 @@
-export function loadLocalImage(data: string) {
+export async function loadLocalImage(data: string): Promise<HTMLImageElement> {
     const img = new Image();
     const test1 = data.match(/([a-z0-9-_]+).(png|gif|jpg)$/i);
     const test2 = data.match(/^data:image\//i);
@@ -6,6 +6,10 @@ export function loadLocalImage(data: string) {
         throw new Error(`Trying to an load an invalid image ${data}.`);
     }
 
-    img.src = data;
-    return img;
+    return new Promise((resolve) => {
+        img.src = data;
+        img.onload = function() {
+            resolve(this as HTMLImageElement);
+        }
+    });
 }

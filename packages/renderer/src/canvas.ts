@@ -67,6 +67,8 @@ export function renderTile(
     const yOnSprite = Math.floor((tileValue - 1) / tilesPerRow) * height;
     // console.log(w, h, tileValue, xOnSprite, yOnSprite);
 
+    console.log(xOnSprite, yOnSprite, width, height, Math.floor(tileIndex % sW) * width, Math.floor(tileIndex / sW) * height)
+
     ctx.drawImage(
         tileSheetImg,
         // Position on tileset.

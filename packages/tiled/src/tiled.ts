@@ -38,7 +38,7 @@ export type TiledObjectProperty = {
     value: number | string | boolean;
 }
 
-function getObjectProperty(properties: TiledObjectProperty[], name: string) {
+export function getObjectProperty(properties: TiledObjectProperty[], name: string) {
     if (!properties || !properties.length) {
         return;
     }
@@ -70,6 +70,22 @@ export default class TiledMap {
         if (!(this.mapFile.layers instanceof Array) || !this.mapFile.layers.length) {
             throw new Error(`Map has no valid 'layers' property.`);
         }
+    }
+
+    public getTileWidth(): number {
+        return this.mapFile.tilewidth;
+    }
+
+    public getTileHeight(): number {
+        return this.mapFile.tileheight;
+    }
+
+    public getWidthInTiles(): number {
+        return this.mapFile.width;
+    }
+
+    public getHeightInTiles(): number {
+        return this.mapFile.height;
     }
 
     public getRenderLayers() {

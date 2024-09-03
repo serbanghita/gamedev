@@ -2,6 +2,7 @@
   {
     "id": "map",
     "components": {
+      "IsTiledMap": {"mapFilePath": "./assets/maps/E1MM2.json" },
       "MatrixConfig": { "width": 40, "height": 30, "tileSize": 16 }
     }
   },

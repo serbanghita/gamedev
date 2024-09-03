@@ -10,7 +10,8 @@
     "baseUrl": "src",
     "paths": {
       "@serbanghita-gamedev/bitmask": ["../../bitmask"],
-      "@serbanghita-gamedev/renderer": ["../../renderer"]
+      "@serbanghita-gamedev/renderer": ["../../renderer"],
+      "@serbanghita-gamedev/tiled": ["../../tiled"]
     }
   },
   "include": [

@@ -137,9 +137,16 @@ export default class World {
     }
 
     public start() {
-        const onlyOnceSystems = [...this.systems].filter(([k, system]) => system.settings.runTimes === 1);
+        // Run all systems that need to be run once and de-register them from the loop.
+        [...this.systems]
+          .filter(([, systemInstance]) => systemInstance.settings.runTimes === 1)
+          .forEach(([systemDeclaration, systemInstance]) => {
+              systemInstance.update();
+              this.systems.delete(systemDeclaration);
+          } );
 
         const loop = (now: DOMHighResTimeStamp) => {
+            console.log(this.systems.size);
             this.systems.forEach((system) => system.update(now));
 
             window.requestAnimationFrame(loop);

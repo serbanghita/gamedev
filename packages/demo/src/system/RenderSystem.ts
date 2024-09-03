@@ -4,24 +4,25 @@ import { Position, SpriteSheet } from "@serbanghita-gamedev/component";
 import IsWalking from "../component/IsWalking";
 import IsIdle from "../component/IsIdle";
 import IsAttackingWithClub from "../component/IsAttackingWithClub";
-import { ANIMATIONS_REGISTRY, SPRITES } from "../assets";
+import { ANIMATIONS_REGISTRY } from "../assets";
 
 export default class RenderSystem extends System {
   public constructor(
     public world: World,
     public query: Query,
-    protected $foreground: HTMLCanvasElement,
+    protected CANVAS: HTMLCanvasElement,
+    protected SPRITES: { [key: string]: HTMLImageElement },
   ) {
     super(world, query);
   }
 
   public update(now: number): void {
-    clearCtx(getCtx(this.$foreground), 0, 0, 640, 480);
+    clearCtx(getCtx(this.CANVAS), 0, 0, 640, 480);
 
     this.query.execute().forEach((entity) => {
       const position = entity.getComponent(Position);
       const spriteSheet = entity.getComponent(SpriteSheet);
-      const spriteSheetImg = SPRITES[spriteSheet.properties.spriteSheetImgPath];
+      const spriteSheetImg = this.SPRITES[spriteSheet.properties.spriteSheetImgPath];
 
       if (!spriteSheetImg) {
         throw new Error(`SpriteSheet image file ${spriteSheet.properties.spriteSheetImgPath} is missing.`);
@@ -66,7 +67,7 @@ export default class RenderSystem extends System {
       }
 
       renderImage(
-        getCtx(this.$foreground),
+        getCtx(this.CANVAS),
         spriteSheetImg,
         // source
         animationFrame.x,
@@ -81,7 +82,7 @@ export default class RenderSystem extends System {
       );
 
       renderRectangle(
-        getCtx(this.$foreground) as CanvasRenderingContext2D,
+        getCtx(this.CANVAS) as CanvasRenderingContext2D,
         destPositionX,
         destPositionY,
         animationFrame.width,
@@ -90,7 +91,7 @@ export default class RenderSystem extends System {
       );
 
       renderRectangle(
-        getCtx(this.$foreground) as CanvasRenderingContext2D,
+        getCtx(this.CANVAS) as CanvasRenderingContext2D,
         destPositionX + hitboxOffset.x,
         destPositionY + hitboxOffset.y,
         16,

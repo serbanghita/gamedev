@@ -2,6 +2,7 @@ import {Component} from "@serbanghita-gamedev/ecs";
 import {TiledMapFile} from "@serbanghita-gamedev/tiled";
 
 export type IsTiledMapProps = {
+  mapFilePath: string;
   mapFile: TiledMapFile;
 }
 

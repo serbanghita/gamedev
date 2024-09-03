@@ -1,8 +1,8 @@
 // 0. Create the UI and canvas.
 import {createWrapperElement, createCanvas} from "@serbanghita-gamedev/renderer";
 import {World} from "@serbanghita-gamedev/ecs";
-import { PreRenderTiledMapSystem } from "./system/PreRenderTiledMapSystem";
-import IsTiledMap from "./component/IsTiledMap";
+import { PreRenderTiledMapSystem } from "@serbanghita-gamedev/renderer";
+import IsTiledMap from "@serbanghita-gamedev/component/IsTiledMap";
 import { loadSprites } from "./assets";
 
 async function runGame() {
@@ -15,7 +15,7 @@ async function runGame() {
 
   const SPRITES = await loadSprites();
 
-// Create the current "World" (scene).
+  // Create the current "World" (scene).
   const world = new World();
 
   world.declarations.components.registerComponent(IsTiledMap);

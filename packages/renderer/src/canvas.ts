@@ -106,6 +106,27 @@ export function renderRectangle(
     ctx.restore();
 }
 
+export function renderCircle(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number,
+  radius: number, color: string
+) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(
+      x,
+      y,
+      radius,
+      0,
+      Math.PI * 2,
+      false
+    );
+    ctx.strokeStyle = color;
+    ctx.stroke();
+    ctx.closePath();
+    ctx.restore();
+}
+
 export function getCtx(canvas: HTMLCanvasElement) {
     return canvas.getContext("2d");
 }
@@ -115,4 +136,13 @@ export function clearCtx(ctx: CanvasRenderingContext2D | null, startX: number, s
         throw Error('Cannot clear non-existent Canvas context.');
     }
     ctx.clearRect(startX, startY, endX, endY);
+}
+
+export function run(fn: (now: DOMHighResTimeStamp) => void) {
+    const loop = (now: DOMHighResTimeStamp) => {
+        fn(now);
+        window.requestAnimationFrame(loop);
+    };
+
+    window.requestAnimationFrame(loop);
 }

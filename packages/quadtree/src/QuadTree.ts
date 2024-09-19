@@ -84,6 +84,10 @@ export default class QuadTree {
   }
 
   public query(area: Rectangle): Point[] {
+    if (!this.area.intersects(area)) {
+      return [];
+    }
+
     if (this.points.length === 0) {
       return this.quadrants.reduce<Point[]>((acc, quadrant) => {
         return acc.concat(quadrant.query(area));

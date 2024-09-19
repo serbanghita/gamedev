@@ -1,7 +1,7 @@
 import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
 
 /**
- * @todo: Add perf tests, add FPS counter.
+ * @todo: Add perf tests, add FPS counter, extend Point to attach optional entity id so I can use it in a System
  */
 
 export default class QuadTree {

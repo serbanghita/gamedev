@@ -41,41 +41,25 @@ export default class QuadTree {
 
   public split() {
     const topLeft = new QuadTree(
-      new Rectangle(
-        this.area.width / 2,
-        this.area.height / 2,
-        new Point(this.area.center.x - this.area.width / 4, this.area.center.y - this.area.height / 4),
-      ),
+      new Rectangle(this.area.width / 2, this.area.height / 2, new Point(this.area.center.x - this.area.width / 4, this.area.center.y - this.area.height / 4)),
       this.maxDepth,
       this.maxPoints,
       this.depth + 1,
     );
     const topRight = new QuadTree(
-      new Rectangle(
-        this.area.width / 2,
-        this.area.height / 2,
-        new Point(this.area.center.x + this.area.width / 4, this.area.center.y - this.area.height / 4),
-      ),
+      new Rectangle(this.area.width / 2, this.area.height / 2, new Point(this.area.center.x + this.area.width / 4, this.area.center.y - this.area.height / 4)),
       this.maxDepth,
       this.maxPoints,
       this.depth + 1,
     );
     const bottomLeft = new QuadTree(
-      new Rectangle(
-        this.area.width / 2,
-        this.area.height / 2,
-        new Point(this.area.center.x - this.area.width / 4, this.area.center.y + this.area.height / 4),
-      ),
+      new Rectangle(this.area.width / 2, this.area.height / 2, new Point(this.area.center.x - this.area.width / 4, this.area.center.y + this.area.height / 4)),
       this.maxDepth,
       this.maxPoints,
       this.depth + 1,
     );
     const bottomRight = new QuadTree(
-      new Rectangle(
-        this.area.width / 2,
-        this.area.height / 2,
-        new Point(this.area.center.x + this.area.width / 4, this.area.center.y + this.area.height / 4),
-      ),
+      new Rectangle(this.area.width / 2, this.area.height / 2, new Point(this.area.center.x + this.area.width / 4, this.area.center.y + this.area.height / 4)),
       this.maxDepth,
       this.maxPoints,
       this.depth + 1,
@@ -97,5 +81,15 @@ export default class QuadTree {
 
   public clearPoints() {
     this.points = [];
+  }
+
+  public query(area: Rectangle): Point[] {
+    if (this.points.length === 0) {
+      return this.quadrants.reduce<Point[]>((acc, quadrant) => {
+        return acc.concat(quadrant.query(area));
+      }, []);
+    }
+
+    return this.points.filter((point) => area.intersectsWithPoint(point));
   }
 }

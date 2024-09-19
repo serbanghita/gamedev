@@ -12,12 +12,15 @@ HTML_WRAPPER.appendChild(CANVAS_BACKGROUND);
 document.body.appendChild(HTML_WRAPPER);
 
 const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
-const quadtree = new QuadTree(area, 3, 1);
+const quadtree = new QuadTree(area, 10, 10);
 
-// for (let i = 0; i<10; i++) {
-//     const point = new Point(randomInt(10, 600), randomInt(10, 400));
-//     quadtree.candidatePoint(point);
-// }
+for (let i = 0; i < 3000; i++) {
+  const point = new Point(randomInt(0, 640), randomInt(0, 480));
+  quadtree.candidatePoint(point);
+}
+
+const queryArea = new Rectangle(120, 120, new Point(randomInt(0, 640), randomInt(0, 480)));
+const pointsFound = quadtree.query(queryArea);
 
 // Case 1. (only one root quadrant).
 // const points = [
@@ -66,18 +69,18 @@ const quadtree = new QuadTree(area, 3, 1);
 // //
 
 // Case 5.
-const points = [
-  [10, 10],
-  [10, 20],
-  [10, 30],
-  [10, 40],
-  [10, 50],
-];
+// const points = [
+//   [10, 10],
+//   [10, 20],
+//   [10, 30],
+//   [10, 40],
+//   [10, 50],
+// ];
 
-points.forEach((arr) => {
-  const point = new Point(arr[0], arr[1]);
-  quadtree.candidatePoint(point);
-});
+// points.forEach((arr) => {
+//   const point = new Point(arr[0], arr[1]);
+//   quadtree.candidatePoint(point);
+// });
 
 /**
  * Render for demo
@@ -95,11 +98,6 @@ function renderQuadTree(quadtree: QuadTree) {
     renderQuadTree(subQuadtree);
   });
 }
-
-// renderQuadTree(quadtree)
-
-console.log(quadtree);
-
 let allowDraw = false;
 
 CANVAS_BACKGROUND.addEventListener("mousedown", () => (allowDraw = true));
@@ -111,12 +109,20 @@ CANVAS_BACKGROUND.addEventListener("mousemove", (event) => {
   }
   const x = event.clientX | 0;
   const y = event.clientY | 0;
-  console.log(x, y);
+  // console.log(x, y);
   const point = new Point(x, y);
   quadtree.candidatePoint(point);
 });
 
+console.log(quadtree);
+
 run(() => {
   ctx.clearRect(0, 0, 640, 480);
   renderQuadTree(quadtree);
+
+  renderRectangle(ctx, queryArea.topLeftX, queryArea.topLeftY, queryArea.width, queryArea.height, "green", "rgba(0,255,0,0.1)");
+
+  pointsFound.forEach((point) => {
+    renderCircle(ctx, point.x, point.y, 2, "green");
+  });
 });

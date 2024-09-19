@@ -1,5 +1,9 @@
 import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
 
+/**
+ * @todo: Add perf tests, add FPS counter.
+ */
+
 export default class QuadTree {
   public points: Point[] = [];
   public quadrants: QuadTree[] = [];

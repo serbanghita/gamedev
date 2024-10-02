@@ -1,4 +1,4 @@
-import { createCanvas, createWrapperElement, renderRectangle, renderCircle, run } from "@serbanghita-gamedev/renderer";
+import { createCanvas, createWrapperElement, rectangle, circle, dot, run } from "@serbanghita-gamedev/renderer";
 import QuadTree from "./QuadTree";
 import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
 
@@ -12,14 +12,21 @@ HTML_WRAPPER.appendChild(CANVAS_BACKGROUND);
 document.body.appendChild(HTML_WRAPPER);
 
 const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
-const quadtree = new QuadTree(area, 10, 10);
+const quadtree = new QuadTree(area, 5, 10);
 
-for (let i = 0; i < 3000; i++) {
-  const point = new Point(randomInt(0, 640), randomInt(0, 480));
-  quadtree.candidatePoint(point);
+for (let x = 0; x < 640 / 2; x += 16) {
+  for (let y = 0; y < 480 / 2; y += 16) {
+    quadtree.addPoint(new Point(x, y));
+  }
 }
 
-const queryArea = new Rectangle(120, 120, new Point(randomInt(0, 640), randomInt(0, 480)));
+// for (let i = 0; i < 3000; i++) {
+//   const point = new Point(randomInt(0, 640), randomInt(0, 480));
+//   quadtree.candidatePoint(point);
+// }
+
+// const queryArea = new Rectangle(120, 120, new Point(randomInt(0, 640), randomInt(0, 480)));
+const queryArea = new Rectangle(120, 120, new Point(640 / 2, 480 / 2));
 const pointsFound = quadtree.query(queryArea);
 
 // Case 1. (only one root quadrant).
@@ -82,19 +89,20 @@ const pointsFound = quadtree.query(queryArea);
 //   quadtree.candidatePoint(point);
 // });
 
-/**
+/******************************************************************
  * Render for demo
- */
+ * ****************************************************************/
 const ctx = CANVAS_BACKGROUND.getContext("2d") as CanvasRenderingContext2D;
 
 function renderQuadTree(quadtree: QuadTree) {
-  renderRectangle(ctx, quadtree.area.topLeftX, quadtree.area.topLeftY, quadtree.area.width, quadtree.area.height, "black");
+  rectangle(ctx, quadtree.area.topLeftX, quadtree.area.topLeftY, quadtree.area.width, quadtree.area.height, "rgba(0,0,0)");
 
   quadtree.points.forEach((point) => {
-    renderCircle(ctx, point.x, point.y, 2, "red");
+    // circle(ctx, point.x, point.y, 2, "red");
+    dot(ctx, point.x, point.y, "red");
   });
 
-  quadtree.quadrants.forEach((subQuadtree) => {
+  Object.values(quadtree.quadrants).forEach((subQuadtree) => {
     renderQuadTree(subQuadtree);
   });
 }
@@ -110,19 +118,28 @@ CANVAS_BACKGROUND.addEventListener("mousemove", (event) => {
   const x = event.clientX | 0;
   const y = event.clientY | 0;
   // console.log(x, y);
-  const point = new Point(x, y);
-  quadtree.candidatePoint(point);
+  quadtree.addPoint(new Point(x, y));
 });
 
 console.log(quadtree);
-
+console.log(pointsFound);
+/******************************************************************
+ * Game loop
+ * ****************************************************************/
 run(() => {
   ctx.clearRect(0, 0, 640, 480);
   renderQuadTree(quadtree);
 
-  renderRectangle(ctx, queryArea.topLeftX, queryArea.topLeftY, queryArea.width, queryArea.height, "green", "rgba(0,255,0,0.1)");
+  rectangle(ctx, queryArea.topLeftX, queryArea.topLeftY, queryArea.width, queryArea.height, "green", "rgba(0,255,0,0.1)");
 
   pointsFound.forEach((point) => {
-    renderCircle(ctx, point.x, point.y, 2, "green");
+    // circle(ctx, point.x, point.y, 2, "green", "green");
+    dot(ctx, point.x, point.y, "green");
   });
 });
+
+// run(() => {
+//   ctx.clearRect(0, 0, 640, 480);
+//
+//   renderRectangle(ctx, queryArea.topLeftX, queryArea.topLeftY, queryArea.width, queryArea.height, "green", "rgba(0,255,0,0.1)");
+// });

@@ -86,7 +86,14 @@ export function renderTile(
     );
 }
 
-export function renderRectangle(
+export function dot(ctx: CanvasRenderingContext2D, x: number, y: number, fillColor: string = 'rgb(0,0,0)') {
+  // ctx.save();
+  ctx.fillStyle = fillColor;
+  ctx.fillRect(x,y,1,1);
+  // ctx.restore();
+}
+
+export function rectangle(
     ctx: CanvasRenderingContext2D,
     x: number, y: number,
     width: number, height: number,
@@ -106,10 +113,10 @@ export function renderRectangle(
     ctx.restore();
 }
 
-export function renderCircle(
+export function circle(
   ctx: CanvasRenderingContext2D,
   x: number, y: number,
-  radius: number, color: string
+  radius: number, strokeColor: string, fillColor?: string,
 ) {
     ctx.save();
     ctx.beginPath();
@@ -121,7 +128,11 @@ export function renderCircle(
       Math.PI * 2,
       false
     );
-    ctx.strokeStyle = color;
+    ctx.strokeStyle = strokeColor;
+    if (fillColor) {
+      ctx.fillStyle = fillColor;
+      ctx.fill();
+    }
     ctx.stroke();
     ctx.closePath();
     ctx.restore();
@@ -138,11 +149,28 @@ export function clearCtx(ctx: CanvasRenderingContext2D | null, startX: number, s
     ctx.clearRect(startX, startY, endX, endY);
 }
 
+
+
 export function run(fn: (now: DOMHighResTimeStamp) => void) {
-    const loop = (now: DOMHighResTimeStamp) => {
-        fn(now);
-        window.requestAnimationFrame(loop);
-    };
+  let fps = 0;
+  let lastTime = 0;
+  let frameCount = 0;
+
+  const loop = (now: DOMHighResTimeStamp) => {
+
+    frameCount++;
+
+    if (now - lastTime >= 1000) {
+      fps = frameCount;
+      frameCount = 0;
+      lastTime = now;
+
+      console.log(`FPS: ${fps}`);
+    }
+
+      fn(now);
+      window.requestAnimationFrame(loop);
+  };
 
     window.requestAnimationFrame(loop);
 }

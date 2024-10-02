@@ -38,3 +38,9 @@ Query on quadtree with maxDepth=10 (3000 points)
 ```shell
 npx vitest --coverage
 ```
+
+## Benchmarks
+
+```shell
+npx vitest bench --run --testNamePattern=queryArea QuadTree.bench.ts
+```

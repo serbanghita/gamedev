@@ -1,7 +1,9 @@
 {
   "name": "@serbanghita-gamedev/quadtree",
   "description": "Quadtree",
-  "keywords": ["quadtree"],
+  "keywords": [
+    "quadtree"
+  ],
   "version": "1.0.0",
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "license": "MIT",
@@ -10,9 +12,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "main": "./src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "esbuild ./src/index.ts --bundle --outfile=dist/quadtree.js",
     "demo": "esbuild ./src/demo.ts --bundle --sourcemap --watch --outfile=demo/demo.js --servedir=demo",
+    "demo2": "esbuild ./src/demo2.ts --bundle --sourcemap --watch --outfile=demo2/demo2.js --servedir=demo2",
     "test": "vitest --globals",
     "lint": "eslint ./src"
   }

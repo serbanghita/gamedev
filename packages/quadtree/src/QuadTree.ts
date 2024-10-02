@@ -4,9 +4,18 @@ import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
  * @todo: Add perf tests, add FPS counter, extend Point to attach optional entity id so I can use it in a System
  */
 
+export type Quadrants = {
+  topLeft?: QuadTree;
+  topRight?: QuadTree;
+  bottomLeft?: QuadTree;
+  bottomRight?: QuadTree;
+};
+
+type QuadrantEntries = [keyof Quadrants, QuadTree][];
+
 export default class QuadTree {
   public points: Point[] = [];
-  public quadrants: QuadTree[] = [];
+  public quadrants: Quadrants = {};
   public hasQuadrants: boolean = false;
 
   constructor(
@@ -19,31 +28,7 @@ export default class QuadTree {
     public readonly depth: number = 0,
   ) {}
 
-  public candidatePoint(point: Point) {
-    if (this.area.intersectsWithPoint(point)) {
-      if (this.hasQuadrants) {
-        this.quadrants.forEach((quadtree) => {
-          quadtree.candidatePoint(point);
-        });
-        return true;
-      }
-
-      this.points.push(point);
-
-      // Attempt to split the points and quadrants only if we didn't reach the maximum depth.
-      if (this.points.length > this.maxPoints && this.depth < this.maxDepth) {
-        this.split();
-        this.redistributePoints();
-        this.clearPoints();
-      }
-
-      return true;
-    }
-
-    return false;
-  }
-
-  public split() {
+  private createQuadrants(): Quadrants {
     const topLeft = new QuadTree(
       new Rectangle(this.area.width / 2, this.area.height / 2, new Point(this.area.center.x - this.area.width / 4, this.area.center.y - this.area.height / 4)),
       this.maxDepth,
@@ -69,18 +54,55 @@ export default class QuadTree {
       this.depth + 1,
     );
 
-    this.quadrants = [topLeft, topRight, bottomLeft, bottomRight];
-    this.hasQuadrants = true;
+    return { topLeft, topRight, bottomLeft, bottomRight };
   }
 
-  // Redistribute points
-  // Do not keep points to the root level if there are existing sub-quadrants.
+  private candidatePoint(point: Point) {
+    return this.area.intersectsWithPoint(point);
+  }
+
+  public addPoint(point: Point): boolean {
+    if (!this.candidatePoint(point)) {
+      return false;
+    }
+
+    this.points.push(point);
+
+    // Attempt to split the points in quadrants only if we didn't reach the maximum depth.
+    // Do not keep points into quadrants if there are existing sub-quadrants.
+    if (this.hasQuadrants || (this.points.length > this.maxPoints && this.depth < this.maxDepth)) {
+      this.redistributePoints();
+      this.clearPoints();
+    }
+
+    return true;
+  }
+
   private redistributePoints() {
+    // Create temporary sub-quadrants objects to check if there are points in them.
+    const quadrants = this.createQuadrants();
+
+    // Iterate through available points and distribute them to sub-quadrants.
     this.points.forEach((point: Point) => {
-      this.quadrants.some((subQuadrant) => {
-        return subQuadrant.candidatePoint(point);
-      });
+      for (const [key, quadrant] of Object.entries(quadrants) as QuadrantEntries) {
+        const searchInQuadrant = this.quadrants[key] ?? quadrant;
+
+        if (searchInQuadrant.candidatePoint(point)) {
+          // Save the quadrant for later use. Don't save empty quadrants.
+          if (!this.quadrants[key]) {
+            this.quadrants[key] = quadrant;
+          }
+
+          this.quadrants[key]?.addPoint(point);
+
+          break;
+        }
+      }
     });
+
+    if (Object.keys(this.quadrants).length > 0) {
+      this.hasQuadrants = true;
+    }
   }
 
   public clearPoints() {
@@ -93,11 +115,21 @@ export default class QuadTree {
     }
 
     if (this.points.length === 0) {
-      return this.quadrants.reduce<Point[]>((acc, quadrant) => {
+      return Object.values(this.quadrants).reduce<Point[]>((acc, quadrant) => {
         return acc.concat(quadrant.query(area));
       }, []);
     }
 
     return this.points.filter((point) => area.intersectsWithPoint(point));
+  }
+
+  private clearQuadrants() {
+    this.hasQuadrants = false;
+    this.quadrants = {};
+  }
+
+  public clear() {
+    this.clearPoints();
+    this.clearQuadrants();
   }
 }

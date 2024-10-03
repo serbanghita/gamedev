@@ -86,10 +86,10 @@ export function renderTile(
     );
 }
 
-export function dot(ctx: CanvasRenderingContext2D, x: number, y: number, fillColor: string = 'rgb(0,0,0)') {
+export function dot(ctx: CanvasRenderingContext2D, x: number, y: number, fillColor: string = 'rgb(0,0,0)', size: number = 1) {
   // ctx.save();
   ctx.fillStyle = fillColor;
-  ctx.fillRect(x,y,1,1);
+  ctx.fillRect(x,y,size,size);
   // ctx.restore();
 }
 

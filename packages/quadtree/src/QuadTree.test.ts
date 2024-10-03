@@ -7,48 +7,47 @@ describe("QuadTree", () => {
     const area = new Rectangle(640, 480, areaCenterPoint);
     const q = new QuadTree(area, 3, 3);
 
-    q.candidatePoint(new Point(10, 50));
-    q.candidatePoint(new Point(10, 70));
-    q.candidatePoint(new Point(10, 80));
+    q.addPoint(new Point(10, 50));
+    q.addPoint(new Point(10, 70));
+    q.addPoint(new Point(10, 80));
 
     expect(q.hasQuadrants).toBe(false);
-    expect(q.points.length).toEqual(3);
-    expect(q.quadrants.length).toEqual(0);
+    expect(q.points).toHaveLength(3);
+    expect(q.quadrants).toEqual({});
   });
 
-  it("4 quadtrees leafs with maxPoints", () => {
+  it("4 sub quadtrees with maxPoints", () => {
     const areaCenterPoint = new Point(640 / 2, 480 / 2);
     const area = new Rectangle(640, 480, areaCenterPoint);
     const rootQuadTree = new QuadTree(area, 3, 3);
 
-    rootQuadTree.candidatePoint(new Point(10, 50));
-    rootQuadTree.candidatePoint(new Point(10, 70));
-    rootQuadTree.candidatePoint(new Point(10, 80));
+    rootQuadTree.addPoint(new Point(10, 50));
+    rootQuadTree.addPoint(new Point(10, 70));
+    rootQuadTree.addPoint(new Point(10, 80));
 
-    rootQuadTree.candidatePoint(new Point(400, 50));
-    rootQuadTree.candidatePoint(new Point(400, 70));
-    rootQuadTree.candidatePoint(new Point(400, 80));
+    rootQuadTree.addPoint(new Point(400, 50));
+    rootQuadTree.addPoint(new Point(400, 70));
+    rootQuadTree.addPoint(new Point(400, 80));
 
-    rootQuadTree.candidatePoint(new Point(100, 450));
-    rootQuadTree.candidatePoint(new Point(100, 470));
-    rootQuadTree.candidatePoint(new Point(100, 480));
+    rootQuadTree.addPoint(new Point(100, 450));
+    rootQuadTree.addPoint(new Point(100, 470));
+    rootQuadTree.addPoint(new Point(100, 480));
 
-    rootQuadTree.candidatePoint(new Point(400, 450));
-    rootQuadTree.candidatePoint(new Point(400, 470));
-    rootQuadTree.candidatePoint(new Point(400, 480));
+    rootQuadTree.addPoint(new Point(400, 450));
+    rootQuadTree.addPoint(new Point(400, 470));
+    rootQuadTree.addPoint(new Point(400, 480));
 
     expect(rootQuadTree.hasQuadrants).toBe(true);
-    expect(rootQuadTree.points.length).toEqual(0);
-    expect(rootQuadTree.quadrants.length).toEqual(4);
+    expect(rootQuadTree.points).toHaveLength(0);
 
-    expect(rootQuadTree.quadrants[0].points.length).toEqual(3);
-    expect(rootQuadTree.quadrants[0].hasQuadrants).toBe(false);
-    expect(rootQuadTree.quadrants[1].points.length).toEqual(3);
-    expect(rootQuadTree.quadrants[1].hasQuadrants).toBe(false);
-    expect(rootQuadTree.quadrants[2].points.length).toEqual(3);
-    expect(rootQuadTree.quadrants[2].hasQuadrants).toBe(false);
-    expect(rootQuadTree.quadrants[3].points.length).toEqual(3);
-    expect(rootQuadTree.quadrants[3].hasQuadrants).toBe(false);
+    expect(rootQuadTree.quadrants.topLeft?.points).toHaveLength(3);
+    expect(rootQuadTree.quadrants.topLeft?.hasQuadrants).toBe(false);
+    expect(rootQuadTree.quadrants.topRight?.points).toHaveLength(3);
+    expect(rootQuadTree.quadrants.topRight?.hasQuadrants).toBe(false);
+    expect(rootQuadTree.quadrants.bottomLeft?.points).toHaveLength(3);
+    expect(rootQuadTree.quadrants.bottomLeft?.hasQuadrants).toBe(false);
+    expect(rootQuadTree.quadrants.bottomRight?.points).toHaveLength(3);
+    expect(rootQuadTree.quadrants.bottomRight?.hasQuadrants).toBe(false);
   });
 
   it("3 level quadrants, points belong to the lowest level quadrants", () => {
@@ -56,22 +55,25 @@ describe("QuadTree", () => {
     const area = new Rectangle(640, 480, areaCenterPoint);
     const rootQuadTree = new QuadTree(area, 3, 3);
 
-    rootQuadTree.candidatePoint(new Point(100, 50));
-    rootQuadTree.candidatePoint(new Point(100, 70));
-    rootQuadTree.candidatePoint(new Point(100, 80));
-    rootQuadTree.candidatePoint(new Point(200, 80));
+    rootQuadTree.addPoint(new Point(100, 50));
+    rootQuadTree.addPoint(new Point(100, 70));
+    rootQuadTree.addPoint(new Point(100, 80));
+    rootQuadTree.addPoint(new Point(200, 80));
 
     expect(rootQuadTree.hasQuadrants).toBe(true);
-    expect(rootQuadTree.points.length).toEqual(0);
-    expect(rootQuadTree.quadrants.length).toEqual(4);
+    expect(rootQuadTree.points).toHaveLength(0);
+    expect(rootQuadTree.quadrants).toHaveProperty("topLeft");
+    expect(rootQuadTree.quadrants).not.toHaveProperty("topRight");
+    expect(rootQuadTree.quadrants).not.toHaveProperty("bottomLeft");
+    expect(rootQuadTree.quadrants).not.toHaveProperty("bottomRight");
 
-    expect(rootQuadTree.quadrants[0].points.length).toEqual(0);
-    expect(rootQuadTree.quadrants[0].hasQuadrants).toBe(true);
+    expect(rootQuadTree.quadrants.topLeft?.points).toHaveLength(0);
+    expect(rootQuadTree.quadrants.topLeft?.hasQuadrants).toBe(true);
 
-    expect(rootQuadTree.quadrants[0].quadrants[0].points.length).toBe(3);
-    expect(rootQuadTree.quadrants[0].quadrants[1].points.length).toBe(1);
-    expect(rootQuadTree.quadrants[0].quadrants[2].points.length).toBe(0);
-    expect(rootQuadTree.quadrants[0].quadrants[3].points.length).toBe(0);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.points).toHaveLength(3);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topRight?.points).toHaveLength(1);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.bottomLeft).toBeUndefined();
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.bottomRight).toBeUndefined();
   });
 
   it("maxDepth", () => {
@@ -79,30 +81,90 @@ describe("QuadTree", () => {
     const area = new Rectangle(640, 480, areaCenterPoint);
     const rootQuadTree = new QuadTree(area, 3, 1);
 
-    rootQuadTree.candidatePoint(new Point(10, 10));
-    rootQuadTree.candidatePoint(new Point(10, 20));
-    rootQuadTree.candidatePoint(new Point(10, 30));
-    rootQuadTree.candidatePoint(new Point(10, 40));
-    rootQuadTree.candidatePoint(new Point(10, 50));
+    rootQuadTree.addPoint(new Point(10, 10));
+    rootQuadTree.addPoint(new Point(10, 20));
+    rootQuadTree.addPoint(new Point(10, 30));
+    rootQuadTree.addPoint(new Point(10, 40));
+    rootQuadTree.addPoint(new Point(10, 50));
 
     expect(rootQuadTree.hasQuadrants).toBe(true);
     expect(rootQuadTree.depth).toEqual(0);
     expect(rootQuadTree.points.length).toEqual(0);
-    expect(rootQuadTree.quadrants.length).toEqual(4);
+    expect(rootQuadTree.quadrants).toHaveProperty("topLeft");
+    expect(rootQuadTree.quadrants).not.toHaveProperty("topRight");
+    expect(rootQuadTree.quadrants).not.toHaveProperty("bottomLeft");
+    expect(rootQuadTree.quadrants).not.toHaveProperty("bottomRight");
 
-    expect(rootQuadTree.quadrants[0].hasQuadrants).toBe(true);
-    expect(rootQuadTree.quadrants[0].depth).toEqual(1);
-    expect(rootQuadTree.quadrants[0].points.length).toEqual(0);
-    expect(rootQuadTree.quadrants[0].quadrants.length).toEqual(4);
+    expect(rootQuadTree.quadrants.topLeft?.hasQuadrants).toBe(true);
+    expect(rootQuadTree.quadrants.topLeft?.depth).toEqual(1);
+    expect(rootQuadTree.quadrants.topLeft?.points.length).toEqual(0);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants).toHaveProperty("topLeft");
+    expect(rootQuadTree.quadrants.topLeft?.quadrants).not.toHaveProperty("topRight");
+    expect(rootQuadTree.quadrants.topLeft?.quadrants).not.toHaveProperty("bottomLeft");
+    expect(rootQuadTree.quadrants.topLeft?.quadrants).not.toHaveProperty("bottomRight");
 
-    expect(rootQuadTree.quadrants[0].quadrants[0].hasQuadrants).toBe(true);
-    expect(rootQuadTree.quadrants[0].quadrants[0].depth).toEqual(2);
-    expect(rootQuadTree.quadrants[0].quadrants[0].points.length).toEqual(0);
-    expect(rootQuadTree.quadrants[0].quadrants[0].quadrants.length).toEqual(4);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.hasQuadrants).toBe(true);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.depth).toEqual(2);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.points.length).toEqual(0);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.quadrants).toHaveProperty("topLeft");
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.quadrants).not.toHaveProperty("topRight");
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.quadrants).not.toHaveProperty("bottomLeft");
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.quadrants).not.toHaveProperty("bottomRight");
 
-    expect(rootQuadTree.quadrants[0].quadrants[0].quadrants[0].hasQuadrants).toBe(false);
-    expect(rootQuadTree.quadrants[0].quadrants[0].quadrants[0].depth).toEqual(3);
-    expect(rootQuadTree.quadrants[0].quadrants[0].quadrants[0].points.length).toEqual(5);
-    expect(rootQuadTree.quadrants[0].quadrants[0].quadrants[0].quadrants.length).toEqual(0);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.quadrants.topLeft?.hasQuadrants).toBe(false);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.quadrants.topLeft?.depth).toEqual(3);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.quadrants.topLeft?.points.length).toEqual(5);
+    expect(rootQuadTree.quadrants.topLeft?.quadrants.topLeft?.quadrants.topLeft?.quadrants).toEqual({});
+  });
+
+  describe("query", () => {
+    it("no quadrants, single point", async () => {
+      const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
+      const quadtree = new QuadTree(area, 5, 10);
+
+      const points = [
+        // Inside
+        [270, 230],
+      ];
+
+      points.forEach(([x, y]) => quadtree.addPoint(new Point(x, y)));
+
+      const pointsFound = quadtree.query(new Rectangle(120, 120, new Point(640 / 2, 480 / 2)));
+
+      expect(quadtree.hasQuadrants).toBe(false);
+      expect(quadtree.quadrants).toEqual({});
+      expect(pointsFound).toHaveLength(1);
+    });
+
+    it("find 5 points", async () => {
+      const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
+      const quadtree = new QuadTree(area, 5, 3);
+
+      const points = [
+        // Outside
+        [100, 100],
+        [100, 110],
+        [100, 120],
+        [100, 130],
+        [100, 140],
+        // Inside
+        [270, 230],
+        [270, 240],
+        [270, 250],
+        [270, 260],
+        [270, 270],
+      ];
+
+      points.forEach(([x, y]) => quadtree.addPoint(new Point(x, y)));
+
+      const pointsFound = quadtree.query(new Rectangle(120, 120, new Point(640 / 2, 480 / 2)));
+
+      expect(quadtree.hasQuadrants).toBe(true);
+      expect(quadtree.quadrants).toHaveProperty("topLeft");
+      expect(quadtree.quadrants).not.toHaveProperty("topRight");
+      expect(quadtree.quadrants).toHaveProperty("bottomLeft");
+      expect(quadtree.quadrants).not.toHaveProperty("bottomRight");
+      expect(pointsFound).toHaveLength(5);
+    });
   });
 });

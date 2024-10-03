@@ -12,22 +12,20 @@ HTML_WRAPPER.appendChild(CANVAS_BACKGROUND);
 document.body.appendChild(HTML_WRAPPER);
 
 const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
-const quadtree = new QuadTree(area, 5, 10);
+const quadtree = new QuadTree(area, 5, 3);
 
-for (let x = 0; x < 640 / 2; x += 16) {
-  for (let y = 0; y < 480 / 2; y += 16) {
-    quadtree.addPoint(new Point(x, y));
-  }
-}
+// for (let x = 0; x < 640 / 2; x += 16) {
+//   for (let y = 0; y < 480 / 2; y += 16) {
+//     quadtree.addPoint(new Point(x, y));
+//   }
+// }
 
 // for (let i = 0; i < 3000; i++) {
 //   const point = new Point(randomInt(0, 640), randomInt(0, 480));
-//   quadtree.candidatePoint(point);
+//   quadtree.addPoint(point);
 // }
 
 // const queryArea = new Rectangle(120, 120, new Point(randomInt(0, 640), randomInt(0, 480)));
-const queryArea = new Rectangle(120, 120, new Point(640 / 2, 480 / 2));
-const pointsFound = quadtree.query(queryArea);
 
 // Case 1. (only one root quadrant).
 // const points = [
@@ -38,21 +36,21 @@ const pointsFound = quadtree.query(queryArea);
 
 // // Case 2. (4 quadrants)
 // const points = [
-//     [100, 50],
-//     [100, 70],
-//     [100, 80],
+//   [100, 50],
+//   [100, 70],
+//   [100, 80],
 //
-//     [400, 50],
-//     [400, 70],
-//     [400, 80],
+//   [400, 50],
+//   [400, 70],
+//   [400, 80],
 //
-//     [100, 450],
-//     [100, 470],
-//     [100, 480],
+//   [100, 450],
+//   [100, 470],
+//   [100, 480],
 //
-//     [400, 450],
-//     [400, 470],
-//     [400, 480],
+//   [400, 450],
+//   [400, 470],
+//   [400, 480],
 // ];
 
 // Case 3.
@@ -84,10 +82,26 @@ const pointsFound = quadtree.query(queryArea);
 //   [10, 50],
 // ];
 
-// points.forEach((arr) => {
-//   const point = new Point(arr[0], arr[1]);
-//   quadtree.candidatePoint(point);
-// });
+// Case 6.
+const points = [
+  // Outside
+  [100, 100],
+  [100, 110],
+  [100, 120],
+  [100, 130],
+  [100, 140],
+  // Inside
+  [270, 230],
+  [270, 240],
+  [270, 250],
+  [270, 260],
+  [270, 270],
+];
+
+points.forEach(([x, y]) => quadtree.addPoint(new Point(x, y)));
+
+const queryArea = new Rectangle(120, 120, new Point(640 / 2, 480 / 2));
+const pointsFound = quadtree.query(queryArea);
 
 /******************************************************************
  * Render for demo
@@ -99,7 +113,7 @@ function renderQuadTree(quadtree: QuadTree) {
 
   quadtree.points.forEach((point) => {
     // circle(ctx, point.x, point.y, 2, "red");
-    dot(ctx, point.x, point.y, "red");
+    dot(ctx, point.x, point.y, "red", 5);
   });
 
   Object.values(quadtree.quadrants).forEach((subQuadtree) => {
@@ -134,12 +148,6 @@ run(() => {
 
   pointsFound.forEach((point) => {
     // circle(ctx, point.x, point.y, 2, "green", "green");
-    dot(ctx, point.x, point.y, "green");
+    dot(ctx, point.x, point.y, "green", 5);
   });
 });
-
-// run(() => {
-//   ctx.clearRect(0, 0, 640, 480);
-//
-//   renderRectangle(ctx, queryArea.topLeftX, queryArea.topLeftY, queryArea.width, queryArea.height, "green", "rgba(0,255,0,0.1)");
-// });

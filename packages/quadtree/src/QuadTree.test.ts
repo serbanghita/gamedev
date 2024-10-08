@@ -2,6 +2,23 @@ import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
 import QuadTree from "./QuadTree";
 
 describe("QuadTree", () => {
+  it("addPoint outside the area", () => {
+    const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
+    const q = new QuadTree(area, 3, 3);
+
+    expect(q.addPoint(new Point(1000, 1000))).toBe(false);
+  });
+
+  it("misplaced Points are note redistributed", () => {
+    const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
+    const q = new QuadTree(area, 3, 3);
+    q.points = [new Point(1000, 1000), new Point(2000, 2000), new Point(3000, 3000), new Point(4000, 4000)];
+
+    q.addPoint(new Point(100, 100));
+
+    expect(q.query(area)).toHaveLength(1);
+  });
+
   it("1 quadtree with maxPoints", () => {
     const areaCenterPoint = new Point(640 / 2, 480 / 2);
     const area = new Rectangle(640, 480, areaCenterPoint);

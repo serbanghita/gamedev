@@ -12,7 +12,7 @@ export default defineConfig({
     },
     coverage: {
       provider: "istanbul", // or 'v8'
-      exclude: ["./src/demo.ts"],
+      exclude: ["./src/demo.ts", "./src/demo2.ts", "./src/QuadTree.bench.ts"],
     },
   },
 });

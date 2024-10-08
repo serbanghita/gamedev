@@ -1,5 +1,5 @@
 {
-  "name": "glhf-demo-tiled",
+  "name": "@serbanghita-gamedev/demo-tiled-rendering",
   "version": "1.0.0",
   "description": "Demo of a Tiled map loaded to Canvas",
   "scripts": {

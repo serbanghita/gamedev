@@ -94,7 +94,8 @@ export default class QuadTree {
           }
 
           this.quadrants[key]?.addPoint(point);
-
+          // Point is assigned to the first quadrant that it intersects with.
+          // This prevents duplication in searches but this could also be a feature (depending on use-cases).
           break;
         }
       }

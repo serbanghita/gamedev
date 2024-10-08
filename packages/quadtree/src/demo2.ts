@@ -70,8 +70,7 @@ run(() => {
   points.forEach((point) => {
     point.x += randomInt(-2, 2);
     point.y += randomInt(-2, 2);
-    // circle(ctx, point.x, point.y, 2, "red");
-    dot(ctx, point.x, point.y, "rgb(255,0,0)");
+    dot(ctx, point.x, point.y, "rgb(255,0,0)", 2);
   });
 
   rectangle(ctx, queryArea.topLeftX, queryArea.topLeftY, queryArea.width, queryArea.height, "rgb(0,125,0)", "rgba(0,255,0,0.1)");
@@ -83,13 +82,6 @@ run(() => {
 
   const pointsFound = quadtree.query(queryArea);
   pointsFound.forEach((point) => {
-    // circle(ctx, point.x, point.y, 2, "green", "green");
-    dot(ctx, point.x, point.y, "rgb(0,125,0)");
+    dot(ctx, point.x, point.y, "rgb(0,125,0)", 4);
   });
 });
-
-// run(() => {
-//   ctx.clearRect(0, 0, 640, 480);
-//
-//   renderRectangle(ctx, queryArea.topLeftX, queryArea.topLeftY, queryArea.width, queryArea.height, "green", "rgba(0,255,0,0.1)");
-// });

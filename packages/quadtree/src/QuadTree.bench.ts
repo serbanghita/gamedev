@@ -23,6 +23,6 @@ describe("queryArea", () => {
     () => {
       quadtree.query(queryArea);
     },
-    { iterations: 10000 },
+    { iterations: 10000, warmupIterations: 10000 },
   );
 });

@@ -2,7 +2,9 @@ import { System, Query, World } from "@serbanghita-gamedev/ecs";
 import IsTiledMap from "../../component/src/IsTiledMap";
 import { renderTile } from "@serbanghita-gamedev/renderer";
 import { TiledMap, TiledMapFile } from "@serbanghita-gamedev/tiled";
+import { getTileCoordinates } from "@serbanghita-gamedev/matrix";
 import { getCtx } from "@serbanghita-gamedev/renderer";
+import { rectangle } from "./canvas";
 
 export default class PreRenderTiledMapSystem extends System {
   public constructor(
@@ -14,7 +16,7 @@ export default class PreRenderTiledMapSystem extends System {
     super(world, query);
   }
 
-  private renderToBuffer(tiledMap: TiledMap) {
+  private renderToBackgroundLayer(tiledMap: TiledMap) {
     if (!this.CANVAS_BACKGROUND) {
       throw new Error(`Background canvas ($background) was not created or passed.`);
     }
@@ -41,9 +43,34 @@ export default class PreRenderTiledMapSystem extends System {
         );
       }
     });
+
+    tiledMap.getCollisionLayers().forEach((layer) => {
+      for (let j = 0; j < layer.data.length; j++) {
+        // Don't draw empty cells.
+        if (layer.data[j] === 0) {
+          continue;
+        }
+
+        const tileCoordinates = getTileCoordinates(j, { width: tiledMap.getWidthInTiles(), height: tiledMap.getHeightInTiles(), tileSize: tiledMap.getTileWidth() });
+
+        rectangle(
+          // @ts-expect-error Not sure why TS sees this as potentially null.
+          getCtx(this.CANVAS_BACKGROUND),
+          tileCoordinates.x,
+          tileCoordinates.y,
+          tiledMap.getTileWidth(),
+          tiledMap.getTileHeight(),
+          "rgb(125,0,0)",
+          "rgba(255,0,0,0.1)",
+        );
+        // j,
+        //   layer.data[j],
+      }
+    });
   }
 
   public update(now: number): void {
+    console.log("PreRenderTiledMapSystem.update");
     this.query.execute().forEach((entity) => {
       const tiledMapComponent = entity.getComponent(IsTiledMap);
       const tiledMapFile = tiledMapComponent.properties.mapFile;
@@ -54,7 +81,11 @@ export default class PreRenderTiledMapSystem extends System {
       }
 
       const tileMap = new TiledMap(tiledMapFile);
-      this.renderToBuffer(tileMap);
+      this.renderToBackgroundLayer(tileMap);
     });
+
+    // if (this.settings.ticksToRunBeforeExit === 1) {
+    //   this.world.removeSystem(PreRenderTiledMapSystem);
+    // }
   }
 }

@@ -1,5 +1,5 @@
 // 0. Create the UI and canvas.
-import { createWrapperElement, createCanvas, run, image, dot } from "@serbanghita-gamedev/renderer";
+import { createWrapperElement, createCanvas, run, dot } from "@serbanghita-gamedev/renderer";
 import { World } from "@serbanghita-gamedev/ecs";
 import { PreRenderTiledMapSystem } from "@serbanghita-gamedev/renderer";
 import { IsTiledMap } from "@serbanghita-gamedev/component";
@@ -31,17 +31,17 @@ async function setup() {
 
   const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [IsTiledMap] });
   world.createSystem(PreRenderTiledMapSystem, TiledMapQuery, CANVAS_BACKGROUND, SPRITES["./assets/sprites/terrain.png"]).runOnlyOnce();
-  world.systems.forEach((system) => system.update(0));
 
   const point = new Point(640 / 2, 480 / 2);
 
-  run(() => {
-    CTX_FOREGROUND.clearRect(0, 0, 640, 480);
-    // image(CTX_FOREGROUND, CANVAS_BACKGROUND, 0, 0, 640, 480, 0, 0, 640, 480);
+  world.start(() => {
+      CTX_FOREGROUND.clearRect(0, 0, 640, 480);
+      // No need to re-render the "background" layer if it's static.
+      // image(CTX_FOREGROUND, CANVAS_BACKGROUND, 0, 0, 640, 480, 0, 0, 640, 480);
 
-    point.x += randomInt(-2, 2);
-    point.y += randomInt(-2, 2);
-    dot(CTX_FOREGROUND, point.x, point.y, "rgb(255,0,0)", 10);
+      point.x += randomInt(-2, 2);
+      point.y += randomInt(-2, 2);
+      dot(CTX_FOREGROUND, point.x, point.y, "rgb(255,0,0)", 10);
   });
 }
 

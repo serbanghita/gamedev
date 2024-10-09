@@ -1,0 +1,12 @@
+{
+  "name": "@serbanghita-gamedev/demo-collision-detection",
+  "version": "1.0.0",
+  "description": "Demo of collision detection based on the quadtree",
+  "scripts": {
+    "build": "esbuild ./src/index.ts --bundle --sourcemap --loader:.png=dataurl --outfile=dist/demo.js",
+    "dev": "esbuild ./src/index.ts --bundle --sourcemap --watch --loader:.png=dataurl --outfile=dist/demo.js --servedir=dist",
+    "test": "echo \"Error: no test specified yet.\""
+  },
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
+  "license": "All code is MIT, the assets are copywritten."
+}

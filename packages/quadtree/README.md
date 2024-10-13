@@ -1,6 +1,6 @@
 # Quadtree
 
-> Quadtree implementation & demo
+> Quadtree implementation & demos
 
 ## Usage
 
@@ -17,21 +17,22 @@ const pointsFound = quadtree.query(queryArea);
 Run demo with:
 
 ```shell
+cd ../demos # pick one of the quadtree folders.
 npm run demo # then go to http://127.0.0.1:8000/
 ```
 
 Quadtree line example
 
-![Quadtree line demo](./demo/line-test.png "Quadtree line demo")
+![Quadtree line demo](resources/line-test.png "Quadtree line demo")
 
 Quadtree with maxDepth=3
 
-![Quadtree with maxDept=3](./demo/maxDepth3.png "Quadtree with maxDepth=3")
+![Quadtree with maxDept=3](resources/maxDepth3.png "Quadtree with maxDepth=3")
 
 
 Query on quadtree with maxDepth=10 (3000 points)
 
-![Quadtree with maxDept=10](./demo/query-maxDepth10.png "Quadtree with maxDepth=10")
+![Quadtree with maxDept=10](resources/query-maxDepth10.png "Quadtree with maxDepth=10")
 
 ## Test
 

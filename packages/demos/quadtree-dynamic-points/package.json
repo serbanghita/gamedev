@@ -1,0 +1,21 @@
+{
+  "name": "@serbanghita-gamedev/quadtree-dynamic-points-demo",
+  "description": "Quadtree",
+  "keywords": [
+    "quadtree"
+  ],
+  "version": "1.0.0",
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "main": "./src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild ./src/index.ts --bundle --outfile=dist/demo.js",
+    "demo": "esbuild ./src/demo.ts --bundle --sourcemap --watch --outfile=demo/demo.js --servedir=demo",
+    "lint": "eslint ./src"
+  }
+}

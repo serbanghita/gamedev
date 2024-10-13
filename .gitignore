@@ -2,7 +2,8 @@
 .tmp
 node_modules
 .nx/cache
-packages/demo/assets/*
-packages/demo/build
+packages/demos/game-playground/assets/*
+packages/demos/game-playground/build
 packages/*/src/*.js
 packages/*/src/*.js.map
+packages/*/coverage/*

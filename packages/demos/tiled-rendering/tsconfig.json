@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    "module": "commonjs",                                /* Specify what module code is generated. */
+    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
+    "strict": true,                                      /* Enable all strict type-checking options. */
+    "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
+    "rootDirs": ["src"],
+    "baseUrl": "src",
+    "sourceMap": true,
+    "paths": {
+      "@serbanghita-gamedev/assets/*": ["../../assets/src/*"],
+      "@serbanghita-gamedev/bitmask/*": ["../../bitmask/src/*"],
+      "@serbanghita-gamedev/component/*": ["../../component/src/*"],
+      "@serbanghita-gamedev/ecs/*": ["../../ecs/src/*"],
+      "@serbanghita-gamedev/input/*": ["../../input/src/*"],
+      "@serbanghita-gamedev/renderer/*": ["../../renderer/src/*"],
+      "@serbanghita-gamedev/matrix/*": ["../../matrix/src/*"],
+      "@serbanghita-gamedev/tiled/*": ["../../tiled/src/*"]
+    }
+  },
+  "include": [
+    "src/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

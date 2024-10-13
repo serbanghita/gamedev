@@ -21,7 +21,7 @@
 
 ## Demo
 
-* [demo](./packages/demo) - A demo of a 2d game implementation using glhf.js library
+* [demo](packages/demos/game-playground) - A demo of a 2d game implementation using glhf.js library
 
 
 ## Development

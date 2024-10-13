@@ -16,11 +16,11 @@
         "@serbanghita-gamedev/ecs/*": ["../../ecs/src/*"],
         "@serbanghita-gamedev/input/*": ["../../input/src/*"],
         "@serbanghita-gamedev/renderer/*": ["../../renderer/src/*"],
-        "@serbanghita-gamedev/matrix/*": ["../../matrix/src/*"],
+        "@serbanghita-gamedev/matrix/*": ["../../matrix/src/*"]
     }
   },
   "include": [
-    "src/index.ts",
+    "src/index.ts"
   ],
   "exclude": [
     "node_modules",

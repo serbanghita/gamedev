@@ -1,5 +1,5 @@
 import { ENTITIES_DECLARATIONS, EntityDeclaration, loadSprites, MAPS } from "./assets";
-import World from "../../ecs/src/World";
+import World from "../../../ecs/src/World";
 import {
   Body,
   Position,

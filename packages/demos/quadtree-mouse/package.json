@@ -1,5 +1,5 @@
 {
-  "name": "@serbanghita-gamedev/quadtree",
+  "name": "@serbanghita-gamedev/quadtree-mouse-demo",
   "description": "Quadtree",
   "keywords": [
     "quadtree"
@@ -14,10 +14,8 @@
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "esbuild ./src/index.ts --bundle --outfile=dist/quadtree.js",
+    "build": "esbuild ./src/demo.ts --bundle --outfile=dist/demo.js",
     "demo": "esbuild ../demos/quadtree-mouse/src/demo.ts --bundle --sourcemap --watch --outfile=demo/demo.js --servedir=demo",
-    "demo2": "esbuild ../demos/quadtree-dynamic-points/src/demo2.ts --bundle --sourcemap --watch --outfile=demo2/demo2.js --servedir=demo2",
-    "test": "vitest --globals",
     "lint": "eslint ./src"
   }
 }

@@ -10,18 +10,16 @@
     "baseUrl": "src",
     "sourceMap": true,
     "paths": {
-      "@serbanghita-gamedev/assets/*": ["../../assets/src/*"],
-      "@serbanghita-gamedev/bitmask/*": ["../../bitmask/src/*"],
-      "@serbanghita-gamedev/component/*": ["../../component/src/*"],
+      "@serbanghita-gamedev/geometry/*": ["../../geometry/src/*"],
       "@serbanghita-gamedev/ecs/*": ["../../ecs/src/*"],
-      "@serbanghita-gamedev/input/*": ["../../input/src/*"],
       "@serbanghita-gamedev/renderer/*": ["../../renderer/src/*"],
       "@serbanghita-gamedev/matrix/*": ["../../matrix/src/*"],
-      "@serbanghita-gamedev/tiled/*": ["../../tiled/src/*"],
+      "@serbanghita-gamedev/quadtree/*": ["../../quadtree/src/*"],
+      "@serbanghita-gamedev/tiled/*": ["../../tiled/src/*"]
     }
   },
   "include": [
-    "src/index.ts",
+    "src/index.ts"
   ],
   "exclude": [
     "node_modules",

@@ -1,5 +1,5 @@
 import { createCanvas, createWrapperElement, rectangle, circle, dot, run } from "@serbanghita-gamedev/renderer";
-import QuadTree from "./QuadTree";
+import QuadTree from "../../../quadtree/src/QuadTree";
 import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
 
 export function randomInt(min: number, max: number): number {

@@ -1,10 +1,10 @@
 {
-  "name": "glhf-demo",
+  "name": "@serbanghita-gamedev/game-playground",
   "version": "1.0.0",
-  "description": "",
+  "description": "A playground for demos made with the game engine library.",
   "scripts": {
-    "build": "node_modules/.bin/esbuild ./src/index.ts --bundle --sourcemap --loader:.png=dataurl --outfile=dist/demo.js",
-    "dev": "node_modules/.bin/esbuild ./src/index.ts --bundle --sourcemap --watch --loader:.png=dataurl --outfile=dist/demo.js --servedir=dist",
+    "build": "esbuild ./src/index.ts --bundle --sourcemap --loader:.png=dataurl --outfile=dist/demo.js",
+    "dev": "esbuild ./src/index.ts --bundle --sourcemap --watch --loader:.png=dataurl --outfile=dist/demo.js --servedir=dist",
     "test": "echo \"Error: no test specified for glhf-demo yet.\""
   },
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",

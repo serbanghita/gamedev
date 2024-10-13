@@ -15,7 +15,7 @@
   "type": "module",
   "scripts": {
     "build": "esbuild ./src/demo.ts --bundle --outfile=dist/demo.js",
-    "demo": "esbuild ../demos/quadtree-mouse/src/demo.ts --bundle --sourcemap --watch --outfile=demo/demo.js --servedir=demo",
+    "dev": "esbuild ./src/demo.ts --bundle --sourcemap --watch --outfile=dist/demo.js --servedir=dist",
     "lint": "eslint ./src"
   }
 }

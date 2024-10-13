@@ -65,6 +65,7 @@ export default class World {
     }
 
     this.notifyQueriesOfEntityRemoval(entity);
+    this.entities.delete(id);
   }
 
   public createSystem(systemDeclaration: typeof System, query: Query, ...args: unknown[]): System {
@@ -95,11 +96,9 @@ export default class World {
   }
 
   public notifyQueriesOfEntityRemoval(entity: Entity) {
-    for (const id in this.queries) {
-      if (this.queries.has(id)) {
-        this.queries.get(id)?.remove(entity);
-      }
-    }
+    this.queries.forEach((query) => {
+      query.remove(entity);
+    });
   }
 
   /**
@@ -154,7 +153,8 @@ export default class World {
         lastTime = now;
       }
 
-      if (frameLimit > 0) { // fps >= frameLimit
+      if (frameLimit > 0) {
+        // fps >= frameLimit
         const runEveryFrameCount = Math.floor(fps / frameLimit);
         if (frameCount % runEveryFrameCount === 0) {
           this.systems.forEach((system) => system.update(now));
@@ -163,13 +163,11 @@ export default class World {
         this.systems.forEach((system) => system.update(now));
       }
 
-
-
       console.log(frameLimit || fps);
 
-      // if (customFn) {
-      //   customFn();
-      // }
+      if (customFn) {
+        customFn();
+      }
       window.requestAnimationFrame(loop);
     };
 

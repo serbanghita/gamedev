@@ -2,14 +2,21 @@ import { createCanvas, createWrapperElement, rectangle, circle, dot, run } from 
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
 import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
 import { World } from "@serbanghita-gamedev/ecs";
-import { Position, IsTiledMap } from "@serbanghita-gamedev/component";
+import { IsTiledMap } from "@serbanghita-gamedev/component";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
 import IsMatrix from "./IsMatrix";
 import PositionSystem from "./PositionSystem";
 import RenderingSystem from "./RenderingSystem";
+import { randomInt } from "./helpers";
+import QuadTreeSystem from "./QuadTreeSystem";
+import CollisionSystem from "./CollisionSystem";
+import PhysicsBody from "./PhysicsBody";
 
 const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
-const quadtree = new QuadTree(area, 5, 10);
+const quadtree = new QuadTree(area, 5, 5);
+
+// @ts-ignore
+window["quadtree"] = quadtree;
 
 /******************************************************************
  * Render for demo
@@ -35,9 +42,9 @@ function renderQuadTree(quadtree: QuadTree) {
 // Create the current "World" (scene).
 const world = new World();
 
-world.declarations.components.registerComponent(Position);
 world.declarations.components.registerComponent(IsTiledMap);
 world.declarations.components.registerComponent(IsMatrix);
+world.declarations.components.registerComponent(PhysicsBody);
 
 const map = world.createEntity("map");
 map.addComponent(IsTiledMap, { mapFile: require("./E1MM2.json"), mapFilePath: "./E1MM2.json" });
@@ -48,26 +55,35 @@ const tiledMap = new TiledMap(tiledMapFile);
 const matrix = world.createEntity("matrix");
 matrix.addComponent(IsMatrix, { matrix: tiledMap.getCollisionLayers()[0] });
 
-for (let w = 0; w < 640; w=w+10) {
-  for (let h = 0; h < 480; h=h+10) {
-    const entity = world.createEntity(`entity${w}-${h}`);
-    entity.addComponent(Position, { x: w, y: h });
+for (let coordX = 0; coordX < 640; coordX = coordX + 30) {
+  for (let coordY = 0; coordY < 480; coordY = coordY + 30) {
+    const id = `entity${coordX}-${coordY}`;
+    const entity = world.createEntity(id);
+    const x = coordX;
+    const y = coordY;
+
+    const point = new Point(x, y, id);
+    // Redundant x, y, but I'm yet to decide on the structure since
+    // a component must only be a container of data, but I also need
+    // the Point reference in order to perform operations.
+
+    const width = randomInt(10, 20);
+    const height = randomInt(10, 20);
+    const rectangle = new Rectangle(width, height, point);
+    entity.addComponent(PhysicsBody, { width, height, rectangle, point });
   }
 }
 
-const PointsQuery = world.createQuery("points", { all: [Position] });
-world.createSystem(PositionSystem, PointsQuery); //.runEveryTicks(60);
+const PointsQuery = world.createQuery("points", { all: [PhysicsBody] });
+world.createSystem(PositionSystem, PointsQuery); // .runEveryTicks(30);
+world.createSystem(QuadTreeSystem, PointsQuery, quadtree); // .runEveryTicks(10);
+world.createSystem(CollisionSystem, PointsQuery, quadtree); //.runEveryTicks(10);
 world.createSystem(RenderingSystem, PointsQuery, ctx);
-
-// const queryAreaCenterPoint = new Point(640 / 2, 480 / 2);
-// const queryArea = new Rectangle(120, 120, queryAreaCenterPoint);
-// points.forEach((point) => {
-//   point.x += randomInt(-2, 2);
-//   point.y += randomInt(-2, 2);
-//   dot(ctx, point.x, point.y, "rgb(255,0,0)", 2);
-// });
 
 /******************************************************************
  * Game loop
  * ****************************************************************/
-world.start(10);
+world.start(2, () => {
+  renderQuadTree(quadtree);
+  console.log("entities", world.entities.size);
+});

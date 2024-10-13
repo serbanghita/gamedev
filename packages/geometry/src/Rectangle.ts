@@ -3,6 +3,7 @@ import Point from "./Point";
 export default class Rectangle {
   public width: number;
   public height: number;
+  public area: number;
 
   public center: Point;
 
@@ -10,6 +11,7 @@ export default class Rectangle {
     this.width = width;
     this.height = height;
     this.center = center;
+    this.area = width * height;
   }
 
   public init(width: number, height: number, centerX: number, centerY: number) {
@@ -17,6 +19,13 @@ export default class Rectangle {
     this.height = height;
     this.center.x = centerX;
     this.center.y = centerY;
+    this.area = width * height;
+  }
+
+  public resize(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    this.area = width * height;
   }
 
   get topLeftX() {
@@ -52,18 +61,10 @@ export default class Rectangle {
   }
 
   public intersects(rectangle: Rectangle) {
-    return !(
-      this.topRightX < rectangle.topLeftX ||
-      this.bottomLeftY < rectangle.topLeftY ||
-      this.topLeftX > rectangle.topRightX ||
-      this.topLeftY > rectangle.bottomLeftY
-    );
+    return !(this.topRightX < rectangle.topLeftX || this.bottomLeftY < rectangle.topLeftY || this.topLeftX > rectangle.topRightX || this.topLeftY > rectangle.bottomLeftY);
   }
 
   public intersectsWithPoint(point: Point): boolean {
-    return (
-      point.x >= this.topLeftX && point.x <= this.topRightX &&
-      point.y >= this.topLeftY && point.y <= this.bottomLeftY
-    );
+    return point.x >= this.topLeftX && point.x <= this.topRightX && point.y >= this.topLeftY && point.y <= this.bottomLeftY;
   }
 }

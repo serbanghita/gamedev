@@ -1,24 +1,26 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
-import { Position } from "@serbanghita-gamedev/component";
 import { randomInt } from "./helpers";
+import PhysicsBody from "./PhysicsBody";
 
 export default class PositionSystem extends System {
   public update(now: number): void {
-    this.ticks++;
+    this.preUpdate();
 
-    if (this.settings.runEveryTicks > 0) {
-      if (this.ticks < this.settings.runEveryTicks) {
-        return;
-      } else {
-        this.ticks = 0;
-      }
+    if (this.isPaused) {
+      return;
     }
 
     this.query.execute().forEach((entity) => {
-      const position = entity.getComponent(Position);
+      const body = entity.getComponent(PhysicsBody);
 
-      position.properties.x += randomInt(-2, 2);
-      position.properties.y += randomInt(-2, 2);
+      const x = randomInt(-2, 2);
+      const y = randomInt(-2, 2);
+
+      body.properties.x += x;
+      body.properties.y += y;
+
+      body.properties.point.x += x;
+      body.properties.point.y += y;
     });
   }
 }

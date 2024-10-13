@@ -1,0 +1,21 @@
+{
+  "name": "glhf-demo",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "node_modules/.bin/esbuild ./src/index.ts --bundle --sourcemap --loader:.png=dataurl --outfile=dist/demo.js",
+    "dev": "node_modules/.bin/esbuild ./src/index.ts --bundle --sourcemap --watch --loader:.png=dataurl --outfile=dist/demo.js --servedir=dist",
+    "test": "echo \"Error: no test specified for glhf-demo yet.\""
+  },
+  "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
+  "license": "All code is MIT, the assets are copywritten.",
+  "devDependencies": {
+    "@eslint/js": "^9.4.0",
+    "@types/eslint__js": "^8.42.3",
+    "esbuild": "0.21.4",
+    "eslint": "^9.4.0",
+    "prettier": "3.3.3",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.11.0"
+  }
+}

@@ -132,7 +132,7 @@ export default class World {
     });
   }
 
-  public start(customFn?: () => void) {
+  public start(frameLimit: number = 0, customFn?: () => void) {
     // Run all systems that need to be run once and de-register them from the loop.
     [...this.systems]
       .filter(([, systemInstance]) => systemInstance.settings.ticksToRunBeforeExit === 1)
@@ -141,13 +141,35 @@ export default class World {
         this.systems.delete(systemDeclaration);
       });
 
+    let fps = 0;
+    let lastTime = 0;
+    let frameCount = 0;
+
     const loop = (now: DOMHighResTimeStamp) => {
-      // console.log(this.systems.size);
-      this.systems.forEach((system) => system.update(now));
-      if (customFn) {
-        customFn();
+      frameCount++;
+
+      if (now - lastTime >= 1000) {
+        fps = frameCount;
+        frameCount = 0;
+        lastTime = now;
       }
 
+      if (frameLimit > 0) { // fps >= frameLimit
+        const runEveryFrameCount = Math.floor(fps / frameLimit);
+        if (frameCount % runEveryFrameCount === 0) {
+          this.systems.forEach((system) => system.update(now));
+        }
+      } else {
+        this.systems.forEach((system) => system.update(now));
+      }
+
+
+
+      console.log(frameLimit || fps);
+
+      // if (customFn) {
+      //   customFn();
+      // }
       window.requestAnimationFrame(loop);
     };
 

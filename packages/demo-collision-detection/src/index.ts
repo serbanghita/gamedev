@@ -48,13 +48,15 @@ const tiledMap = new TiledMap(tiledMapFile);
 const matrix = world.createEntity("matrix");
 matrix.addComponent(IsMatrix, { matrix: tiledMap.getCollisionLayers()[0] });
 
-for (let j = 0; j < 10; j++) {
-  const entity = world.createEntity(`entity${j}`);
-  entity.addComponent(Position, { x: 100 + j * 20, y: 100 });
+for (let w = 0; w < 640; w=w+10) {
+  for (let h = 0; h < 480; h=h+10) {
+    const entity = world.createEntity(`entity${w}-${h}`);
+    entity.addComponent(Position, { x: w, y: h });
+  }
 }
 
 const PointsQuery = world.createQuery("points", { all: [Position] });
-world.createSystem(PositionSystem, PointsQuery).runEveryTicks(60);
+world.createSystem(PositionSystem, PointsQuery); //.runEveryTicks(60);
 world.createSystem(RenderingSystem, PointsQuery, ctx);
 
 // const queryAreaCenterPoint = new Point(640 / 2, 480 / 2);
@@ -68,4 +70,4 @@ world.createSystem(RenderingSystem, PointsQuery, ctx);
 /******************************************************************
  * Game loop
  * ****************************************************************/
-world.start();
+world.start(10);

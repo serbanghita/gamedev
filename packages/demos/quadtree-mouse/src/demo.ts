@@ -137,6 +137,7 @@ CANVAS_BACKGROUND.addEventListener("mousemove", (event) => {
 
 console.log(quadtree);
 console.log(pointsFound);
+
 /******************************************************************
  * Game loop
  * ****************************************************************/

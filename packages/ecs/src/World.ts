@@ -13,6 +13,7 @@ export default class World {
   public queries = new Map<string, Query>();
   public entities = new Map<string, Entity>();
   public systems = new Map<typeof System, System>();
+  public fps: number = 0;
 
   public createQuery(id: string, filters: IQueryFilters): Query {
     const query = new Query(this, id, filters);
@@ -163,7 +164,7 @@ export default class World {
         this.systems.forEach((system) => system.update(now));
       }
 
-      console.log(frameLimit || fps);
+      this.fps = frameLimit || fps;
 
       if (customFn) {
         customFn();

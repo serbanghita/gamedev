@@ -28,6 +28,29 @@ export function createCanvas(layerName: string, width: number, height: number, l
   return $canvas;
 }
 
+export function text(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  fontSize: string = "10",
+  fontFamily: string = "arial",
+  strokeColor?: string,
+  fillColor?: string,
+) {
+  ctx.save();
+  ctx.font = `${fontSize}px ${fontFamily}`;
+  if (strokeColor) {
+    ctx.strokeStyle = strokeColor;
+    ctx.strokeText(text, x, y);
+  }
+  if (fillColor) {
+    ctx.fillText(text, x, y);
+    ctx.fillStyle = fillColor;
+  }
+  ctx.restore();
+}
+
 export function image(
   ctx: CanvasRenderingContext2D | null,
   img: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
@@ -105,7 +128,7 @@ export function dot(ctx: CanvasRenderingContext2D, x: number, y: number, fillCol
 }
 
 export function rectangle(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, strokeColor: string = "black", fillColor?: string): void {
-  ctx.save();
+  //ctx.save();
   ctx.beginPath();
   ctx.lineWidth = 1;
   ctx.strokeStyle = strokeColor;
@@ -116,7 +139,7 @@ export function rectangle(ctx: CanvasRenderingContext2D, x: number, y: number, w
   }
   ctx.stroke();
   ctx.closePath();
-  ctx.restore();
+  //ctx.restore();
 }
 
 export function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, strokeColor: string, fillColor?: string) {

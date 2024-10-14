@@ -1,4 +1,4 @@
-import { createCanvas, createWrapperElement, rectangle, circle, dot, run } from "@serbanghita-gamedev/renderer";
+import { createCanvas, createWrapperElement, rectangle, circle, dot, run, text } from "@serbanghita-gamedev/renderer";
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
 import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
 import { World } from "@serbanghita-gamedev/ecs";
@@ -11,6 +11,8 @@ import { randomInt } from "./helpers";
 import QuadTreeSystem from "./QuadTreeSystem";
 import CollisionSystem from "./CollisionSystem";
 import PhysicsBody from "./PhysicsBody";
+import IsPlayer from "./IsPlayer";
+import IsRendered from "./IsRendered";
 
 const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
 const quadtree = new QuadTree(area, 5, 5);
@@ -45,6 +47,8 @@ const world = new World();
 world.declarations.components.registerComponent(IsTiledMap);
 world.declarations.components.registerComponent(IsMatrix);
 world.declarations.components.registerComponent(PhysicsBody);
+world.declarations.components.registerComponent(IsPlayer);
+world.declarations.components.registerComponent(IsRendered);
 
 const map = world.createEntity("map");
 map.addComponent(IsTiledMap, { mapFile: require("./E1MM2.json"), mapFilePath: "./E1MM2.json" });
@@ -55,8 +59,15 @@ const tiledMap = new TiledMap(tiledMapFile);
 const matrix = world.createEntity("matrix");
 matrix.addComponent(IsMatrix, { matrix: tiledMap.getCollisionLayers()[0] });
 
-for (let coordX = 0; coordX < 640; coordX = coordX + 30) {
-  for (let coordY = 0; coordY < 480; coordY = coordY + 30) {
+const player = world.createEntity("player");
+const playerPoint = new Point(320, 240);
+const playerRectangle = new Rectangle(50, 50, playerPoint);
+player.addComponent(PhysicsBody, { width: 50, height: 50, rectangle: playerRectangle, point: playerPoint });
+player.addComponent(IsPlayer);
+player.addComponent(IsRendered);
+
+for (let coordX = 0; coordX < 640; coordX = coordX + 10) {
+  for (let coordY = 0; coordY < 480; coordY = coordY + 10) {
     const id = `entity${coordX}-${coordY}`;
     const entity = world.createEntity(id);
     const x = coordX;
@@ -67,23 +78,46 @@ for (let coordX = 0; coordX < 640; coordX = coordX + 30) {
     // a component must only be a container of data, but I also need
     // the Point reference in order to perform operations.
 
-    const width = randomInt(10, 20);
-    const height = randomInt(10, 20);
+    const width = randomInt(1, 10);
+    const height = randomInt(1, 10);
     const rectangle = new Rectangle(width, height, point);
     entity.addComponent(PhysicsBody, { width, height, rectangle, point });
+    entity.addComponent(IsRendered);
   }
 }
 
-const PointsQuery = world.createQuery("points", { all: [PhysicsBody] });
-world.createSystem(PositionSystem, PointsQuery); // .runEveryTicks(30);
-world.createSystem(QuadTreeSystem, PointsQuery, quadtree); // .runEveryTicks(10);
-world.createSystem(CollisionSystem, PointsQuery, quadtree); //.runEveryTicks(10);
-world.createSystem(RenderingSystem, PointsQuery, ctx);
+const PointsQuery = world.createQuery("points", { all: [PhysicsBody], none: [IsPlayer] });
+const PhysicsQuery = world.createQuery("physics", { all: [PhysicsBody] });
+const RenderableQuery = world.createQuery("renderable", { all: [IsRendered] });
+world.createSystem(PositionSystem, PointsQuery);
+world.createSystem(QuadTreeSystem, PhysicsQuery, quadtree);
+world.createSystem(CollisionSystem, PhysicsQuery, quadtree);
+world.createSystem(RenderingSystem, RenderableQuery, ctx);
+
+/******************************************************************
+ * Mouse
+ * ****************************************************************/
+let allowDraw = false;
+
+CANVAS_BACKGROUND.addEventListener("mousedown", () => (allowDraw = true));
+CANVAS_BACKGROUND.addEventListener("mouseup", () => (allowDraw = false));
+
+CANVAS_BACKGROUND.addEventListener("mousemove", (event) => {
+  if (!allowDraw) {
+    return false;
+  }
+  const x = event.clientX | 0;
+  const y = event.clientY | 0;
+
+  playerPoint.x = x;
+  playerPoint.y = y;
+});
 
 /******************************************************************
  * Game loop
  * ****************************************************************/
-world.start(2, () => {
+world.start(60, () => {
   renderQuadTree(quadtree);
-  console.log("entities", world.entities.size);
+  text(ctx, `fps: ${world.fps}`, 520, 430, "30", "serif", "white", "black");
+  text(ctx, `entities: ${world.entities.size}`, 520, 460, "20", "serif", "white", "black");
 });

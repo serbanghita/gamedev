@@ -10,6 +10,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "main": "./src/bitmask.ts",
+  "type": "module",
   "scripts": {
     "build": "esbuild ./src/bitmask.ts --bundle --outfile=dist/bitmask.js",
     "test": "vitest --watch=false",

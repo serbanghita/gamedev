@@ -9,6 +9,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "echo \"Error: no build specified for assets yet.\"",
     "test": "echo \"Error: no test specified for assets yet.\""

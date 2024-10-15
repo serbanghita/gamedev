@@ -2,9 +2,11 @@
   "name": "@serbanghita/fsm",
   "description": "Finite State Machine that supports registering custom states, state priority and queued states.",
   "version": "1.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
   "scripts": {
     "build": "echo \"Error: no build specified for glhf-assets yet.\"",
-    "test": "jest"
+    "test": "echo \"Error: no test specified for assets yet.\""
   },
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "license": "MIT",

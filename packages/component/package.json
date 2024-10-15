@@ -10,6 +10,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "main": "./src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "echo \"Error: no build specified for component yet.\"",
     "test": "echo \"Error: no test specified for component yet.\"",

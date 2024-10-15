@@ -10,6 +10,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "main": "./src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "esbuild ./src/index.ts --bundle --outfile=dist/matrix.js",
     "test": "vitest --watch=false",

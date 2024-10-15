@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "esbuild ./src/index.ts --bundle --outfile=dist/ecs.js",
-    "test": "vitest --globals --config vite.config.ts",
+    "test": "vitest --watch=false",
     "lint": "eslint ./src"
   },
   "devDependencies": {

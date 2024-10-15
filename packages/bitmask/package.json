@@ -12,7 +12,7 @@
   "main": "./src/bitmask.ts",
   "scripts": {
     "build": "esbuild ./src/bitmask.ts --bundle --outfile=dist/bitmask.js",
-    "test": "vitest --globals",
+    "test": "vitest --watch=false",
     "lint": "eslint ./src"
   },
   "devDependencies": {

@@ -12,7 +12,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "build": "esbuild ./src/index.ts --bundle --outfile=dist/tiled.js",
-    "test": "vitest --globals",
+    "test": "echo \"Error: no test specified for assets yet.\"",
     "lint": "eslint ./src"
   },
   "devDependencies": {

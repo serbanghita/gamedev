@@ -10,8 +10,8 @@
   },
   "main": "src/index.ts",
   "scripts": {
-    "build": "echo \"Error: no build specified for glhf-assets yet.\"",
-    "test": "echo \"Error: no test specified for glhf-assets yet.\""
+    "build": "echo \"Error: no build specified for assets yet.\"",
+    "test": "echo \"Error: no test specified for assets yet.\""
   },
   "devDependencies": {
     "@eslint/js": "^9.4.0",

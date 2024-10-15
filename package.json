@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build": "nx run-many -t build",
-    "test": "nx run-many -t test",
+    "test-ci": "nx run-many -t test",
     "lint": "nx run-many -t lint"
   },
   "devDependencies": {

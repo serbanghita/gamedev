@@ -4,8 +4,8 @@
   "description": "Library for managing Input (Keyboard, Mouse, Controllers)",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "echo \"Error: no build specified for glhf-input yet.\"",
-    "test": "echo \"Error: no test specified for glhf-input yet.\""
+    "build": "echo \"Error: no build specified for input yet.\"",
+    "test": "echo \"Error: no test specified for input yet.\""
   },
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "license": "MIT",

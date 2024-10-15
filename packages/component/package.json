@@ -11,8 +11,8 @@
   },
   "main": "./src/index.ts",
   "scripts": {
-    "build": "echo \"Error: no build specified for @serbanghita-gamedev/component yet.\"",
-    "test": "echo \"Error: no test specified for @serbanghita-gamedev/component yet.\"",
+    "build": "echo \"Error: no build specified for component yet.\"",
+    "test": "echo \"Error: no test specified for component yet.\"",
     "lint": "eslint ./src"
   },
   "devDependencies": {

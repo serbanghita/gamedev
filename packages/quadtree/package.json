@@ -15,9 +15,7 @@
   "type": "module",
   "scripts": {
     "build": "esbuild ./src/index.ts --bundle --outfile=dist/quadtree.js",
-    "demo": "esbuild ../demos/quadtree-mouse/src/demo.ts --bundle --sourcemap --watch --outfile=demo/demo.js --servedir=demo",
-    "demo2": "esbuild ../demos/quadtree-dynamic-points/src/demo2.ts --bundle --sourcemap --watch --outfile=demo2/demo2.js --servedir=demo2",
-    "test": "vitest --globals",
+    "test": "vitest --watch=false",
     "lint": "eslint ./src"
   }
 }

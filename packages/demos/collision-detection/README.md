@@ -4,4 +4,3 @@
 
 
 ![Rectangles colliding](./resources/demo2.png)
-

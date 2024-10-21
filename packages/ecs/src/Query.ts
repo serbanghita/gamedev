@@ -32,7 +32,19 @@ export default class Query {
      * @param filters
      */
     constructor(public world: World, public id: string, public filters: IQueryFilters) {
+        this.checkIfComponentsAreRegistered();
         this.processFiltersAsBitMasks();
+    }
+
+    private checkIfComponentsAreRegistered() {
+      // Get a list of unique "Components" that are being used in the filters.
+      [...new Set<typeof Component>(Object.values(this.filters).reduce((acc, value) => {
+        return acc.concat(value);
+      }, []))].forEach((component) => {
+        if (typeof component.prototype.bitmask === "undefined") {
+          throw new Error(`Please register the component ${component.name} in the ComponentRegistry.`);
+        }
+      });
     }
 
     private processFiltersAsBitMasks(): void {

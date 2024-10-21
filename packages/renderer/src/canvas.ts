@@ -35,8 +35,8 @@ export function text(
   y: number,
   fontSize: string = "10",
   fontFamily: string = "arial",
-  strokeColor?: string,
-  fillColor?: string,
+  strokeColor: string = 'black',
+  fillColor: string = 'black',
 ) {
   ctx.save();
   ctx.font = `${fontSize}px ${fontFamily}`;
@@ -121,10 +121,10 @@ export function renderTile(
 }
 
 export function dot(ctx: CanvasRenderingContext2D, x: number, y: number, fillColor: string = "rgb(0,0,0)", size: number = 1) {
-  // ctx.save();
+  ctx.save();
   ctx.fillStyle = fillColor;
   ctx.fillRect(x, y, size, size);
-  // ctx.restore();
+  ctx.restore();
 }
 
 export function rectangle(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, strokeColor: string = "black", fillColor?: string): void {

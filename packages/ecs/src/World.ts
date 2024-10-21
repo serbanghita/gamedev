@@ -15,6 +15,11 @@ export default class World {
   public systems = new Map<typeof System, System>();
   public fps: number = 0;
 
+  public registerComponent(declaration: typeof Component)
+  {
+    this.declarations.components.registerComponent(declaration);
+  }
+
   public createQuery(id: string, filters: IQueryFilters): Query {
     const query = new Query(this, id, filters);
 

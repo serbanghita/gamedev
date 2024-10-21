@@ -25,7 +25,7 @@ import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
 import MatrixSystem from "./system/MatrixSystem";
 import { createHtmlUiElements, PreRenderTiledMapSystem } from "@serbanghita-gamedev/renderer";
 
-async function runGame() {
+async function setup() {
   // 0. Create the UI and canvas.
   const [, CANVAS_BACKGROUND, CANVAS_FOREGROUND] = createHtmlUiElements();
 
@@ -106,4 +106,4 @@ async function runGame() {
   };
 }
 
-runGame().then(() => console.log("Game started ..."));
+setup().then(() => console.log("Game started ..."));

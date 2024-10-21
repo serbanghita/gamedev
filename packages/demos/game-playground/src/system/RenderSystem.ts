@@ -1,5 +1,5 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
-import { clearCtx, getCtx, renderImage, renderRectangle } from "@serbanghita-gamedev/renderer";
+import { clearCtx, getCtx, image, rectangle } from "@serbanghita-gamedev/renderer";
 import { Position, SpriteSheet } from "@serbanghita-gamedev/component";
 import IsWalking from "../component/IsWalking";
 import IsIdle from "../component/IsIdle";
@@ -66,7 +66,7 @@ export default class RenderSystem extends System {
         );
       }
 
-      renderImage(
+      image(
         getCtx(this.CANVAS),
         spriteSheetImg,
         // source
@@ -81,7 +81,7 @@ export default class RenderSystem extends System {
         animationFrame.height,
       );
 
-      renderRectangle(
+      rectangle(
         getCtx(this.CANVAS) as CanvasRenderingContext2D,
         destPositionX,
         destPositionY,
@@ -90,7 +90,7 @@ export default class RenderSystem extends System {
         "#cccccc",
       );
 
-      renderRectangle(
+      rectangle(
         getCtx(this.CANVAS) as CanvasRenderingContext2D,
         destPositionX + hitboxOffset.x,
         destPositionY + hitboxOffset.y,

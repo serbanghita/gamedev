@@ -7,3 +7,7 @@ Example of rendering individual tiles:
 
 Example of rendering collision tiles:  
 ![Basic rendering of layers](resources/demo2.png)
+
+Example of random points moving on a static grid
+interacting with themselves and colliding with static tiles:  
+![Basic rendering of layers](resources/demo3.png)

@@ -5,10 +5,9 @@ import { PreRenderTiledMapSystem } from "@serbanghita-gamedev/renderer";
 import { IsTiledMap, Renderable } from "@serbanghita-gamedev/component";
 import { loadSprites } from "./assets";
 import { Point, Rectangle } from "@serbanghita-gamedev/geometry";
-import { randomInt } from "./helpers";
 import IsMatrix from "./IsMatrix";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
-import { getTileCoordinates } from "@serbanghita-gamedev/matrix";
+import { getTileCoordinates, getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
 import QuadTreeSystem from "./QuadTreeSystem";
 import IsCollisionTile from "./IsCollisionTile";
@@ -84,10 +83,22 @@ async function setup() {
     const x = event.clientX | 0;
     const y = event.clientY | 0;
 
+    const map = world.getEntity("map");
+    if (!map) {
+      throw new Error(`Map entity has not been defined yet.`);
+    }
+    const mapMatrix = map.getComponent(IsMatrix);
+    const tile = getTileFromCoordinates(x, y, mapMatrix.properties);
+
+    if (mapMatrix.properties.matrix[tile] !== 0) {
+      return;
+    }
+
     const playerId = `player-${x}-${y}`;
     const player = world.createEntity(playerId);
     const point = new Point(x, y, playerId);
-    player.addComponent(IsCollisionTile, { x, y, point });
+
+    player.addComponent(IsCollisionTile, { x, y, point, tile });
     player.addComponent(IsRenderedInForeground);
     player.addComponent(IsPlayer);
     quadtree.addPoint(point);

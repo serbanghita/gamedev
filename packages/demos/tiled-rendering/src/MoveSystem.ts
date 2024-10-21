@@ -28,13 +28,18 @@ export default class MoveSystem extends System {
       let futureX = tile.properties.x + randomInt(-1, 1);
       let futureY = tile.properties.y + randomInt(-1, 1);
 
+      const currentTile = tile.properties.tile;
       const futureTile = getTileFromCoordinates(futureX, futureY, matrixComponent.properties);
-      if (matrix[futureTile] === 0) {
+      if (currentTile === futureTile || matrix[futureTile] === 0) {
         tile.properties.x = futureX;
         tile.properties.y = futureY;
         tile.properties.point.x = futureX;
         tile.properties.point.y = futureY;
         tile.properties.tile = futureTile;
+
+        // Update the tile on the "matrix".
+        matrix[currentTile] = 0;
+        matrix[futureTile] = 2;
       }
     });
   }

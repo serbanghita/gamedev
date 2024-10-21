@@ -13,12 +13,5 @@
   "scripts": {
     "build": "echo \"Error: no build specified for assets yet.\"",
     "test": "echo \"Error: no test specified for assets yet.\""
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.4.0",
-    "@types/eslint__js": "^8.42.3",
-    "eslint": "^9.4.0",
-    "typescript": "^5.4.5",
-    "typescript-eslint": "^7.11.0"
   }
 }

@@ -18,56 +18,107 @@ import IsPlayer from "./IsPlayer";
 import MoveSystem from "./MoveSystem";
 
 async function setup() {
-  // 0. Create the UI and canvas.
+  /**
+   * Create the UI and canvas.
+   */
   const [, , $ctxBackground, $canvasForeground, $ctxForeground] = createHtmlUiElements();
 
-  // 1. Load sprite sheets IMGs.
+  /**
+   * Load sprite sheets IMGs.
+   * This is annoying because I need to load the image binary into DOM in order to get
+   * a HTMLImageElement instance which can be used in Canvas 2d.
+   */
   const SPRITES = await loadSprites();
 
-  // Create the current "World" (scene).
+  /**
+   * Create the current "World" (scene).
+   * "World" class is part of the local ECS library.
+   */
   const world = new World();
-
+  /**
+   * Why do you need to register components?
+   * Because we assign them different bitmasks so we can have fast checks in the local ECS library when
+   * performing a Query of Entities.
+   */
   world.registerComponents([IsTiledMap, IsMatrix, IsCollisionTile, IsPreRendered, IsRenderedInForeground, IsPlayer]);
 
-  // Load the map from Tiled json file declaration.
-  // Create a dedicated map entity.
+  /**
+   *  Load the map from Tiled json file declaration.
+   *  Create a dedicated map entity.
+   *  I will have to figure a way to dynamically load this.
+   *  I believe I first statically load the whole list of Maps and then the player will be able to choose one.
+   */
   const map = world.createEntity("map");
   map.addComponent(IsTiledMap, { mapFile: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
   // Load the "TiledMap" class wrapper over the json file declaration.
   const tiledMap = new TiledMap(map.getComponent(IsTiledMap).properties.mapFile);
   // Add the "collision" layer data to the map.
+  // For now just take the first "collision" layer. We can have multiple collision layers defined in Tiled.
+  // One examples is "collision_ai" layer which influences "negatively" the AI path finding.
   const collisionLayer = tiledMap.getCollisionLayers()[0];
-  map.addComponent(IsMatrix, { matrix: collisionLayer.data, width: collisionLayer.width, height: collisionLayer.height, tileSize: 16 });
-
-  // Transform all collision tiles as entities.
+  map.addComponent(IsMatrix, {
+    matrix: collisionLayer.data,
+    width: collisionLayer.width,
+    height: collisionLayer.height,
+    tileSize: tiledMap.getTileSize(),
+  });
+  // Transform all collision tiles as Entities.
   collisionLayer.data.forEach((tileValue, tileIndex) => {
     if (tileValue > 0) {
       const entityId = `collision-tile-${tileIndex}`;
       const collisionTileEntity = world.createEntity(entityId);
       let { x, y } = getTileCoordinates(tileIndex, map.getComponent(IsMatrix).properties);
-      x = x + 16 / 2;
-      y = y + 16 / 2;
+      x = x + tiledMap.getTileSize() / 2;
+      y = y + tiledMap.getTileSize() / 2;
       collisionTileEntity.addComponent(IsCollisionTile, { x, y, point: new Point(x, y, entityId) });
       collisionTileEntity.addComponent(IsPreRendered);
     }
   });
 
+  /**
+   *  Pre-rendering of the terrain.
+   *  This system runs only once and then de-registers itself.
+   */
   const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [IsTiledMap] });
   world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, SPRITES["./assets/sprites/terrain.png"]).runOnlyOnce();
 
-  // Quadtree
-  const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
+  /**
+   * Quadtree - for Entity body to body checks.
+   * Start from a big rectangle made out of the entire map (e.g. 640x480)
+   */
+  const area = new Rectangle(
+    tiledMap.getWidthInPx(),
+    tiledMap.getHeightInPx(),
+    new Point(tiledMap.getWidthInPx() / 2, tiledMap.getHeightInPx() / 2),
+  );
   const quadtree = new QuadTree(area, 5, 5);
 
+  /**
+   *  Pre-rendering of the collision tiles for debug purposes.
+   *  This system runs only once and then de-registers itself.
+   */
   const CollisionTilesQuery = world.createQuery("CollisionTilesQuery", { all: [IsCollisionTile] });
   world.createSystem(PreRenderCollisionTilesSystem, CollisionTilesQuery, $ctxBackground).runOnlyOnce();
 
+  /**
+   * System that renders all Entities that will appear in the foreground.
+   */
   const RenderingQuery = world.createQuery("RenderingQuery", { all: [IsRenderedInForeground] });
   world.createSystem(RenderingSystem, RenderingQuery, $ctxForeground, quadtree);
+
   const IsPlayerQuery = world.createQuery("IsPlayerQuery", { all: [IsPlayer] });
+  /**
+   * Movement system (contains matrix collision checks).
+   */
   world.createSystem(MoveSystem, IsPlayerQuery);
+  /**
+   * Quadtree - we re-make the quadtree every frame.
+   */
   world.createSystem(QuadTreeSystem, IsPlayerQuery, quadtree);
 
+  /**
+   * Trigger to add Entities (Player) via click.
+   */
   $canvasForeground.addEventListener("dblclick", (event) => {
     const x = event.clientX | 0;
     const y = event.clientY | 0;

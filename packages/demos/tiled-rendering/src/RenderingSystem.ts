@@ -32,5 +32,7 @@ export default class RenderingSystem extends System {
     });
 
     this.renderQuadTree(this.quadtree);
+    text(this.ctx, `fps: ${this.world.fps}`, 520, 430, "30", "sans-serif", "", "black");
+    text(this.ctx, `entities: ${this.world.entities.size}`, 470, 460, "30", "sans-serif", "", "black");
   }
 }

@@ -80,12 +80,28 @@ export default class TiledMap {
         return this.mapFile.tileheight;
     }
 
+    public getTileSize(): number {
+      if (this.mapFile.tilewidth !== this.mapFile.tileheight) {
+        throw new Error(`Tile is not a square: ${this.mapFile.tilewidth}x${this.mapFile.tileheight}`);
+      }
+
+      return this.mapFile.tilewidth;
+    }
+
     public getWidthInTiles(): number {
         return this.mapFile.width;
     }
 
     public getHeightInTiles(): number {
         return this.mapFile.height;
+    }
+
+    public getWidthInPx(): number {
+      return this.mapFile.width * this.mapFile.tilewidth;
+    }
+
+    public getHeightInPx(): number {
+      return this.mapFile.height * this.mapFile.tileheight;
     }
 
     public getRenderLayers() {

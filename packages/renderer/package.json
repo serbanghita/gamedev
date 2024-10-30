@@ -2,8 +2,6 @@
   "name": "@serbanghita-gamedev/renderer",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack --mode development",
-    "dev": "webpack --mode development --watch",
     "test": "echo \"Error: no test specified for renderer yet.\""
   },
   "author": "Serban Ghita",

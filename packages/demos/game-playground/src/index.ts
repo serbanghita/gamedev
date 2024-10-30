@@ -1,39 +1,45 @@
-import { ENTITIES_DECLARATIONS, EntityDeclaration, loadSprites, MAPS } from "./assets";
-import World from "../../../ecs/src/World";
-import {
-  Body,
-  Position,
-  Direction,
-  Keyboard,
-  Renderable,
-  SpriteSheet,
-  IsOnMatrix,
-  MatrixConfig,
-  IsTiledMap,
-} from "@serbanghita-gamedev/component";
+import { loadAssets } from "./assets";
+import { World } from "@serbanghita-gamedev/ecs";
+import { Body, Position, Direction, Keyboard, Renderable, SpriteSheet, IsOnMatrix, MatrixConfig, IsTiledMap } from "@serbanghita-gamedev/component";
 import { Keyboard as KeyboardInput, InputActions } from "@serbanghita-gamedev/input";
-import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
-import RenderSystem from "./system/RenderSystem";
-import PreRenderSystem from "./system/PreRenderSystem";
-import IsIdle from "./component/IsIdle";
-import IsWalking from "./component/IsWalking";
-import IdleSystem from "./system/IdleSystem";
-import WalkingSystem from "./system/WalkingSystem";
-import CurrentState from "./component/CurrentState";
-import IsAttackingWithClub from "./component/IsAttackingWithClub";
-import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
-import MatrixSystem from "./system/MatrixSystem";
-import { createHtmlUiElements, PreRenderTiledMapSystem } from "@serbanghita-gamedev/renderer";
+import PlayerKeyboardSystem from "./PlayerKeyboardSystem";
+import RenderSystem from "./RenderSystem";
+import IsIdle from "./IsIdle";
+import IsWalking from "./IsWalking";
+import IdleSystem from "./IdleSystem";
+import WalkingSystem from "./WalkingSystem";
+import IsAttackingWithClub from "./IsAttackingWithClub";
+import AttackingWithClubSystem from "./AttackingWithClubSystem";
+import MatrixSystem from "./MatrixSystem";
+import { createHtmlUiElements, RenderTiledMapTerrainSystem, AnimationRegistry, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
+import { TiledMap } from "@serbanghita-gamedev/tiled";
 
 async function setup() {
-  // 0. Create the UI and canvas.
-  const [, CANVAS_BACKGROUND, CANVAS_FOREGROUND] = createHtmlUiElements();
+  /************************************************************
+   * Create the UI and canvas.
+   ************************************************************/
 
-  // 1. Load sprite sheets IMGs.
-  const SPRITES = await loadSprites();
-  // 2. Load JSON animations for sprite sheets.
-  // 3. Load JSON map declarations (Tiled).
-  // 4. Create the grid.
+  const [$htmlWrapper, $canvasBackground, $ctxBackground, $canvasForeground, $ctxForeground] = createHtmlUiElements();
+
+  /*************************************************************
+   * Preload assets (IMGs, JSONs)
+   *
+   *    entities/images - Sprite sheets as IMGs for entities animations.
+   *    entities/animations - Animation frames as JSON
+   *    entities/declarations - Entities + Components as JSON
+   *    maps/images - Terrain as sprite sheets IMGs.
+   *    maps/declarations - Maps as JSON exported from Tiled.
+   *
+   ************************************************************/
+
+  const assets = await loadAssets();
+
+  /************************************************************
+   * Registry for animations. Stores Entity's animation frames.
+   * Used by the RenderSystem to pre-compute animation frames data.
+   ************************************************************/
+
+  const animationRegistry = loadAnimationRegistry(assets);
 
   // Load input Component.
   const input = new KeyboardInput();
@@ -48,38 +54,16 @@ async function setup() {
   const world = new World();
 
   // Register "Components".
-  world.declarations.components.registerComponents([
-    Body,
-    Position,
-    Direction,
-    Keyboard,
-    Renderable,
-    SpriteSheet,
-    IsIdle,
-    IsWalking,
-    IsAttackingWithClub,
-    CurrentState,
-    MatrixConfig,
-    IsOnMatrix,
-    IsTiledMap,
-  ]);
+  world.registerComponents([Body, Direction, Keyboard, Renderable, SpriteSheet, IsIdle, IsWalking, IsAttackingWithClub, IsTiledMap]);
 
-  function createEntityFromDeclaration(entityDeclaration: EntityDeclaration) {
-    // Create the entity and assign it to the world.
-    const entity = world.createEntity(entityDeclaration.id);
+  // Create entities automatically from "entities.json" declaration file.
+  assets["entities/declarations"].forEach((entityDeclaration) => world.createEntityFromDeclaration(entityDeclaration));
 
-    // Add Component(s) to the Entity.
-    for (const name in entityDeclaration.components) {
-      const componentDeclaration = world.declarations.components.getComponent(name);
-      const props = entityDeclaration.components[name];
+  const map = world.createEntity("map");
+  map.addComponent(IsTiledMap, { mapFile: assets["maps/declarations"]["./assets/maps/E1MM2.json"], mapFilePath: "./assets/maps/E1MM2.json" });
+  // Load the "TiledMap" class wrapper over the json file declaration.
+  const tiledMap = new TiledMap(map.getComponent(IsTiledMap).properties.mapFile);
 
-      entity.addComponent(componentDeclaration, props);
-    }
-  }
-
-  ENTITIES_DECLARATIONS.forEach((entityDeclaration) => createEntityFromDeclaration(entityDeclaration));
-
-  const MatrixQuery = world.createQuery("MatrixQuery", { all: [IsOnMatrix] });
   const KeyboardQuery = world.createQuery("KeyboardQuery", { all: [Keyboard] });
   const IdleQuery = world.createQuery("IdleQuery", { all: [IsIdle] });
   const WalkingQuery = world.createQuery("WalkingQuery", { all: [IsWalking] });
@@ -87,15 +71,12 @@ async function setup() {
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Position] });
   const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [IsTiledMap] });
 
-  world
-    .createSystem(PreRenderTiledMapSystem, TiledMapQuery, CANVAS_BACKGROUND, SPRITES["./assets/sprites/terrain.png"], MAPS)
-    .runOnlyOnce();
-  world.createSystem(PreRenderSystem, RenderableQuery).runOnlyOnce();
+  world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, assets["entities/images"]["./assets/sprites/terrain.png"]).runOnlyOnce();
   world.createSystem(PlayerKeyboardSystem, KeyboardQuery, input);
   world.createSystem(IdleSystem, IdleQuery);
   world.createSystem(WalkingSystem, WalkingQuery);
   world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
-  world.createSystem(RenderSystem, RenderableQuery, CANVAS_FOREGROUND, SPRITES);
+  world.createSystem(RenderSystem, RenderableQuery, animationRegistry, $ctxForeground);
   world.createSystem(MatrixSystem, MatrixQuery);
 
   world.start();

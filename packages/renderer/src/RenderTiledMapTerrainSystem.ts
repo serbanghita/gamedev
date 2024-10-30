@@ -1,23 +1,22 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
 import IsTiledMap from "../../component/src/IsTiledMap";
 import { renderTile } from "@serbanghita-gamedev/renderer";
-import { TiledMap, TiledMapFile } from "@serbanghita-gamedev/tiled";
+import { TiledMap } from "@serbanghita-gamedev/tiled";
 import { getTileCoordinates } from "@serbanghita-gamedev/matrix";
-import { getCtx } from "@serbanghita-gamedev/renderer";
 import { rectangle } from "./canvas";
 
-export default class PreRenderTiledMapSystem extends System {
+export default class RenderTiledMapTerrainSystem extends System {
   public constructor(
     public world: World,
     public query: Query,
-    protected CANVAS_BACKGROUND: HTMLCanvasElement,
-    protected TERRAIN_SPRITE: HTMLImageElement,
+    protected ctx: CanvasRenderingContext2D,
+    protected terrainSprite: HTMLImageElement,
   ) {
     super(world, query);
   }
 
   private renderToBackgroundLayer(tiledMap: TiledMap) {
-    if (!this.CANVAS_BACKGROUND) {
+    if (!this.ctx) {
       throw new Error(`Background canvas ($background) was not created or passed.`);
     }
 
@@ -31,9 +30,8 @@ export default class PreRenderTiledMapSystem extends System {
         }
 
         renderTile(
-          // @ts-expect-error Not sure why TS sees this as potentially null.
-          getCtx(this.CANVAS_BACKGROUND), // @todo: Use buffer/off canvas.
-          this.TERRAIN_SPRITE,
+          this.ctx, // @todo: Use buffer/off canvas.
+          this.terrainSprite,
           tiledMap.getTileWidth(),
           tiledMap.getTileHeight(),
           j,
@@ -53,16 +51,7 @@ export default class PreRenderTiledMapSystem extends System {
 
         const tileCoordinates = getTileCoordinates(j, { width: tiledMap.getWidthInTiles(), height: tiledMap.getHeightInTiles(), tileSize: tiledMap.getTileWidth() });
 
-        rectangle(
-          // @ts-expect-error Not sure why TS sees this as potentially null.
-          getCtx(this.CANVAS_BACKGROUND),
-          tileCoordinates.x,
-          tileCoordinates.y,
-          tiledMap.getTileWidth(),
-          tiledMap.getTileHeight(),
-          "rgb(125,0,0)",
-          "rgba(255,0,0,0.1)",
-        );
+        rectangle(this.ctx, tileCoordinates.x, tileCoordinates.y, tiledMap.getTileWidth(), tiledMap.getTileHeight(), "rgb(125,0,0)", "rgba(255,0,0,0.1)");
         // j,
         //   layer.data[j],
       }

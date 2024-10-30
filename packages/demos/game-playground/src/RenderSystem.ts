@@ -1,28 +1,28 @@
-import { System, Query, World } from "@serbanghita-gamedev/ecs";
-import { clearCtx, getCtx, image, rectangle } from "@serbanghita-gamedev/renderer";
+import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
+import { clearCtx, image, rectangle, AnimationRegistry, AnimationRegistryItem } from "@serbanghita-gamedev/renderer";
 import { Position, SpriteSheet } from "@serbanghita-gamedev/component";
-import IsWalking from "../component/IsWalking";
-import IsIdle from "../component/IsIdle";
-import IsAttackingWithClub from "../component/IsAttackingWithClub";
-import { ANIMATIONS_REGISTRY } from "../assets";
+import IsWalking from "./IsWalking";
+import IsIdle from "./IsIdle";
+import IsAttackingWithClub from "./IsAttackingWithClub";
 
 export default class RenderSystem extends System {
   public constructor(
     public world: World,
     public query: Query,
-    protected CANVAS: HTMLCanvasElement,
-    protected SPRITES: { [key: string]: HTMLImageElement },
+
+    protected animationRegistry: AnimationRegistry,
+    protected ctx: CanvasRenderingContext2D,
   ) {
     super(world, query);
   }
 
   public update(now: number): void {
-    clearCtx(getCtx(this.CANVAS), 0, 0, 640, 480);
+    clearCtx(this.ctx, 0, 0, 640, 480);
 
     this.query.execute().forEach((entity) => {
       const position = entity.getComponent(Position);
       const spriteSheet = entity.getComponent(SpriteSheet);
-      const spriteSheetImg = this.SPRITES[spriteSheet.properties.spriteSheetImgPath];
+      const spriteSheetImg = this.animationRegistry.assets["entities/images"][spriteSheet.properties.spriteSheetImgPath];
 
       if (!spriteSheetImg) {
         throw new Error(`SpriteSheet image file ${spriteSheet.properties.spriteSheetImgPath} is missing.`);
@@ -40,9 +40,11 @@ export default class RenderSystem extends System {
         throw new Error(`Entity ${entity.id} has no default state to render.`);
       }
 
-      const animation = ANIMATIONS_REGISTRY[spriteSheet.properties.spriteSheetAnimationsPath].animations.get(
-        component.properties.animationStateName,
-      );
+      const animationItem = this.animationRegistry.getAnimationsFor(spriteSheet.properties.spriteSheetAnimationsPath);
+      if (!animationItem) {
+        throw new Error(`Animations were not loaded for ${spriteSheet.properties.spriteSheetAnimationsPath}.`);
+      }
+      const animation = animationItem.animations.get(component.properties.animationStateName);
 
       if (!animation) {
         throw new Error(
@@ -61,13 +63,11 @@ export default class RenderSystem extends System {
       const destPositionY = hitboxOffset?.y ? position.properties.y - hitboxOffset.y : position.properties.y;
 
       if (!animationFrame) {
-        throw new Error(
-          `Cannot find animation frame ${component.properties.animationTick} for "${component.properties.animationStateName}".`,
-        );
+        throw new Error(`Cannot find animation frame ${component.properties.animationTick} for "${component.properties.animationStateName}".`);
       }
 
       image(
-        getCtx(this.CANVAS),
+        this.ctx,
         spriteSheetImg,
         // source
         animationFrame.x,
@@ -81,23 +81,9 @@ export default class RenderSystem extends System {
         animationFrame.height,
       );
 
-      rectangle(
-        getCtx(this.CANVAS) as CanvasRenderingContext2D,
-        destPositionX,
-        destPositionY,
-        animationFrame.width,
-        animationFrame.height,
-        "#cccccc",
-      );
+      rectangle(this.ctx, destPositionX, destPositionY, animationFrame.width, animationFrame.height, "#cccccc");
 
-      rectangle(
-        getCtx(this.CANVAS) as CanvasRenderingContext2D,
-        destPositionX + hitboxOffset.x,
-        destPositionY + hitboxOffset.y,
-        16,
-        16,
-        "red",
-      );
+      rectangle(this.ctx, destPositionX + hitboxOffset.x, destPositionY + hitboxOffset.y, 16, 16, "red");
     });
   }
 }

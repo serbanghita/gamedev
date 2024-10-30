@@ -1,13 +1,9 @@
 {
   "name": "@serbanghita-gamedev/assets",
-  "description": "Asset related utils (JSON, Images, etc)",
-  "version": "0.0.1",
+  "description": "Opinionated asset (JSON, Images, etc) related utility library",
+  "version": "0.0.2",
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
   "main": "src/index.ts",
   "type": "module",
   "scripts": {

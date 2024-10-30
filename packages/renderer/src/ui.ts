@@ -9,15 +9,20 @@ export function createWrapperElement(layerId: string, width?: number, height?: n
     }
     return $elem;
 }
-export function createHtmlUiElements() {
-    const HTML_WRAPPER = createWrapperElement("game-wrapper", 640, 480);
-    const CANVAS_BACKGROUND = createCanvas("background", 640, 480, "1");
-    const CANVAS_FOREGROUND = createCanvas("foreground", 640, 480, "2");
 
-    HTML_WRAPPER.appendChild(CANVAS_BACKGROUND);
-    HTML_WRAPPER.appendChild(CANVAS_FOREGROUND);
+type UiElements = [HTMLDivElement, HTMLCanvasElement, CanvasRenderingContext2D, HTMLCanvasElement, CanvasRenderingContext2D];
 
-    document.body.appendChild(HTML_WRAPPER);
+export function createHtmlUiElements(): UiElements {
+  const $htmlWrapper = createWrapperElement("game-wrapper", 640, 480);
+  const $canvasBackground = createCanvas("background", 640, 480, "1");
+  const $ctxBackground = $canvasBackground.getContext('2d') as CanvasRenderingContext2D;
+  const $canvasForeground = createCanvas("foreground", 640, 480, "2");
+  const $ctxForeground = $canvasForeground.getContext('2d') as CanvasRenderingContext2D;
 
-    return [HTML_WRAPPER, CANVAS_BACKGROUND, CANVAS_FOREGROUND];
+  $htmlWrapper.appendChild($canvasBackground);
+  $htmlWrapper.appendChild($canvasForeground);
+
+    document.body.appendChild($htmlWrapper);
+
+    return [$htmlWrapper, $canvasBackground, $ctxBackground, $canvasForeground, $ctxForeground];
 }

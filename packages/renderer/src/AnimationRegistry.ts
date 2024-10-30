@@ -1,11 +1,36 @@
-import { Entity, System } from "@serbanghita-gamedev/ecs";
 import { Animation, SpriteSheet } from "@serbanghita-gamedev/component";
-import { ANIMATIONS_DECLARATIONS, ANIMATIONS_REGISTRY } from "../assets";
+import { Assets, EntityDeclaration } from "@serbanghita-gamedev/assets";
 
-export default class PreRenderSystem extends System {
-  private setAnimationFramesForSpriteSheet(entity: Entity) {
-    const spriteSheet = entity.getComponent(SpriteSheet);
-    const spriteSheetAnimations = ANIMATIONS_DECLARATIONS[spriteSheet.properties.spriteSheetAnimationsPath];
+export type AnimationRegistryItem = {
+  animationDefaultFrame: string;
+  animations: Map<string, Animation>;
+};
+
+export function loadAnimationRegistry(assets: Assets): AnimationRegistry {
+  const instance = new AnimationRegistry(assets);
+  instance.load();
+
+  return instance;
+}
+
+export default class AnimationRegistry {
+  // Store pre-computed animation frames from the sprite sheet asset.
+  private animations: Map<string, AnimationRegistryItem> = new Map();
+
+  public constructor(public assets: Assets) {}
+
+  public load() {
+    this.assets["entities/declarations"].forEach((entityDeclaration) => this.setAnimationFramesForSpriteSheet(entityDeclaration));
+  }
+
+  public getAnimationsFor(spriteSheetAnimationsPath: string)
+  {
+    return this.animations.get(spriteSheetAnimationsPath);
+  }
+
+  public setAnimationFramesForSpriteSheet(entityDeclaration: EntityDeclaration) {
+    const spriteSheet = entityDeclaration.components.SpriteSheet;
+    const spriteSheetAnimations = this.assets["entities/animations"][spriteSheet.properties.spriteSheetAnimationsPath];
 
     if (!spriteSheetAnimations) {
       throw new Error(`Animations JSON file ${spriteSheet.properties.spriteSheetAnimationsPath} is missing.`);
@@ -48,12 +73,6 @@ export default class PreRenderSystem extends System {
       animationIndex++;
     }
 
-    ANIMATIONS_REGISTRY[spriteSheet.properties.spriteSheetAnimationsPath] = { animationDefaultFrame, animations };
-  }
-
-  public update(now: number): void {
-    this.query.execute().forEach((entity) => {
-      this.setAnimationFramesForSpriteSheet(entity);
-    });
+    this.animations.set(spriteSheet.properties.spriteSheetAnimationsPath, { animationDefaultFrame, animations });
   }
 }

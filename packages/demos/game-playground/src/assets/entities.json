@@ -1,19 +1,12 @@
 [
   {
-    "id": "map",
-    "components": {
-      "IsTiledMap": {"mapFilePath": "./assets/maps/E1MM2.json" },
-      "MatrixConfig": { "width": 40, "height": 30, "tileSize": 16 }
-    }
-  },
-  {
     "id": "player",
     "components": {
       "IsIdle": {
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 0, "y": 200 },
+      "Position": { "x": 40, "y": 90 },
       "IsOnMatrix": { "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
@@ -34,7 +27,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 64, "y": 200 },
+      "Position": { "x": 124, "y": 200 },
       "IsOnMatrix": { "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
@@ -55,7 +48,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 64, "y": 300 },
+      "Position": { "x": 40, "y": 300 },
       "IsOnMatrix": { "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
@@ -76,7 +69,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 160, "y": 200 },
+      "Position": { "x": 210, "y": 140 },
       "IsOnMatrix": { "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
@@ -97,7 +90,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 160, "y": 300 },
+      "Position": { "x": 265, "y": 280 },
       "IsOnMatrix": { "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
@@ -139,7 +132,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 350, "y": 300 },
+      "Position": { "x": 400, "y": 290 },
       "IsOnMatrix": { "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },

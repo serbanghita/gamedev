@@ -1,4 +1,4 @@
-import Entity from "./Entity";
+import Entity, { EntityDeclaration } from "./Entity";
 import System, { SystemSettings } from "./System";
 import Query, { IQueryFilters } from "./Query";
 import Component from "./Component";
@@ -15,9 +15,12 @@ export default class World {
   public systems = new Map<typeof System, System>();
   public fps: number = 0;
 
-  public registerComponent(declaration: typeof Component)
-  {
+  public registerComponent(declaration: typeof Component) {
     this.declarations.components.registerComponent(declaration);
+  }
+
+  public registerComponents(declarations: (typeof Component)[]) {
+    this.declarations.components.registerComponents(declarations);
   }
 
   public createQuery(id: string, filters: IQueryFilters): Query {
@@ -44,6 +47,19 @@ export default class World {
       throw new Error(`There is not query registered with the id: ${id}.`);
     }
     return query;
+  }
+
+  public createEntityFromDeclaration(entityDeclaration: EntityDeclaration) {
+    // Create the entity and assign it to the world.
+    const entity = this.createEntity(entityDeclaration.id);
+
+    // Add Component(s) to the Entity.
+    for (const name in entityDeclaration.components) {
+      const componentDeclaration = this.declarations.components.getComponent(name);
+      const props = entityDeclaration.components[name];
+
+      entity.addComponent(componentDeclaration, props);
+    }
   }
 
   public createEntity(id: string): Entity {

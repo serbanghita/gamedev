@@ -1,5 +1,5 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import IsCollisionTile from "./IsCollisionTile";
+import {IsOnATile} from "@serbanghita-gamedev/component";
 import { dot, rectangle, text } from "@serbanghita-gamedev/renderer";
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
 
@@ -25,7 +25,7 @@ export default class RenderingSystem extends System {
     this.ctx.clearRect(0, 0, 640, 480);
 
     this.query.execute().forEach((entity) => {
-      const tile = entity.getComponent(IsCollisionTile);
+      const tile = entity.getComponent(IsOnATile);
       const point = tile.properties.point;
       dot(this.ctx, point.x, point.y, "rgb(0,255,0)", 6);
       text(this.ctx, `${tile.properties.tile}`, point.x, point.y, "10", "arial", "", "black");

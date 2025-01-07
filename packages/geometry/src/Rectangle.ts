@@ -28,6 +28,16 @@ export default class Rectangle {
     this.area = width * height;
   }
 
+  public moveCenterTo(x: number, y: number) {
+    this.center.x = x;
+    this.center.y = y;
+  }
+
+  public moveCenterBy(deltaX: number, deltaY: number) {
+    this.center.x += deltaX;
+    this.center.y += deltaY;
+  }
+
   get topLeftX() {
     return this.center.x - this.width / 2;
   }

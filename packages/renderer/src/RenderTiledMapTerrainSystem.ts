@@ -1,5 +1,5 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
-import IsTiledMap from "../../component/src/IsTiledMap";
+import { TiledMapFile } from "@serbanghita-gamedev/component";
 import { renderTile } from "@serbanghita-gamedev/renderer";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
 import { getTileCoordinates } from "@serbanghita-gamedev/matrix";
@@ -61,7 +61,7 @@ export default class RenderTiledMapTerrainSystem extends System {
   public update(now: number): void {
     console.log("PreRenderTiledMapSystem.update");
     this.query.execute().forEach((entity) => {
-      const tiledMapComponent = entity.getComponent(IsTiledMap);
+      const tiledMapComponent = entity.getComponent(TiledMapFile);
       const tiledMapFile = tiledMapComponent.properties.mapFile;
       const tiledMapFilePath = tiledMapComponent.properties.mapFilePath;
 

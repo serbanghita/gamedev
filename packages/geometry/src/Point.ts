@@ -1,3 +1,5 @@
+import Rectangle from "./Rectangle";
+
 export type PointDTO = {
   x: number;
   y: number;
@@ -21,5 +23,9 @@ export default class Point {
 
   public intersects(point: Point) {
     return this.x === point.x && this.y === point.y;
+  }
+
+  public intersectsWithRectangle(rectangle: Rectangle) {
+    return this.x >= rectangle.topLeftX && this.x <= rectangle.topRightX && this.y >= rectangle.topLeftY && this.y <= rectangle.bottomLeftY;
   }
 }

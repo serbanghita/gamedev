@@ -1,6 +1,6 @@
 import {Component} from "@serbanghita-gamedev/ecs";
-import {StateStatus} from "../state/state-status";
-import {extend} from "../utils";
+import {StateStatus} from "./state";
+import {extend} from "./utils";
 
 interface IsWalkingProps {
     stateName: string;

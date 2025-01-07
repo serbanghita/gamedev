@@ -1,6 +1,6 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { clearCtx, image, rectangle, AnimationRegistry, AnimationRegistryItem } from "@serbanghita-gamedev/renderer";
-import { Position, SpriteSheet } from "@serbanghita-gamedev/component";
+import { SpriteSheet, IsOnATile } from "@serbanghita-gamedev/component";
 import IsWalking from "./IsWalking";
 import IsIdle from "./IsIdle";
 import IsAttackingWithClub from "./IsAttackingWithClub";
@@ -20,7 +20,7 @@ export default class RenderSystem extends System {
     clearCtx(this.ctx, 0, 0, 640, 480);
 
     this.query.execute().forEach((entity) => {
-      const position = entity.getComponent(Position);
+      const position = entity.getComponent(IsOnATile);
       const spriteSheet = entity.getComponent(SpriteSheet);
       const spriteSheetImg = this.animationRegistry.assets["entities/images"][spriteSheet.properties.spriteSheetImgPath];
 

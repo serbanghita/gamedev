@@ -2,7 +2,7 @@ import { createCanvas, createWrapperElement, rectangle, circle, dot, run, text }
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
 import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
 import { World } from "@serbanghita-gamedev/ecs";
-import { IsTiledMap } from "@serbanghita-gamedev/component";
+import { IsATiledMap } from "@serbanghita-gamedev/component";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
 import IsMatrix from "./IsMatrix";
 import PositionSystem from "./PositionSystem";
@@ -44,16 +44,16 @@ function renderQuadTree(quadtree: QuadTree) {
 // Create the current "World" (scene).
 const world = new World();
 
-world.declarations.components.registerComponent(IsTiledMap);
+world.declarations.components.registerComponent(IsATiledMap);
 world.declarations.components.registerComponent(IsMatrix);
 world.declarations.components.registerComponent(PhysicsBody);
 world.declarations.components.registerComponent(IsPlayer);
 world.declarations.components.registerComponent(IsRendered);
 
 const map = world.createEntity("map");
-map.addComponent(IsTiledMap, { mapFile: require("./E1MM2.json"), mapFilePath: "./E1MM2.json" });
+map.addComponent(IsATiledMap, { mapFile: require("./E1MM2.json"), mapFilePath: "./E1MM2.json" });
 
-const tiledMapFile = map.getComponent(IsTiledMap).properties.mapFile;
+const tiledMapFile = map.getComponent(IsATiledMap).properties.mapFile;
 const tiledMap = new TiledMap(tiledMapFile);
 
 const matrix = world.createEntity("matrix");

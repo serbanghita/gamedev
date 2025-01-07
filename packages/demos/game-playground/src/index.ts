@@ -1,6 +1,6 @@
 import { loadAssets } from "./assets";
 import { World } from "@serbanghita-gamedev/ecs";
-import { Body, Position, Direction, Keyboard, Renderable, SpriteSheet, IsOnMatrix, MatrixConfig, IsTiledMap } from "@serbanghita-gamedev/component";
+import { Body, Direction, Keyboard, Renderable, SpriteSheet, TiledMapFile, TileMatrix, Tile } from "@serbanghita-gamedev/component";
 import { Keyboard as KeyboardInput, InputActions } from "@serbanghita-gamedev/input";
 import PlayerKeyboardSystem from "./PlayerKeyboardSystem";
 import RenderSystem from "./RenderSystem";
@@ -10,9 +10,10 @@ import IdleSystem from "./IdleSystem";
 import WalkingSystem from "./WalkingSystem";
 import IsAttackingWithClub from "./IsAttackingWithClub";
 import AttackingWithClubSystem from "./AttackingWithClubSystem";
-import MatrixSystem from "./MatrixSystem";
-import { createHtmlUiElements, RenderTiledMapTerrainSystem, AnimationRegistry, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
+import { createHtmlUiElements, RenderTiledMapTerrainSystem, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
+import IsPlayer from "./IsPlayer";
+import AutoMoveSystem from "./AutoMoveSystem";
 
 async function setup() {
   /************************************************************
@@ -54,30 +55,38 @@ async function setup() {
   const world = new World();
 
   // Register "Components".
-  world.registerComponents([Body, Direction, Keyboard, Renderable, SpriteSheet, IsIdle, IsWalking, IsAttackingWithClub, IsTiledMap]);
+  world.registerComponents([Body, Direction, Keyboard, Renderable, SpriteSheet, IsPlayer, IsIdle, IsWalking, IsAttackingWithClub]);
 
   // Create entities automatically from "entities.json" declaration file.
   assets["entities/declarations"].forEach((entityDeclaration) => world.createEntityFromDeclaration(entityDeclaration));
 
   const map = world.createEntity("map");
-  map.addComponent(IsTiledMap, { mapFile: assets["maps/declarations"]["./assets/maps/E1MM2.json"], mapFilePath: "./assets/maps/E1MM2.json" });
-  // Load the "TiledMap" class wrapper over the json file declaration.
-  const tiledMap = new TiledMap(map.getComponent(IsTiledMap).properties.mapFile);
+  map.addComponent(TiledMapFile, { mapFile: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
+  const tiledMapFile = map.getComponent(TiledMapFile).properties.mapFile;
+  const tiledMap = new TiledMap(tiledMapFile);
+  const collisionLayer = tiledMap.getCollisionLayers()[0];
+  map.addComponent(TileMatrix, {
+    matrix: collisionLayer.data,
+    width: collisionLayer.width,
+    height: collisionLayer.height,
+    tileSize: tiledMap.getTileSize(),
+  });
 
   const KeyboardQuery = world.createQuery("KeyboardQuery", { all: [Keyboard] });
   const IdleQuery = world.createQuery("IdleQuery", { all: [IsIdle] });
   const WalkingQuery = world.createQuery("WalkingQuery", { all: [IsWalking] });
-  const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [IsAttackingWithClub] });
-  const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Position] });
-  const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [IsTiledMap] });
+  // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [IsAttackingWithClub] });
+  const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Tile] });
+  const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [TiledMapFile] });
+  const MoveQuery = world.createQuery("MoveQuery", {all: [Tile, IsPlayer]});
 
-  world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, assets["entities/images"]["./assets/sprites/terrain.png"]).runOnlyOnce();
+  world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, assets["maps/images"]["./assets/sprites/terrain.png"]).runOnlyOnce();
   world.createSystem(PlayerKeyboardSystem, KeyboardQuery, input);
   world.createSystem(IdleSystem, IdleQuery);
   world.createSystem(WalkingSystem, WalkingQuery);
-  world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
+  // world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
   world.createSystem(RenderSystem, RenderableQuery, animationRegistry, $ctxForeground);
-  world.createSystem(MatrixSystem, MatrixQuery);
+  world.createSystem(AutoMoveSystem, MoveQuery);
 
   world.start();
 

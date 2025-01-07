@@ -35,8 +35,8 @@ export function text(
   y: number,
   fontSize: string = "10",
   fontFamily: string = "arial",
-  strokeColor: string = 'black',
-  fillColor: string = 'black',
+  strokeColor: string = "black",
+  fillColor: string = "black",
 ) {
   ctx.save();
   ctx.font = `${fontSize}px ${fontFamily}`;
@@ -132,6 +132,7 @@ export function rectangle(ctx: CanvasRenderingContext2D, x: number, y: number, w
   ctx.beginPath();
   ctx.lineWidth = 1;
   ctx.strokeStyle = strokeColor;
+  // console.log("rect", x, y, width, height);
   ctx.rect(x, y, width, height);
   if (fillColor) {
     ctx.fillStyle = fillColor;

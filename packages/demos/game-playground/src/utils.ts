@@ -9,3 +9,7 @@ export function extend<T extends PropertiesOptions , U extends Partial<Propertie
 
     return { ...props, ...newProps};
 }
+
+export function randomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

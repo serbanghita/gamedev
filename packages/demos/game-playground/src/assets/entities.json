@@ -6,8 +6,8 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 40, "y": 90 },
-      "IsOnMatrix": { "tile": 0 },
+      "IsOnATile": { "x": 40, "y": 90, "tile": 100 },
+      "IsPlayer": {},
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
       "Renderable": {},
@@ -27,8 +27,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 124, "y": 200 },
-      "IsOnMatrix": { "tile": 0 },
+      "IsOnATile": { "x": 124, "y": 200, "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
       "Renderable": {},
@@ -48,8 +47,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 40, "y": 300 },
-      "IsOnMatrix": { "tile": 0 },
+      "IsOnATile": { "x": 40, "y": 300, "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
       "Renderable": {},
@@ -69,8 +67,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 210, "y": 140 },
-      "IsOnMatrix": { "tile": 0 },
+      "IsOnATile": { "x": 210, "y": 140, "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
       "Renderable": {},
@@ -90,8 +87,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 265, "y": 280 },
-      "IsOnMatrix": { "tile": 0 },
+      "IsOnATile": { "x": 265, "y": 280, "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
       "Renderable": {},
@@ -111,8 +107,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 350, "y": 200 },
-      "IsOnMatrix": { "tile": 0 },
+      "IsOnATile": { "x": 350, "y": 200, "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
       "Renderable": {},
@@ -132,8 +127,7 @@
         "animationStateName": "idle"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 400, "y": 290 },
-      "IsOnMatrix": { "tile": 0 },
+      "IsOnATile": { "x": 400, "y": 290, "tile": 0 },
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
       "Renderable": {},

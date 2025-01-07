@@ -1,5 +1,5 @@
 // This is the main JSON map file.
-export type TiledMapFile = {
+export type TiledMapFileContents = {
     width: number;
     height: number;
     tilewidth: number;
@@ -47,7 +47,7 @@ export function getObjectProperty(properties: TiledObjectProperty[], name: strin
 }
 
 export default class TiledMap {
-    constructor(public mapFile: TiledMapFile) {
+    constructor(public mapFile: TiledMapFileContents) {
         this.checkSettings();
     }
 

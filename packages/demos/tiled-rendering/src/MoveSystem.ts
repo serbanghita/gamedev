@@ -1,9 +1,6 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import { QuadTree } from "@serbanghita-gamedev/quadtree";
-import PhysicsBody from "./PhysicsBody";
 import { randomInt } from "./helpers";
-import IsCollisionTile from "./IsCollisionTile";
-import IsMatrix from "./IsMatrix";
+import {IsOnATile, IsAMatrix} from "@serbanghita-gamedev/component";
 import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
 
 export default class MoveSystem extends System {
@@ -14,16 +11,16 @@ export default class MoveSystem extends System {
     super(world, query);
   }
 
-  public update(now) {
+  public update(now: number) {
     const map = this.world.getEntity("map");
     if (!map) {
       throw new Error(`Map entity is not defined.`);
     }
-    const matrixComponent = map.getComponent(IsMatrix);
+    const matrixComponent = map.getComponent(IsAMatrix);
     const matrix = matrixComponent.properties.matrix;
 
     this.query.execute().forEach((entity) => {
-      const tile = entity.getComponent(IsCollisionTile);
+      const tile = entity.getComponent(IsOnATile);
 
       let futureX = tile.properties.x + randomInt(-1, 1);
       let futureY = tile.properties.y + randomInt(-1, 1);

@@ -1,6 +1,6 @@
 import { Component } from "@serbanghita-gamedev/ecs";
 
-export interface IsMatrixProps {
+export interface TileMatrixProps {
   // Flat array matrix with all the possible entities, obstacles, etc.
   matrix: number[];
   // Width in tiles.
@@ -11,8 +11,8 @@ export interface IsMatrixProps {
   tileSize: number;
 }
 
-export default class IsMatrix extends Component {
-  constructor(public properties: IsMatrixProps) {
+export default class TileMatrix extends Component {
+  constructor(public properties: TileMatrixProps) {
     super(properties);
   }
 }

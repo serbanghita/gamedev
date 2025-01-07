@@ -1,7 +1,7 @@
 import { Direction, Directions } from "@serbanghita-gamedev/component";
 import { System, Entity } from "@serbanghita-gamedev/ecs";
-import IsWalking from "../component/IsWalking";
-import {StateStatus} from "../state/state-status";
+import IsWalking from "./IsWalking";
+import {StateStatus} from "./state";
 
 export default class WalkingSystem extends System {
 

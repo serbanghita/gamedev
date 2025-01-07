@@ -30,10 +30,10 @@ export default class AnimationRegistry {
 
   public setAnimationFramesForSpriteSheet(entityDeclaration: EntityDeclaration) {
     const spriteSheet = entityDeclaration.components.SpriteSheet;
-    const spriteSheetAnimations = this.assets["entities/animations"][spriteSheet.properties.spriteSheetAnimationsPath];
+    const spriteSheetAnimations = this.assets["entities/animations"][spriteSheet.spriteSheetAnimationsPath];
 
     if (!spriteSheetAnimations) {
-      throw new Error(`Animations JSON file ${spriteSheet.properties.spriteSheetAnimationsPath} is missing.`);
+      throw new Error(`Animations JSON file ${spriteSheet.spriteSheetAnimationsPath} is missing.`);
     }
 
     let offsetY: number = 0;
@@ -57,8 +57,8 @@ export default class AnimationRegistry {
         return {
           width: animation.width,
           height: animation.height,
-          x: spriteSheet.properties.offset_x + frameIndex * animation.width,
-          y: spriteSheet.properties.offset_y + offsetY,
+          x: spriteSheet.offset_x + frameIndex * animation.width,
+          y: spriteSheet.offset_y + offsetY,
         };
       });
 
@@ -73,6 +73,6 @@ export default class AnimationRegistry {
       animationIndex++;
     }
 
-    this.animations.set(spriteSheet.properties.spriteSheetAnimationsPath, { animationDefaultFrame, animations });
+    this.animations.set(spriteSheet.spriteSheetAnimationsPath, { animationDefaultFrame, animations });
   }
 }

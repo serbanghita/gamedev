@@ -1,10 +1,10 @@
 import {Entity, Query, System, World} from "@serbanghita-gamedev/ecs";
 import {InputActions, Keyboard as KeyboardInput} from "@serbanghita-gamedev/input";
-import {Keyboard, Position, Direction, Directions} from "@serbanghita-gamedev/component";
-import IsWalking from "../component/IsWalking";
-import IsIdle from "../component/IsIdle";
-import IsAttackingWithClub from "../component/IsAttackingWithClub";
-import {StateStatus} from "../state/state-status";
+import {Keyboard, IsOnATile, Direction, Directions} from "@serbanghita-gamedev/component";
+import IsWalking from "./IsWalking";
+import IsIdle from "./IsIdle";
+import IsAttackingWithClub from "./IsAttackingWithClub";
+import {StateStatus} from "./state";
 
 export default class PlayerKeyboardSystem extends System {
     private directionsFromInput: Set<Directions> = new Set([]);
@@ -90,7 +90,7 @@ export default class PlayerKeyboardSystem extends System {
             direction.properties.literal = this.directionLiteral;
         }
 
-        const position = entity.getComponent(Position);
+        const position = entity.getComponent(IsOnATile);
         const speed = 1;
 
         if (this.directionsFromInput.has(Directions.UP)) {

@@ -8,3 +8,4 @@ export { default as TiledMapFile } from "./TiledMapFile";
 export { default as Position } from "./Position";
 export { default as Tile } from "./Tile";
 export { default as TileMatrix } from "./TileMatrix";
+export { default as PhysicsBody, PhysicsBodyPropsDeclaration } from "./PhysicsBody";

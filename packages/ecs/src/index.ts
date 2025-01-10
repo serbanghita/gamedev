@@ -5,13 +5,13 @@
 
 import Component from "./Component";
 import ComponentRegistry from "./ComponentRegistry";
-import Entity, {EntityDeclaration} from "./Entity";
+import Entity from "./Entity";
 import Query from "./Query";
 import System from "./System";
 import World from "./World";
 
 export {
     Component, ComponentRegistry,
-    Entity, EntityDeclaration, Query,
+    Entity, Query,
     System, World
 }

@@ -1,9 +1,10 @@
-import Entity, { EntityDeclaration } from "./Entity";
-import System, { SystemSettings } from "./System";
+import Entity from "./Entity";
+import System from "./System";
 import Query, { IQueryFilters } from "./Query";
 import Component from "./Component";
 import { hasBit } from "@serbanghita-gamedev/bitmask";
 import ComponentRegistry from "./ComponentRegistry";
+import { EntityDeclaration } from "@serbanghita-gamedev/assets";
 
 export default class World {
   public declarations = {

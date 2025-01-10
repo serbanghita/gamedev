@@ -74,7 +74,8 @@ export default class Rectangle {
     return !(this.topRightX < rectangle.topLeftX || this.bottomLeftY < rectangle.topLeftY || this.topLeftX > rectangle.topRightX || this.topLeftY > rectangle.bottomLeftY);
   }
 
-  public intersectsWithPoint(point: Point): boolean {
-    return point.x >= this.topLeftX && point.x <= this.topRightX && point.y >= this.topLeftY && point.y <= this.bottomLeftY;
+  public intersectsWithPoint(point: Point, tolerance:number = 0): boolean {
+    return point.x >= this.topLeftX - tolerance && point.x <= this.topRightX + tolerance && point.y >= this.topLeftY - tolerance && point.y <= this.bottomLeftY + tolerance;
   }
+
 }

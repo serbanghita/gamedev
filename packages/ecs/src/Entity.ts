@@ -66,6 +66,9 @@ export default class Entity {
   }
 
   public hasComponent(declaration: typeof Component): boolean {
+    if (typeof declaration.prototype.bitmask === "undefined") {
+      throw new Error(`Please register the component ${declaration.name} in the ComponentRegistry.`);
+    }
     return hasBit(this.componentsBitmask, declaration.prototype.bitmask);
   }
 

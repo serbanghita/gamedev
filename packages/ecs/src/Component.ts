@@ -14,6 +14,11 @@ class Component {
     init(properties: NonNullable<object>) {
         this.properties = properties;
     }
+
+    // Use this when saving the state.
+    serialize(): NonNullable<object> {
+      throw new Error(`You need to implement this for ${this.constructor.name}`);
+    }
 }
 
 export default Component;

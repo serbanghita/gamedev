@@ -127,6 +127,13 @@ export function dot(ctx: CanvasRenderingContext2D, x: number, y: number, fillCol
   ctx.restore();
 }
 
+export function dashedLine(this: any, ctx: CanvasRenderingContext2D, fn: (args: any[]) => void, pattern: number[] = [10, 10]): void {
+  ctx.save();
+  ctx.setLineDash(pattern);
+  fn.call(this, []);
+  ctx.restore();
+}
+
 export function rectangle(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, strokeColor: string = "rgb(0,0,0)", fillColor?: string): void {
   //ctx.save();
   ctx.beginPath();

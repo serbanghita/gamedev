@@ -1,27 +1,27 @@
 import { Component } from "@serbanghita-gamedev/ecs";
-import { StateStatus } from "./state";
-import { extend } from "./utils";
+import { StateStatus } from "../state";
+import { extend } from "../utils";
 
-interface IsAttackingWithClubProps {
+interface IsWalkingProps {
   stateName: string;
   animationStateName: string;
   animationTick: number;
   tick: number;
   status: StateStatus;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
-export default class IsAttackingWithClub extends Component {
-  constructor(public properties: IsAttackingWithClubProps) {
+export default class IsWalking extends Component {
+  constructor(public properties: IsWalkingProps) {
     super(properties);
 
     this.init(properties);
   }
 
-  public init(properties: IsAttackingWithClubProps) {
+  public init(properties: IsWalkingProps) {
     const defaultProps = {
-      stateName: "club_attack_one",
-      animationStateName: "club_attack_one_down",
+      stateName: "walking",
+      animationStateName: "walk_down",
       animationTick: 0,
       tick: 0,
       status: StateStatus.NOT_STARTED,

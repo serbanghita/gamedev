@@ -1,33 +1,28 @@
 import { Direction, Directions } from "@serbanghita-gamedev/component";
-import { Entity, System } from "@serbanghita-gamedev/ecs";
-import { StateStatus } from "./state";
+import { System, Entity } from "@serbanghita-gamedev/ecs";
+import IsWalking from "../component/IsWalking";
+import { StateStatus } from "../state";
 
-import IsAttackingWithClub from "./IsAttackingWithClub";
-
-export default class AttackingWithClubSystem extends System {
-  private onEnter(entity: Entity, component: IsAttackingWithClub) {
+export default class WalkingSystem extends System {
+  private onEnter(entity: Entity, component: IsWalking) {
     component.properties.tick = 0;
     component.properties.animationTick = 0;
     component.properties.status = StateStatus.STARTED;
   }
 
-  private onUpdate(entity: Entity, component: IsAttackingWithClub) {
+  private onUpdate(entity: Entity, component: IsWalking) {
     const direction = entity.getComponent(Direction);
 
-    if (component.properties.animationTick === 5) {
-      this.onExit(entity, component);
-    }
-
     if (direction.properties.y === Directions.UP) {
-      component.properties.animationStateName = "club_attack_one_up";
+      component.properties.animationStateName = "walk_up";
     } else if (direction.properties.y === Directions.DOWN) {
-      component.properties.animationStateName = "club_attack_one_down";
+      component.properties.animationStateName = "walk_down";
     }
 
     if (direction.properties.x === Directions.LEFT) {
-      component.properties.animationStateName = "club_attack_one_left";
+      component.properties.animationStateName = "walk_left";
     } else if (direction.properties.x === Directions.RIGHT) {
-      component.properties.animationStateName = "club_attack_one_right";
+      component.properties.animationStateName = "walk_right";
     }
 
     component.properties.tick++;
@@ -38,18 +33,18 @@ export default class AttackingWithClubSystem extends System {
     // console.log(component.properties.animationTick);
   }
 
-  private onExit(entity: Entity, component: IsAttackingWithClub) {
+  private onExit(entity: Entity, component: IsWalking) {
     component.properties.status = StateStatus.FINISHED;
   }
 
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
-      const component = entity.getComponent(IsAttackingWithClub);
+      const component = entity.getComponent(IsWalking);
 
-      console.log("IsAttackingWithClub", entity.id);
+      // console.log('IsWalking', entity.id);
 
       if (component.properties.status === StateStatus.FINISHED) {
-        entity.removeComponent(IsAttackingWithClub);
+        entity.removeComponent(IsWalking);
         return;
       }
 

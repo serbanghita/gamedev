@@ -1,9 +1,9 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { clearCtx, image, rectangle, AnimationRegistry, AnimationRegistryItem } from "@serbanghita-gamedev/renderer";
-import { SpriteSheet, IsOnATile } from "@serbanghita-gamedev/component";
-import IsWalking from "./IsWalking";
-import IsIdle from "./IsIdle";
-import IsAttackingWithClub from "./IsAttackingWithClub";
+import { SpriteSheet, Position } from "@serbanghita-gamedev/component";
+import IsWalking from "../component/IsWalking";
+import IsIdle from "../component/IsIdle";
+import IsAttackingWithClub from "../component/IsAttackingWithClub";
 
 export default class RenderSystem extends System {
   public constructor(
@@ -20,7 +20,7 @@ export default class RenderSystem extends System {
     clearCtx(this.ctx, 0, 0, 640, 480);
 
     this.query.execute().forEach((entity) => {
-      const position = entity.getComponent(IsOnATile);
+      const position = entity.getComponent(Position);
       const spriteSheet = entity.getComponent(SpriteSheet);
       const spriteSheetImg = this.animationRegistry.assets["entities/images"][spriteSheet.properties.spriteSheetImgPath];
 
@@ -59,8 +59,8 @@ export default class RenderSystem extends System {
       const animationFrame = animation.frames[component.properties.animationTick];
       const hitboxOffset = animation.hitboxOffset;
 
-      const destPositionX = hitboxOffset?.x ? position.properties.x - hitboxOffset.x : position.properties.x;
-      const destPositionY = hitboxOffset?.y ? position.properties.y - hitboxOffset.y : position.properties.y;
+      const destPositionX = hitboxOffset?.x ? position.point.x - hitboxOffset.x : position.point.x;
+      const destPositionY = hitboxOffset?.y ? position.point.y - hitboxOffset.y : position.point.y;
 
       if (!animationFrame) {
         throw new Error(`Cannot find animation frame ${component.properties.animationTick} for "${component.properties.animationStateName}".`);

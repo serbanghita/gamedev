@@ -1,19 +1,19 @@
 import { loadAssets } from "./assets";
 import { World } from "@serbanghita-gamedev/ecs";
-import { Body, Direction, Keyboard, Renderable, SpriteSheet, TiledMapFile, TileMatrix, Tile } from "@serbanghita-gamedev/component";
+import { Body, Direction, Keyboard, Renderable, SpriteSheet, TiledMapFile, TileMatrix, Tile, Position } from "@serbanghita-gamedev/component";
 import { Keyboard as KeyboardInput, InputActions } from "@serbanghita-gamedev/input";
-import PlayerKeyboardSystem from "./PlayerKeyboardSystem";
-import RenderSystem from "./RenderSystem";
-import IsIdle from "./IsIdle";
-import IsWalking from "./IsWalking";
-import IdleSystem from "./IdleSystem";
-import WalkingSystem from "./WalkingSystem";
-import IsAttackingWithClub from "./IsAttackingWithClub";
-import AttackingWithClubSystem from "./AttackingWithClubSystem";
+import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
+import RenderSystem from "./system/RenderSystem";
+import IsIdle from "./component/IsIdle";
+import IsWalking from "./component/IsWalking";
+import IdleSystem from "./system/IdleSystem";
+import WalkingSystem from "./system/WalkingSystem";
+import IsAttackingWithClub from "./component/IsAttackingWithClub";
+import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
 import { createHtmlUiElements, RenderTiledMapTerrainSystem, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
-import IsPlayer from "./IsPlayer";
-import AutoMoveSystem from "./AutoMoveSystem";
+import IsPlayer from "./component/IsPlayer";
+import AutoMoveSystem from "./system/AutoMoveSystem";
 
 async function setup() {
   /************************************************************
@@ -55,10 +55,21 @@ async function setup() {
   const world = new World();
 
   // Register "Components".
-  world.registerComponents([Body, Direction, Keyboard, Renderable, SpriteSheet, IsPlayer, IsIdle, IsWalking, IsAttackingWithClub]);
-
-  // Create entities automatically from "entities.json" declaration file.
-  assets["entities/declarations"].forEach((entityDeclaration) => world.createEntityFromDeclaration(entityDeclaration));
+  world.registerComponents([
+    Body,
+    Direction,
+    Keyboard,
+    Renderable,
+    SpriteSheet,
+    IsPlayer,
+    IsIdle,
+    IsWalking,
+    IsAttackingWithClub,
+    TiledMapFile,
+    TileMatrix,
+    Tile,
+    Position,
+  ]);
 
   const map = world.createEntity("map");
   map.addComponent(TiledMapFile, { mapFile: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
@@ -72,13 +83,22 @@ async function setup() {
     tileSize: tiledMap.getTileSize(),
   });
 
+  // Create entities automatically from "entities.json" declaration file.
+  assets["entities/declarations"].forEach((entityDeclaration) => {
+    const entity = world.createEntityFromDeclaration(entityDeclaration);
+    // Entity Tile is depending on Position and TileMatrix.
+    if (entityDeclaration.components["Tile"]) {
+      entity.addComponent(Tile, { point: entity.getComponent(Position).point, matrixConfig: map.getComponent(TileMatrix).matrixConfig });
+    }
+  });
+
   const KeyboardQuery = world.createQuery("KeyboardQuery", { all: [Keyboard] });
   const IdleQuery = world.createQuery("IdleQuery", { all: [IsIdle] });
   const WalkingQuery = world.createQuery("WalkingQuery", { all: [IsWalking] });
   // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [IsAttackingWithClub] });
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Tile] });
   const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [TiledMapFile] });
-  const MoveQuery = world.createQuery("MoveQuery", {all: [Tile, IsPlayer]});
+  const MoveQuery = world.createQuery("MoveQuery", { all: [Tile, IsPlayer] });
 
   world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, assets["maps/images"]["./assets/sprites/terrain.png"]).runOnlyOnce();
   world.createSystem(PlayerKeyboardSystem, KeyboardQuery, input);

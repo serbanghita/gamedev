@@ -50,7 +50,7 @@ export default class World {
     return query;
   }
 
-  public createEntityFromDeclaration(entityDeclaration: EntityDeclaration) {
+  public createEntityFromDeclaration(entityDeclaration: EntityDeclaration): Entity {
     // Create the entity and assign it to the world.
     const entity = this.createEntity(entityDeclaration.id);
 
@@ -61,6 +61,8 @@ export default class World {
 
       entity.addComponent(componentDeclaration, props);
     }
+
+    return entity;
   }
 
   public createEntity(id: string): Entity {

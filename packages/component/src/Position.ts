@@ -1,16 +1,17 @@
 import { Component } from "@serbanghita-gamedev/ecs";
 import { Point } from "@serbanghita-gamedev/geometry";
 
-export type PositionProps = {
+export type PositionInitProps = {
   x: number;
   y: number;
-  point: Point;
 };
 
 export default class Position extends Component {
-  constructor(public properties: PositionProps) {
+  public point: Point;
+
+  constructor(public properties: PositionInitProps) {
     super(properties);
 
-    properties.point = new Point(properties.x, properties.y);
+    this.point = new Point(properties.x, properties.y);
   }
 }

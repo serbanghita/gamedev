@@ -1,6 +1,6 @@
 import { Component } from "@serbanghita-gamedev/ecs";
 
-export interface TileMatrixProps {
+export interface TileMatrixInitProps {
   // Flat array matrix with all the possible entities, obstacles, etc.
   matrix: number[];
   // Width in tiles.
@@ -12,7 +12,21 @@ export interface TileMatrixProps {
 }
 
 export default class TileMatrix extends Component {
-  constructor(public properties: TileMatrixProps) {
+  public width: number;
+  public height: number;
+  public tileSize: number;
+  public matrix: number[];
+
+  constructor(public properties: TileMatrixInitProps) {
     super(properties);
+
+    this.width = properties.width;
+    this.height = properties.height;
+    this.tileSize = properties.tileSize;
+    this.matrix = properties.matrix;
+  }
+
+  public get matrixConfig() {
+    return { width: this.width, height: this.height, tileSize: this.tileSize };
   }
 }

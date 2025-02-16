@@ -1,7 +1,7 @@
 import { Direction } from "@serbanghita-gamedev/component";
 import { System, Entity } from "@serbanghita-gamedev/ecs";
-import IsIdle from "./IsIdle";
-import { StateStatus } from "./state";
+import IsIdle from "../component/IsIdle";
+import { StateStatus } from "../state";
 
 export default class IdleSystem extends System {
   private onEnter(entity: Entity, component: IsIdle) {

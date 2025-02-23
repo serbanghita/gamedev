@@ -4,8 +4,8 @@ import { Body, Direction, Keyboard, Renderable, SpriteSheet, TiledMapFile, TileM
 import { Keyboard as KeyboardInput, InputActions } from "@serbanghita-gamedev/input";
 import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
 import RenderSystem from "./system/RenderSystem";
-import IsIdle from "./component/IsIdle";
-import IsWalking from "./component/IsWalking";
+import Idle from "./component/Idle";
+import Walking from "./component/Walking";
 import IdleSystem from "./system/IdleSystem";
 import WalkingSystem from "./system/WalkingSystem";
 import IsAttackingWithClub from "./component/IsAttackingWithClub";
@@ -62,8 +62,8 @@ async function setup() {
     Renderable,
     SpriteSheet,
     IsPlayer,
-    IsIdle,
-    IsWalking,
+    Idle,
+    Walking,
     IsAttackingWithClub,
     TiledMapFile,
     TileMatrix,
@@ -93,8 +93,8 @@ async function setup() {
   });
 
   const KeyboardQuery = world.createQuery("KeyboardQuery", { all: [Keyboard] });
-  const IdleQuery = world.createQuery("IdleQuery", { all: [IsIdle] });
-  const WalkingQuery = world.createQuery("WalkingQuery", { all: [IsWalking] });
+  const IdleQuery = world.createQuery("IdleQuery", { all: [Idle] });
+  const WalkingQuery = world.createQuery("WalkingQuery", { all: [Walking] });
   // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [IsAttackingWithClub] });
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Tile] });
   const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [TiledMapFile] });
@@ -106,9 +106,9 @@ async function setup() {
   world.createSystem(WalkingSystem, WalkingQuery);
   // world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
   world.createSystem(RenderSystem, RenderableQuery, animationRegistry, $ctxForeground);
-  world.createSystem(AutoMoveSystem, MoveQuery);
+  //world.createSystem(AutoMoveSystem, MoveQuery);
 
-  world.start();
+  world.start({fpsCap: 60});
 
   // @ts-expect-error I'm too lazy to typehint window.
   window["engine"] = {

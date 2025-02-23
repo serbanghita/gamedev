@@ -1,52 +1,43 @@
 import { Direction } from "@serbanghita-gamedev/component";
 import { System, Entity } from "@serbanghita-gamedev/ecs";
-import IsIdle from "../component/IsIdle";
+import Idle from "../component/Idle";
 import { StateStatus } from "../state";
 
 export default class IdleSystem extends System {
-  private onEnter(entity: Entity, component: IsIdle) {
-    component.properties.tick = 0;
-    component.properties.animationTick = 0;
-    component.properties.status = StateStatus.STARTED;
+  private lastFrameTime: number = 0;
+
+  private onEnter(entity: Entity, component: Idle) {
+    component.init();
   }
 
-  private onUpdate(entity: Entity, component: IsIdle) {
-    // Loop. @todo: move logic
-    // if (component.properties.tick === 10) {
-    //     this.onEnter(entity, component);
-    // }
-
+  private onUpdate(entity: Entity, component: Idle) {
     const direction = entity.getComponent(Direction);
-    const directionLiteral = direction.properties.literal || "";
 
-    // console.log(`idle_${directionLiteral}`);
+    component.animationStateName = direction.literal ? `idle_${direction.literal}` : "idle";
 
-    component.properties.animationStateName = directionLiteral ? `idle_${directionLiteral}` : "idle";
-    component.properties.tick++;
-    if (component.properties.tick % 15 === 0) {
-      component.properties.animationTick += 1;
+    if (this.world.now - this.lastFrameTime >= 120) {
+      component.animationTick += 1;
+      this.lastFrameTime = this.world.now;
     }
-
-    // console.log(component.properties.animationTick);
   }
 
-  private onExit(entity: Entity, component: IsIdle) {
-    component.properties.status = StateStatus.FINISHED;
+  private onExit(entity: Entity, component: Idle) {
+    component.status = StateStatus.FINISHED;
   }
 
   public update(now: number): void {
     this.query.execute().forEach((entity: Entity) => {
-      const component = entity.getComponent(IsIdle);
+      const component = entity.getComponent(Idle);
 
       // console.log('IsIdle', entity.id);
 
-      if (component.properties.status === StateStatus.FINISHED) {
+      if (component.status === StateStatus.FINISHED) {
         console.log("IsIdle finished and removed");
-        entity.removeComponent(IsIdle);
+        entity.removeComponent(Idle);
         return;
       }
 
-      if (component.properties.status === StateStatus.NOT_STARTED) {
+      if (component.status === StateStatus.NOT_STARTED) {
         this.onEnter(entity, component);
       }
 

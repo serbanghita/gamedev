@@ -6,6 +6,13 @@ import { hasBit } from "@serbanghita-gamedev/bitmask";
 import ComponentRegistry from "./ComponentRegistry";
 import { EntityDeclaration } from "@serbanghita-gamedev/assets";
 
+export type WorldStartOptions = {
+  // Limit the FPS.
+  fpsCap?: number;
+  // Function to run at the end of each frame.
+  callbackFnAfterSystemsUpdate?: () => void;
+}
+
 export default class World {
   public declarations = {
     components: ComponentRegistry.getInstance(),
@@ -15,6 +22,12 @@ export default class World {
   public entities = new Map<string, Entity>();
   public systems = new Map<typeof System, System>();
   public fps: number = 0;
+  public frameDuration: number = 0;
+  public frameNo: number = 0;
+  public fpsCap: number = 0;
+  public fpsCapDuration: number = 0;
+  public callbackFnAfterSystemsUpdate: (() => void) | undefined = undefined;
+  public now: DOMHighResTimeStamp = 0;
 
   public registerComponent(declaration: typeof Component) {
     this.declarations.components.registerComponent(declaration);
@@ -156,7 +169,11 @@ export default class World {
     });
   }
 
-  public start(frameLimit: number = 0, customFn?: () => void) {
+  public start(options?: WorldStartOptions) {
+    if (options) {
+      this.fpsCap = options.fpsCap || 0;
+    }
+
     // Run all systems that need to be run once and de-register them from the loop.
     [...this.systems]
       .filter(([, systemInstance]) => systemInstance.settings.ticksToRunBeforeExit === 1)
@@ -165,37 +182,71 @@ export default class World {
         this.systems.delete(systemDeclaration);
       });
 
+    this.startLoop();
+  }
+
+  private startLoop() {
+
+    let frameTimeDiff = 0;
+    let lastFrameTime = 0;
+
     let fps = 0;
-    let lastTime = 0;
-    let frameCount = 0;
+    let frames = 0;
+    let lastFpsTime = 0;
+
+    let fpsCap = this.fpsCap;
+    let fpsCapDurationTime = this.fpsCapDuration = 1000 / fpsCap;
+    let fpsCapLastFrameTime = 0;
+    let logicFrames = 0;
 
     const loop = (now: DOMHighResTimeStamp) => {
-      frameCount++;
+      this.now = now;
+      frames++;
 
-      if (now - lastTime >= 1000) {
-        fps = frameCount;
-        frameCount = 0;
-        lastTime = now;
-      }
+      // Last frame time.
+      if (lastFrameTime === 0) { lastFrameTime = now; }
+      frameTimeDiff = now - lastFrameTime;
+      lastFrameTime = now;
 
-      if (frameLimit > 0) {
-        // fps >= frameLimit
-        const runEveryFrameCount = Math.floor(fps / frameLimit);
-        if (frameCount % runEveryFrameCount === 0) {
-          this.systems.forEach((system) => system.update(now));
+      if (fpsCapLastFrameTime === 0) { fpsCapLastFrameTime = now; }
+      if (fpsCap > 0 && fps > fpsCap) {
+        logicFrames++;
+        if ((now - fpsCapLastFrameTime) >= fpsCapDurationTime) {
+          fpsCapLastFrameTime = now;
+          // frames++
+          if (fps > 0) {
+            this.systems.forEach((system) => system.update(now));
+          }
+          logicFrames = 0;
         }
       } else {
-        this.systems.forEach((system) => system.update(now));
+        // frames++
+        if (fps > 0) {
+          this.systems.forEach((system) => system.update(now));
+        }
       }
 
-      this.fps = frameLimit || fps;
-
-      if (customFn) {
-        customFn();
+      // Fps
+      if (lastFpsTime === 0) { lastFpsTime = now; }
+      if (now - lastFpsTime >= 1000) {
+        fps = frames;
+        frames = 0;
+        lastFpsTime = now;
       }
-      window.requestAnimationFrame(loop);
-    };
 
-    window.requestAnimationFrame(loop);
+      // Public properties.
+      this.fps = fps;
+      this.frameDuration = frameTimeDiff;
+
+      if (this.callbackFnAfterSystemsUpdate) {
+        this.callbackFnAfterSystemsUpdate();
+      }
+
+      this.frameNo = frames;
+
+      requestAnimationFrame(loop);
+    }
+
+    requestAnimationFrame(loop);
   }
 }

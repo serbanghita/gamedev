@@ -1,54 +1,54 @@
 import { Direction, Directions } from "@serbanghita-gamedev/component";
 import { System, Entity } from "@serbanghita-gamedev/ecs";
-import IsWalking from "../component/IsWalking";
+import Walking from "../component/Walking";
 import { StateStatus } from "../state";
 
 export default class WalkingSystem extends System {
-  private onEnter(entity: Entity, component: IsWalking) {
-    component.properties.tick = 0;
-    component.properties.animationTick = 0;
-    component.properties.status = StateStatus.STARTED;
+  private lastFrameTime: DOMHighResTimeStamp = 0;
+
+  private onEnter(entity: Entity, component: Walking) {
+    component.init();
   }
 
-  private onUpdate(entity: Entity, component: IsWalking) {
+  private onUpdate(entity: Entity, component: Walking) {
     const direction = entity.getComponent(Direction);
 
     if (direction.properties.y === Directions.UP) {
-      component.properties.animationStateName = "walk_up";
+      component.animationStateName = "walk_up";
     } else if (direction.properties.y === Directions.DOWN) {
-      component.properties.animationStateName = "walk_down";
+      component.animationStateName = "walk_down";
     }
 
     if (direction.properties.x === Directions.LEFT) {
-      component.properties.animationStateName = "walk_left";
+      component.animationStateName = "walk_left";
     } else if (direction.properties.x === Directions.RIGHT) {
-      component.properties.animationStateName = "walk_right";
+      component.animationStateName = "walk_right";
     }
 
-    component.properties.tick++;
-    if (component.properties.tick % 15 === 0) {
-      component.properties.animationTick += 1;
+
+    if (this.world.now - this.lastFrameTime >= 60) {
+      component.animationTick += 1;
+      this.lastFrameTime = this.world.now;
     }
-    // console.log(component.properties.tick);
-    // console.log(component.properties.animationTick);
+
   }
 
-  private onExit(entity: Entity, component: IsWalking) {
-    component.properties.status = StateStatus.FINISHED;
+  private onExit(entity: Entity, component: Walking) {
+    component.status = StateStatus.FINISHED;
   }
 
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
-      const component = entity.getComponent(IsWalking);
+      const component = entity.getComponent(Walking);
 
       // console.log('IsWalking', entity.id);
 
-      if (component.properties.status === StateStatus.FINISHED) {
-        entity.removeComponent(IsWalking);
+      if (component.status === StateStatus.FINISHED) {
+        entity.removeComponent(Walking);
         return;
       }
 
-      if (component.properties.status === StateStatus.NOT_STARTED) {
+      if (component.status === StateStatus.NOT_STARTED) {
         this.onEnter(entity, component);
       }
 

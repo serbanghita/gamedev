@@ -2,7 +2,7 @@ import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { randomInt } from "../utils";
 import { Direction, Directions, TileMatrix, Tile, Position } from "@serbanghita-gamedev/component";
 import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
-import IsWalking from "../component/IsWalking";
+import Walking from "../component/Walking";
 import { StateStatus } from "../state";
 
 export default class AutoMoveSystem extends System {
@@ -35,21 +35,17 @@ export default class AutoMoveSystem extends System {
       if (matrix[destinationTile] === 0) {
         // Compute the direction.
         if (destinationX < position.point.x) {
-          direction.properties.literal = "left";
-          direction.properties.x = Directions.LEFT;
+          direction.setX(Directions.LEFT);
         } else if (destinationX > position.point.x) {
-          direction.properties.literal = "right";
-          direction.properties.x = Directions.RIGHT;
+          direction.setX(Directions.RIGHT);
         }
         if (destinationY < position.point.y) {
-          direction.properties.literal = "up";
-          direction.properties.y = Directions.UP;
+          direction.setY(Directions.UP);
         } else if (destinationY > position.point.y) {
-          direction.properties.literal = "down";
-          direction.properties.y = Directions.DOWN;
+          direction.setY(Directions.DOWN);
         }
         // Start the movement.
-        entity.addComponent(IsWalking, {
+        entity.addComponent(Walking, {
           tick: 0,
           animationTick: 0,
           status: StateStatus.STARTED,

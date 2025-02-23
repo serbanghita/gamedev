@@ -1,8 +1,8 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import { clearCtx, image, rectangle, AnimationRegistry, AnimationRegistryItem } from "@serbanghita-gamedev/renderer";
+import { clearCtx, image, rectangle, AnimationRegistry, AnimationRegistryItem, text } from "@serbanghita-gamedev/renderer";
 import { SpriteSheet, Position } from "@serbanghita-gamedev/component";
-import IsWalking from "../component/IsWalking";
-import IsIdle from "../component/IsIdle";
+import Walking from "../component/Walking";
+import Idle from "../component/Idle";
 import IsAttackingWithClub from "../component/IsAttackingWithClub";
 
 export default class RenderSystem extends System {
@@ -30,12 +30,10 @@ export default class RenderSystem extends System {
 
       let component;
 
-      if (entity.hasComponent(IsAttackingWithClub)) {
-        component = entity.getComponent(IsAttackingWithClub);
-      } else if (entity.hasComponent(IsWalking)) {
-        component = entity.getComponent(IsWalking);
-      } else if (entity.hasComponent(IsIdle)) {
-        component = entity.getComponent(IsIdle);
+      if (entity.hasComponent(Walking)) {
+        component = entity.getComponent(Walking);
+      } else if (entity.hasComponent(Idle)) {
+        component = entity.getComponent(Idle);
       } else {
         throw new Error(`Entity ${entity.id} has no default state to render.`);
       }
@@ -44,26 +42,26 @@ export default class RenderSystem extends System {
       if (!animationItem) {
         throw new Error(`Animations were not loaded for ${spriteSheet.properties.spriteSheetAnimationsPath}.`);
       }
-      const animation = animationItem.animations.get(component.properties.animationStateName);
+      const animation = animationItem.animations.get(component.animationStateName);
 
       if (!animation) {
         throw new Error(
-          `Animation is not declared in ${spriteSheet.properties.spriteSheetAnimationsPath} for state ${component.properties.animationStateName}.`,
+          `Animation is not declared in ${spriteSheet.properties.spriteSheetAnimationsPath} for state ${component.animationStateName}.`,
         );
       }
 
-      if (component.properties.animationTick >= animation.frames.length) {
-        component.properties.animationTick = 0;
+      if (component.animationTick >= animation.frames.length) {
+        component.animationTick = 0;
       }
 
-      const animationFrame = animation.frames[component.properties.animationTick];
+      const animationFrame = animation.frames[component.animationTick];
       const hitboxOffset = animation.hitboxOffset;
 
       const destPositionX = hitboxOffset?.x ? position.point.x - hitboxOffset.x : position.point.x;
       const destPositionY = hitboxOffset?.y ? position.point.y - hitboxOffset.y : position.point.y;
 
       if (!animationFrame) {
-        throw new Error(`Cannot find animation frame ${component.properties.animationTick} for "${component.properties.animationStateName}".`);
+        throw new Error(`Cannot find animation frame ${component.animationTick} for "${component.animationStateName}".`);
       }
 
       image(
@@ -85,5 +83,10 @@ export default class RenderSystem extends System {
 
       rectangle(this.ctx, destPositionX + hitboxOffset.x, destPositionY + hitboxOffset.y, 16, 16, "red");
     });
+
+    text(this.ctx, `fps: ${this.world.fps}`, 440, 420, "20", "serif", "white", "black");
+    text(this.ctx, `frame duration: ${this.world.frameDuration}`, 440, 440, "20", "serif", "white", "black");
+    text(this.ctx, `fps cap: ${this.world.fpsCap}`, 440, 460, "20", "serif", "white", "black");
+    text(this.ctx, `frame no: ${this.world.frameNo}`, 440, 480, "20", "serif", "white", "black");
   }
 }

@@ -1,8 +1,8 @@
 import { Entity, Query, System, World } from "@serbanghita-gamedev/ecs";
 import { InputActions, Keyboard as KeyboardInput } from "@serbanghita-gamedev/input";
 import { Keyboard, Position, Direction, Directions } from "@serbanghita-gamedev/component";
-import IsWalking from "../component/IsWalking";
-import IsIdle from "../component/IsIdle";
+import Walking from "../component/Walking";
+import Idle from "../component/Idle";
 import IsAttackingWithClub from "../component/IsAttackingWithClub";
 import { StateStatus } from "../state";
 
@@ -73,13 +73,13 @@ export default class PlayerKeyboardSystem extends System {
     return true;
   }
 
-  private onEnter(entity: Entity, component: IsWalking) {
+  private onEnter(entity: Entity, component: Walking) {
     component.properties.tick = 0;
     component.properties.animationTick = 0;
     component.properties.status = StateStatus.STARTED;
   }
 
-  private onUpdate(entity: Entity, component: IsWalking) {
+  private onUpdate(entity: Entity, component: Walking) {
     if (!entity.hasComponent(Keyboard) || !this.input.areKeysPressed()) {
       this.onExit(entity, component);
       return false;
@@ -115,10 +115,10 @@ export default class PlayerKeyboardSystem extends System {
     }
   }
 
-  private onExit(entity: Entity, component: IsWalking) {
+  private onExit(entity: Entity, component: Walking) {
     component.properties.status = StateStatus.FINISHED;
-    if (entity.hasComponent(IsWalking)) {
-      entity.removeComponent(IsWalking);
+    if (entity.hasComponent(Walking)) {
+      entity.removeComponent(Walking);
     }
   }
 
@@ -128,28 +128,28 @@ export default class PlayerKeyboardSystem extends System {
         if (!entity.getComponent(Keyboard).properties.action_1) {
           return;
         }
-        entity.removeComponent(IsWalking);
+        entity.removeComponent(Walking);
         entity.addComponent(IsAttackingWithClub);
         return;
       }
 
       if (!this.input.areMovementKeysPressed()) {
-        if (entity.hasComponent(IsWalking)) {
-          entity.removeComponent(IsWalking);
-          entity.addComponent(IsIdle);
+        if (entity.hasComponent(Walking)) {
+          entity.removeComponent(Walking);
+          entity.addComponent(Idle);
         }
         return;
       }
 
-      if (!entity.hasComponent(IsWalking)) {
-        entity.addComponent(IsWalking);
+      if (!entity.hasComponent(Walking)) {
+        entity.addComponent(Walking);
         // entity.removeComponent(IsIdle);
       }
 
-      const component = entity.getComponent(IsWalking);
+      const component = entity.getComponent(Walking);
 
       if (component.properties.status === StateStatus.FINISHED) {
-        entity.removeComponent(IsWalking);
+        entity.removeComponent(Walking);
         return;
       }
 

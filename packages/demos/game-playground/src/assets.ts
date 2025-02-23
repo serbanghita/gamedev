@@ -12,7 +12,7 @@
 // Added manually because esbuild doesn't support dynamic imports
 import { loadLocalImage } from "@serbanghita-gamedev/assets";
 import { SpriteSheetAnimation } from "@serbanghita-gamedev/component";
-import { TiledMapFile } from "@serbanghita-gamedev/tiled";
+import { TiledMapFileContents } from "@serbanghita-gamedev/tiled";
 import { Assets, EntityDeclaration } from "@serbanghita-gamedev/assets";
 
 // @see https://esbuild.github.io/content-types/#data-url
@@ -49,7 +49,7 @@ export async function loadAssets(): Promise<Assets> {
       "./assets/sprites/terrain.png": await loadLocalImage(require("./assets/sprites/terrain.png")),
     },
     "maps/declarations": {
-      "./assets/maps/E1MM2.json": require("./assets/maps/E1MM2.json") as TiledMapFile,
+      "./assets/maps/E1MM2.json": require("./assets/maps/E1MM2.json") as TiledMapFileContents,
     },
   };
 }

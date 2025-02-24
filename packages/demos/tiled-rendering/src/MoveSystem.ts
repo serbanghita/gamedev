@@ -1,6 +1,6 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import { randomInt } from "./helpers";
-import {IsOnATile, IsAMatrix} from "@serbanghita-gamedev/component";
+import { randomInt } from "./utils";
+import {Tile, TileMatrix} from "@serbanghita-gamedev/component";
 import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
 
 export default class MoveSystem extends System {
@@ -16,23 +16,21 @@ export default class MoveSystem extends System {
     if (!map) {
       throw new Error(`Map entity is not defined.`);
     }
-    const matrixComponent = map.getComponent(IsAMatrix);
+    const matrixComponent = map.getComponent(TileMatrix);
     const matrix = matrixComponent.properties.matrix;
 
     this.query.execute().forEach((entity) => {
-      const tile = entity.getComponent(IsOnATile);
+      const tile = entity.getComponent(Tile);
 
-      let futureX = tile.properties.x + randomInt(-1, 1);
-      let futureY = tile.properties.y + randomInt(-1, 1);
+      let futureX = tile.x + randomInt(-1, 1);
+      let futureY = tile.y + randomInt(-1, 1);
 
-      const currentTile = tile.properties.tile;
+      const currentTile = tile.tile;
       const futureTile = getTileFromCoordinates(futureX, futureY, matrixComponent.properties);
       if (currentTile === futureTile || matrix[futureTile] === 0) {
-        tile.properties.x = futureX;
-        tile.properties.y = futureY;
-        tile.properties.point.x = futureX;
-        tile.properties.point.y = futureY;
-        tile.properties.tile = futureTile;
+        tile.point.x = futureX;
+        tile.point.y = futureY;
+        // tile.tile = futureTile;
 
         // Update the tile on the "matrix".
         matrix[currentTile] = 0;

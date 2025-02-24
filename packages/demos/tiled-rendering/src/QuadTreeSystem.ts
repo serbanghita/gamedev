@@ -1,6 +1,6 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
-import {IsOnATile} from "@serbanghita-gamedev/component";
+import {Tile} from "@serbanghita-gamedev/component";
 
 export default class QuadTreeSystem extends System {
   public constructor(
@@ -20,8 +20,8 @@ export default class QuadTreeSystem extends System {
     this.quadtree.clear();
 
     this.query.execute().forEach((entity) => {
-      const tile = entity.getComponent(IsOnATile);
-      this.quadtree.addPoint(tile.properties.point);
+      const tile = entity.getComponent(Tile);
+      this.quadtree.addPoint(tile.point);
     });
   }
 }

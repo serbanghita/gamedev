@@ -1,11 +1,11 @@
 import { createHtmlUiElements } from "@serbanghita-gamedev/renderer";
 import { World } from "@serbanghita-gamedev/ecs";
 import { RenderTiledMapTerrainSystem } from "@serbanghita-gamedev/renderer";
-import { IsATiledMap, IsOnATile, Renderable, IsAMatrix } from "@serbanghita-gamedev/component";
+import { TiledMapFile, Tile, Renderable, TileMatrix } from "@serbanghita-gamedev/component";
 import { loadSprites } from "./assets";
 import { Point, Rectangle } from "@serbanghita-gamedev/geometry";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
-import { getTileCoordinates, getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
+import { getCoordinatesFromTile, getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
 import QuadTreeSystem from "./QuadTreeSystem";
 import IsPreRendered from "./IsPreRendered";
@@ -38,7 +38,7 @@ async function setup() {
    * Because we assign them different bitmasks so we can have fast checks in the local ECS library when
    * performing a Query of Entities.
    */
-  world.registerComponents([IsATiledMap, IsOnATile, IsAMatrix, IsPreRendered, IsRenderedInForeground, IsPlayer]);
+  world.registerComponents([TiledMapFile, Tile, TileMatrix, IsPreRendered, IsRenderedInForeground, IsPlayer]);
 
   /**
    *  Load the map from Tiled json file declaration.
@@ -47,14 +47,14 @@ async function setup() {
    *  I believe I first statically load the whole list of Maps and then the player will be able to choose one.
    */
   const map = world.createEntity("map");
-  map.addComponent(IsATiledMap, { mapFile: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
+  map.addComponent(TiledMapFile, { mapFile: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
   // Load the "TiledMap" class wrapper over the json file declaration.
-  const tiledMap = new TiledMap(map.getComponent(IsATiledMap).properties.mapFile);
+  const tiledMap = new TiledMap(map.getComponent(TiledMapFile).properties.mapFile);
   // Add the "collision" layer data to the map.
   // For now just take the first "collision" layer. We can have multiple collision layers defined in Tiled.
   // One examples is "collision_ai" layer which influences "negatively" the AI path finding.
   const collisionLayer = tiledMap.getCollisionLayers()[0];
-  map.addComponent(IsAMatrix, {
+  map.addComponent(TileMatrix, {
     matrix: collisionLayer.data,
     width: collisionLayer.width,
     height: collisionLayer.height,
@@ -65,10 +65,10 @@ async function setup() {
     if (tileValue > 0) {
       const entityId = `collision-tile-${tileIndex}`;
       const collisionTileEntity = world.createEntity(entityId);
-      let { x, y } = getTileCoordinates(tileIndex, map.getComponent(IsAMatrix).properties);
+      let { x, y } = getCoordinatesFromTile(tileIndex, map.getComponent(TileMatrix).properties);
       x = x + tiledMap.getTileSize() / 2;
       y = y + tiledMap.getTileSize() / 2;
-      collisionTileEntity.addComponent(IsOnATile, { x, y, point: new Point(x, y, entityId) });
+      collisionTileEntity.addComponent(Tile, { x, y, point: new Point(x, y, entityId) });
       collisionTileEntity.addComponent(IsPreRendered);
     }
   });
@@ -77,7 +77,7 @@ async function setup() {
    *  Pre-rendering of the terrain.
    *  This system runs only once and then de-registers itself.
    */
-  const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [IsATiledMap] });
+  const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [TiledMapFile] });
   world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, SPRITES["./assets/sprites/terrain.png"]).runOnlyOnce();
 
   /**
@@ -95,7 +95,7 @@ async function setup() {
    *  Pre-rendering of the collision tiles for debug purposes.
    *  This system runs only once and then de-registers itself.
    */
-  const CollisionTilesQuery = world.createQuery("CollisionTilesQuery", { all: [IsOnATile] });
+  const CollisionTilesQuery = world.createQuery("CollisionTilesQuery", { all: [Tile] });
   world.createSystem(PreRenderCollisionTilesSystem, CollisionTilesQuery, $ctxBackground).runOnlyOnce();
 
   /**
@@ -125,8 +125,8 @@ async function setup() {
     if (!map) {
       throw new Error(`Map entity has not been defined yet.`);
     }
-    const mapMatrix = map.getComponent(IsAMatrix);
-    const tile = getTileFromCoordinates(x, y, mapMatrix.properties);
+    const mapMatrix = map.getComponent(TileMatrix);
+    const tile = getTileFromCoordinates(x, y, mapMatrix.matrixConfig);
 
     if (mapMatrix.properties.matrix[tile] !== 0) {
       return;
@@ -136,13 +136,13 @@ async function setup() {
     const player = world.createEntity(playerId);
     const point = new Point(x, y, playerId);
 
-    player.addComponent(IsOnATile, { x, y, point, tile });
+    player.addComponent(Tile, { point, matrixConfig: mapMatrix.matrixConfig});
     player.addComponent(IsRenderedInForeground);
     player.addComponent(IsPlayer);
     quadtree.addPoint(point);
   });
 
-  world.start(0, () => {});
+  world.start();
 }
 
 setup().then(() => console.log("Game started ..."));

@@ -1,5 +1,5 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import {IsOnATile} from "@serbanghita-gamedev/component";
+import {Tile} from "@serbanghita-gamedev/component";
 import { dot, rectangle, text } from "@serbanghita-gamedev/renderer";
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
 
@@ -25,14 +25,18 @@ export default class RenderingSystem extends System {
     this.ctx.clearRect(0, 0, 640, 480);
 
     this.query.execute().forEach((entity) => {
-      const tile = entity.getComponent(IsOnATile);
-      const point = tile.properties.point;
-      dot(this.ctx, point.x, point.y, "rgb(0,255,0)", 6);
-      text(this.ctx, `${tile.properties.tile}`, point.x, point.y, "10", "arial", "", "black");
+      const tileComp = entity.getComponent(Tile);
+
+      dot(this.ctx, tileComp.x, tileComp.y, "rgb(0,255,0)", 6);
+      text(this.ctx, `${tileComp.tile}`, tileComp.x, tileComp.y, "10", "arial", "", "black");
     });
 
     this.renderQuadTree(this.quadtree);
-    text(this.ctx, `fps: ${this.world.fps}`, 520, 430, "30", "sans-serif", "", "black");
-    text(this.ctx, `entities: ${this.world.entities.size}`, 470, 460, "30", "sans-serif", "", "black");
+
+    // debug
+    text(this.ctx, `fps: ${this.world.fps}`, 440, 420, "20", "serif", "", "black");
+    text(this.ctx, `frame duration: ${this.world.frameDuration}`, 440, 440, "20", "serif", "", "black");
+    text(this.ctx, `fps cap: ${this.world.fpsCap}`, 440, 460, "20", "serif", "", "black");
+    text(this.ctx, `frame no: ${this.world.frameNo}`, 440, 480, "20", "serif", "", "black");
   }
 }

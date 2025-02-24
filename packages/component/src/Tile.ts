@@ -8,7 +8,7 @@ export interface TileInitProps {
 }
 
 export default class Tile extends Component {
-  private point!: Point;
+  public point!: Point;
   private matrixConfig!: MatrixConfig;
 
   constructor(public properties: TileInitProps) {
@@ -23,5 +23,13 @@ export default class Tile extends Component {
 
   public get tile(): number {
     return getTileFromCoordinates(this.point.x, this.point.y, this.matrixConfig);
+  }
+
+  public get x(): number {
+    return this.point.x;
+  }
+
+  public get y(): number {
+    return this.point.y;
   }
 }

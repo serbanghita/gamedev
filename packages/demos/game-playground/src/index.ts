@@ -56,21 +56,17 @@ async function setup() {
 
   // Register "Components".
   world.registerComponents([
-    Body,
-    Direction,
-    Keyboard,
-    Renderable,
-    SpriteSheet,
-    IsPlayer,
-    Idle,
-    Walking,
-    AttackingWithClub,
-    TiledMapFile,
-    TileMatrix,
-    Tile,
+    Body, Direction, Keyboard,
+    Renderable, SpriteSheet,
+    IsPlayer, Idle, Walking, AttackingWithClub,
+    TiledMapFile, TileMatrix, Tile,
     Position,
   ]);
 
+  /**
+   * Create the globally known Map entity.
+   * Add the collision layer to the map.
+   */
   const map = world.createEntity("map");
   map.addComponent(TiledMapFile, { mapFile: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
   const tiledMapFile = map.getComponent(TiledMapFile).properties.mapFile;
@@ -83,7 +79,9 @@ async function setup() {
     tileSize: tiledMap.getTileSize(),
   });
 
-  // Create entities automatically from "entities.json" declaration file.
+  /**
+   * Create all actor entities automatically from "entities.json" declaration file.
+   */
   assets["entities/declarations"].forEach((entityDeclaration) => {
     const entity = world.createEntityFromDeclaration(entityDeclaration);
     // Entity Tile is depending on Position and TileMatrix.

@@ -172,6 +172,9 @@ export default class World {
   public start(options?: WorldStartOptions) {
     if (options) {
       this.fpsCap = options.fpsCap || 0;
+      if (options.callbackFnAfterSystemsUpdate) {
+        this.callbackFnAfterSystemsUpdate = options.callbackFnAfterSystemsUpdate;
+      }
     }
 
     // Run all systems that need to be run once and de-register them from the loop.

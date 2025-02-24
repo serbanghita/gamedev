@@ -4,15 +4,23 @@ import { Rectangle, Point } from "@serbanghita-gamedev/geometry";
 import { World } from "@serbanghita-gamedev/ecs";
 import { TiledMapFile } from "@serbanghita-gamedev/component";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
-import IsMatrix from "./IsMatrix";
-import PositionSystem from "./PositionSystem";
-import RenderingSystem from "./RenderingSystem";
+import IsMatrix from "./component/IsMatrix";
+import PositionSystem from "./system/PositionSystem";
+import RenderingSystem from "./system/RenderingSystem";
 import { randomInt } from "./helpers";
-import QuadTreeSystem from "./QuadTreeSystem";
-import CollisionSystem from "./CollisionSystem";
-import PhysicsBody from "./PhysicsBody";
-import IsPlayer from "./IsPlayer";
-import IsRendered from "./IsRendered";
+import QuadTreeSystem from "./system/QuadTreeSystem";
+import CollisionSystem from "./system/CollisionSystem";
+import PhysicsBody from "./component/PhysicsBody";
+import IsPlayer from "./component/IsPlayer";
+import IsRendered from "./component/IsRendered";
+
+/**
+ * Demo of a canvas filled with random entities with physics identified by a Rectangle and a Point.
+ * The Player entity acts as an eraser of entities when colliding with them.
+ * If entities collide with each other they grow.
+ *
+ * The idea is to showcase the collision detection based on a Quad Tree.
+ */
 
 const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));
 const quadtree = new QuadTree(area, 5, 5);
@@ -44,11 +52,10 @@ function renderQuadTree(quadtree: QuadTree) {
 // Create the current "World" (scene).
 const world = new World();
 
-world.declarations.components.registerComponent(TiledMapFile);
-world.declarations.components.registerComponent(IsMatrix);
-world.declarations.components.registerComponent(PhysicsBody);
-world.declarations.components.registerComponent(IsPlayer);
-world.declarations.components.registerComponent(IsRendered);
+world.declarations.components.registerComponents([
+  TiledMapFile, IsMatrix, PhysicsBody,
+  IsPlayer, IsRendered
+]);
 
 const map = world.createEntity("map");
 map.addComponent(TiledMapFile, { mapFile: require("./E1MM2.json"), mapFilePath: "./E1MM2.json" });
@@ -59,6 +66,9 @@ const tiledMap = new TiledMap(tiledMapFile);
 const matrix = world.createEntity("matrix");
 matrix.addComponent(IsMatrix, { matrix: tiledMap.getCollisionLayers()[0] });
 
+/**
+ * Create the "Player" entity which acts as an eraser.
+ */
 const player = world.createEntity("player");
 const playerPoint = new Point(320, 240);
 const playerRectangle = new Rectangle(50, 50, playerPoint);
@@ -66,6 +76,10 @@ player.addComponent(PhysicsBody, { width: 50, height: 50, rectangle: playerRecta
 player.addComponent(IsPlayer);
 player.addComponent(IsRendered);
 
+/**
+ * Create random entities inside the canvas.
+ * Entities have "Rectangle" bodies.
+ */
 for (let coordX = 0; coordX < 640; coordX = coordX + 10) {
   for (let coordY = 0; coordY < 480; coordY = coordY + 10) {
     const id = `entity${coordX}-${coordY}`;

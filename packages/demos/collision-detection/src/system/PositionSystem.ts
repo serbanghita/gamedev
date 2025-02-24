@@ -1,6 +1,6 @@
 import { System } from "@serbanghita-gamedev/ecs";
-import { randomInt } from "./helpers";
-import PhysicsBody from "./PhysicsBody";
+import { randomInt } from "../helpers";
+import PhysicsBody from "../component/PhysicsBody";
 
 export default class PositionSystem extends System {
   public update(now: number): void {

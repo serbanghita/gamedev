@@ -1,7 +1,7 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
 import { dot, rectangle } from "@serbanghita-gamedev/renderer";
-import PhysicsBody from "./PhysicsBody";
-import IsPlayer from "./IsPlayer";
+import PhysicsBody from "../component/PhysicsBody";
+import IsPlayer from "../component/IsPlayer";
 
 export default class RenderingSystem extends System {
   public constructor(

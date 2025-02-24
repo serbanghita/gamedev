@@ -1,6 +1,6 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
-import PhysicsBody from "./PhysicsBody";
+import PhysicsBody from "../component/PhysicsBody";
 
 export default class QuadTreeSystem extends System {
   public constructor(

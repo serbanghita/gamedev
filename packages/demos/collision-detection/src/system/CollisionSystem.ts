@@ -1,6 +1,6 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
-import PhysicsBody from "./PhysicsBody";
+import PhysicsBody from "../component/PhysicsBody";
 
 export default class CollisionSystem extends System {
   public constructor(

@@ -1,5 +1,5 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import { randomInt } from "./utils";
+import { randomInt } from "../utils";
 import {Tile, TileMatrix} from "@serbanghita-gamedev/component";
 import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
 

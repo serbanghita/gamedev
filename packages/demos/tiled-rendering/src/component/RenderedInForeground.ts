@@ -1,6 +1,6 @@
 import { Component } from "@serbanghita-gamedev/ecs";
 
-export default class IsPlayer extends Component {
+export default class RenderedInForeground extends Component {
   constructor(public properties: Record<string, never>) {
     super(properties);
   }

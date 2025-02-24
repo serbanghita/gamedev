@@ -7,13 +7,13 @@ import { Point, Rectangle } from "@serbanghita-gamedev/geometry";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
 import { getCoordinatesFromTile, getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
 import { QuadTree } from "@serbanghita-gamedev/quadtree";
-import QuadTreeSystem from "./QuadTreeSystem";
-import IsPreRendered from "./IsPreRendered";
-import PreRenderCollisionTilesSystem from "./PreRenderCollisionTilesSystem";
-import IsRenderedInForeground from "./IsRenderedInForeground";
-import RenderingSystem from "./RenderingSystem";
-import IsPlayer from "./IsPlayer";
-import MoveSystem from "./MoveSystem";
+import QuadTreeSystem from "./system/QuadTreeSystem";
+import PreRendered from "./component/PreRendered";
+import PreRenderCollisionTilesSystem from "./system/PreRenderCollisionTilesSystem";
+import RenderedInForeground from "./component/RenderedInForeground";
+import RenderingSystem from "./system/RenderingSystem";
+import Player from "./component/Player";
+import MoveSystem from "./system/MoveSystem";
 
 async function setup() {
   /**
@@ -38,7 +38,7 @@ async function setup() {
    * Because we assign them different bitmasks so we can have fast checks in the local ECS library when
    * performing a Query of Entities.
    */
-  world.registerComponents([TiledMapFile, Tile, TileMatrix, IsPreRendered, IsRenderedInForeground, IsPlayer]);
+  world.registerComponents([TiledMapFile, Tile, TileMatrix, PreRendered, RenderedInForeground, Player]);
 
   /**
    *  Load the map from Tiled json file declaration.
@@ -69,7 +69,7 @@ async function setup() {
       x = x + tiledMap.getTileSize() / 2;
       y = y + tiledMap.getTileSize() / 2;
       collisionTileEntity.addComponent(Tile, { x, y, point: new Point(x, y, entityId) });
-      collisionTileEntity.addComponent(IsPreRendered);
+      collisionTileEntity.addComponent(PreRendered);
     }
   });
 
@@ -101,10 +101,10 @@ async function setup() {
   /**
    * System that renders all Entities that will appear in the foreground.
    */
-  const RenderingQuery = world.createQuery("RenderingQuery", { all: [IsRenderedInForeground] });
+  const RenderingQuery = world.createQuery("RenderingQuery", { all: [RenderedInForeground] });
   world.createSystem(RenderingSystem, RenderingQuery, $ctxForeground, quadtree);
 
-  const IsPlayerQuery = world.createQuery("IsPlayerQuery", { all: [IsPlayer] });
+  const IsPlayerQuery = world.createQuery("IsPlayerQuery", { all: [Player] });
   /**
    * Movement system (contains matrix collision checks).
    */
@@ -137,8 +137,8 @@ async function setup() {
     const point = new Point(x, y, playerId);
 
     player.addComponent(Tile, { point, matrixConfig: mapMatrix.matrixConfig});
-    player.addComponent(IsRenderedInForeground);
-    player.addComponent(IsPlayer);
+    player.addComponent(RenderedInForeground);
+    player.addComponent(Player);
     quadtree.addPoint(point);
   });
 

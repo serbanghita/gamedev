@@ -15,6 +15,14 @@ import RenderingSystem from "./system/RenderingSystem";
 import Player from "./component/Player";
 import MoveSystem from "./system/MoveSystem";
 
+/**
+ * In this demo I pre-rendered all tiles (Tile) from a Tiled (json) map (see assets/maps/E1MM2.json).
+ * Then I added a Quad Tree implementation.
+ * Then I added the possibility of adding random "Player" points that are rendered in the foreground
+ * that move randomly but obey the occupied tiles.
+ *
+ */
+
 async function setup() {
   /**
    * Create the UI and canvas.
@@ -49,7 +57,7 @@ async function setup() {
   const map = world.createEntity("map");
   map.addComponent(TiledMapFile, { mapFile: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
   // Load the "TiledMap" class wrapper over the json file declaration.
-  const tiledMap = new TiledMap(map.getComponent(TiledMapFile).properties.mapFile);
+  const tiledMap = new TiledMap(map.getComponent(TiledMapFile).mapFileContents);
   // Add the "collision" layer data to the map.
   // For now just take the first "collision" layer. We can have multiple collision layers defined in Tiled.
   // One examples is "collision_ai" layer which influences "negatively" the AI path finding.

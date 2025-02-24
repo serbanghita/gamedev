@@ -9,7 +9,7 @@
       "Body": { "width": 16, "height": 16 },
       "Position": { "x": 40, "y": 90 },
       "Tile": {},
-      "IsPlayer": {},
+      "Player": {},
       "Direction": { "x": 0, "y": 0 },
       "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d", "action_1": "f" },
       "Renderable": {},

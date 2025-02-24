@@ -43,7 +43,7 @@ export function getTileRowAndColumn(tile: number, matrixConfig: MatrixConfig) {
 }
 
 export function getTileFromCoordinates<T extends MatrixConfig>(x: number, y: number, matrixConfig: T): number {
-  const tileIndex = Math.floor(x / matrixConfig.tileSize) + matrixConfig.width * Math.floor(y / matrixConfig.tileSize);
+  const tileIndex = Math.round(x / matrixConfig.tileSize) + matrixConfig.width * Math.round(y / matrixConfig.tileSize);
 
   if (tileIndex < 0 || tileIndex > matrixConfig.width * matrixConfig.height - 1) {
     throw new Error(`Invalid tile ${tileIndex} resulted from ${x} and ${y}`);

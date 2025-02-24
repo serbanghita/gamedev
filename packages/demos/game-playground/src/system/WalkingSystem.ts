@@ -1,18 +1,75 @@
-import { Direction, Directions } from "@serbanghita-gamedev/component";
-import { System, Entity } from "@serbanghita-gamedev/ecs";
+import { Direction, Directions, Position, Tile, TileMatrix } from "@serbanghita-gamedev/component";
+import { System, Entity, World, Query } from "@serbanghita-gamedev/ecs";
 import Walking from "../component/Walking";
 import { StateStatus } from "../state";
+import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
 
 export default class WalkingSystem extends System {
   private lastFrameTime: DOMHighResTimeStamp = 0;
+  private tileMatrix!: TileMatrix;
+
+  public constructor(public world: World, public query: Query) {
+    super(world, query);
+
+    const map = this.world.getEntity("map");
+    if (!map) {
+      throw new Error(`Map entity is not defined.`);
+    }
+    this.tileMatrix = map.getComponent(TileMatrix);
+  }
 
   private onEnter(entity: Entity, component: Walking) {
     component.init();
   }
 
   private onUpdate(entity: Entity, component: Walking) {
+    /**
+     * Position (based on Direction)
+     * Checks if next tile is occupied.
+     */
+    const tile = entity.getComponent(Tile);
     const direction = entity.getComponent(Direction);
+    const position = entity.getComponent(Position);
+    const speed = 1;
 
+    let futureX = position.point.x;
+    let futureY = position.point.y;
+
+    if (direction.y === Directions.UP) {
+      futureY -= speed;
+    } else if (direction.y === Directions.DOWN) {
+      futureY += speed;
+    } else {
+      direction.y = Directions.NONE;
+    }
+
+    if (direction.x === Directions.LEFT) {
+      futureX -= speed;
+    } else if (direction.x === Directions.RIGHT) {
+      futureX += speed;
+    } else {
+      direction.x = Directions.NONE;
+    }
+
+    const currentTile = tile.tile;
+    const futureTile = getTileFromCoordinates(futureX, futureY, this.tileMatrix.matrixConfig);
+
+    // Allow movement if tile is free.
+    if (currentTile === futureTile || this.tileMatrix.matrix[futureTile] === 0) {
+      position.point.y = futureY;
+      position.point.x = futureX;
+
+      if (currentTile !== futureTile) {
+        this.tileMatrix.matrix[currentTile] = 0;
+        this.tileMatrix.matrix[futureTile] = 2; // @todo Define tile types.
+      }
+    } else {
+      console.log('no');
+    }
+
+    /**
+     * Animation
+     */
     if (direction.y === Directions.UP) {
       component.animationStateName = "walk_up";
     } else if (direction.y === Directions.DOWN) {
@@ -40,8 +97,6 @@ export default class WalkingSystem extends System {
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
       const component = entity.getComponent(Walking);
-
-      // console.log('IsWalking', entity.id);
 
       if (component.status === StateStatus.FINISHED) {
         entity.removeComponent(Walking);

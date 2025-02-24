@@ -86,9 +86,10 @@ export default class RenderSystem extends System {
       rectangle(this.ctx, destPositionX + hitboxOffset.x, destPositionY + hitboxOffset.y, 16, 16, "red");
     });
 
-    text(this.ctx, `fps: ${this.world.fps}`, 440, 420, "20", "serif", "white", "black");
-    text(this.ctx, `frame duration: ${this.world.frameDuration}`, 440, 440, "20", "serif", "white", "black");
-    text(this.ctx, `fps cap: ${this.world.fpsCap}`, 440, 460, "20", "serif", "white", "black");
-    text(this.ctx, `frame no: ${this.world.frameNo}`, 440, 480, "20", "serif", "white", "black");
+    text(this.ctx, `entities: ${this.world.entities.size}`, 440, 400, "16", "serif", "", "black");
+    text(this.ctx, `fps: ${this.world.fps}`, 440, 420, "16", "serif", "", "black");
+    text(this.ctx, `frame duration: ${this.world.frameDuration.toFixed(4)}`, 440, 440, "16", "serif", "", "black");
+    text(this.ctx, `fps cap: ${this.world.fpsCap}`, 440, 460, "16", "serif", "", "black");
+    text(this.ctx, `frame no: ${this.world.frameNo}`, 440, 480, "16", "serif", "", "black");
   }
 }

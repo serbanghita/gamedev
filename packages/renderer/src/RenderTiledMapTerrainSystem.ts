@@ -62,14 +62,14 @@ export default class RenderTiledMapTerrainSystem extends System {
     console.log("PreRenderTiledMapSystem.update");
     this.query.execute().forEach((entity) => {
       const tiledMapComponent = entity.getComponent(TiledMapFile);
-      const tiledMapFile = tiledMapComponent.properties.mapFile;
-      const tiledMapFilePath = tiledMapComponent.properties.mapFilePath;
+      const tiledMapFileContents = tiledMapComponent.mapFileContents;
+      const tiledMapFilePath = tiledMapComponent.mapFilePath;
 
-      if (!tiledMapFile) {
+      if (!tiledMapFileContents) {
         throw new Error(`Tiled map file JSON declaration ${tiledMapFilePath} was not found.`);
       }
 
-      const tileMap = new TiledMap(tiledMapFile);
+      const tileMap = new TiledMap(tiledMapFileContents);
       this.renderToBackgroundLayer(tileMap);
     });
 

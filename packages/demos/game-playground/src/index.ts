@@ -12,7 +12,9 @@ import AttackingWithClub from "./component/AttackingWithClub";
 import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
 import { createHtmlUiElements, RenderTiledMapTerrainSystem, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
-import IsPlayer from "./component/IsPlayer";
+import { getCoordinatesFromTile } from "@serbanghita-gamedev/matrix";
+import { Point } from "@serbanghita-gamedev/geometry";
+import Player from "./component/Player";
 import AutoMoveSystem from "./system/AutoMoveSystem";
 
 async function setup() {
@@ -58,7 +60,7 @@ async function setup() {
   world.registerComponents([
     Body, Direction, Keyboard,
     Renderable, SpriteSheet,
-    IsPlayer, Idle, Walking, AttackingWithClub,
+    Player, Idle, Walking, AttackingWithClub,
     TiledMapFile, TileMatrix, Tile,
     Position,
   ]);
@@ -67,16 +69,32 @@ async function setup() {
    * Create the globally known Map entity.
    * Add the collision layer to the map.
    */
+  const mapFilePath = "./assets/maps/E1MM2.json";
+  const mapFileContents = require("./assets/maps/E1MM2.json");
+
   const map = world.createEntity("map");
-  map.addComponent(TiledMapFile, { mapFile: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
-  const tiledMapFile = map.getComponent(TiledMapFile).properties.mapFile;
-  const tiledMap = new TiledMap(tiledMapFile);
+  map.addComponent(TiledMapFile, { mapFileContents, mapFilePath });
+  const tiledMap = new TiledMap(mapFileContents);
   const collisionLayer = tiledMap.getCollisionLayers()[0];
   map.addComponent(TileMatrix, {
     matrix: collisionLayer.data,
     width: collisionLayer.width,
     height: collisionLayer.height,
     tileSize: tiledMap.getTileSize(),
+  });
+  /**
+   * Transform all collision tiles as Entities.
+   */
+  collisionLayer.data.forEach((tileValue, tileIndex) => {
+    if (tileValue > 0) {
+      const entityId = `collision-tile-${tileIndex}`;
+      const collisionTileEntity = world.createEntity(entityId);
+      let { x, y } = getCoordinatesFromTile(tileIndex, map.getComponent(TileMatrix).properties);
+      x = x + tiledMap.getTileSize() / 2;
+      y = y + tiledMap.getTileSize() / 2;
+      collisionTileEntity.addComponent(Tile, { x, y, point: new Point(x, y, entityId) });
+      // collisionTileEntity.addComponent(PreRendered);
+    }
   });
 
   /**
@@ -93,21 +111,24 @@ async function setup() {
     }
   });
 
+  /**
+   * Pre-render the terrain.
+   * Runs only once and then de-registers itself.
+   */
+  const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [TiledMapFile] });
+  world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, assets["maps/images"]["./assets/sprites/terrain.png"]).runOnlyOnce();
+
   const KeyboardQuery = world.createQuery("KeyboardQuery", { all: [Keyboard] });
   const IdleQuery = world.createQuery("IdleQuery", { all: [Idle] });
   const WalkingQuery = world.createQuery("WalkingQuery", { all: [Walking] });
   const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Tile] });
-  const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [TiledMapFile] });
-  const MoveQuery = world.createQuery("MoveQuery", { all: [Tile, IsPlayer] });
 
-  world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, assets["maps/images"]["./assets/sprites/terrain.png"]).runOnlyOnce();
   world.createSystem(PlayerKeyboardSystem, KeyboardQuery, input);
   world.createSystem(IdleSystem, IdleQuery);
   world.createSystem(WalkingSystem, WalkingQuery);
   world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
   world.createSystem(RenderSystem, RenderableQuery, animationRegistry, $ctxForeground);
-  //world.createSystem(AutoMoveSystem, MoveQuery);
 
   world.start({fpsCap: 60});
 

@@ -45,7 +45,7 @@ export default class Keyboard {
     }
 
     public keyDownCallback(e: { key: string; preventDefault: () => void; stopPropagation: () => void; }) {
-        console.log("keyDownCallback", e.key);
+        // console.log("keyDownCallback", e.key);
         e.preventDefault();
         e.stopPropagation();
         if (this.isBoundKey(e.key)) {

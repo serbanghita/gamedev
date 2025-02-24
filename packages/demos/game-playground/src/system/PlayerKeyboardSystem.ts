@@ -7,44 +7,32 @@ import AttackingWithClub from "../component/AttackingWithClub";
 import { StateStatus } from "../state";
 
 export default class PlayerKeyboardSystem extends System {
-  private directionsFromInput: Set<Directions> = new Set([]);
-  private directionLiteral: "up" | "down" | "left" | "right" | "" = "";
+  // private directionsFromInput: Set<Directions> = new Set([]);
+  // private directionLiteral: "up" | "down" | "left" | "right" | "" = "";
 
-  public constructor(
-    public world: World,
-    public query: Query,
-    protected input: KeyboardInput,
-  ) {
+  public constructor(public world: World, public query: Query, protected input: KeyboardInput) {
     super(world, query);
   }
 
-  private setDirectionFromKeyboardActions() {
+  private setDirectionFromKeyboardActions(entity: Entity) {
+    const direction = entity.getComponent(Direction);
     const actions = this.input.ongoingActions;
-    this.directionsFromInput.clear();
-    this.directionLiteral = "";
-    let isDirty = false;
 
     if (actions.has(InputActions.MOVE_UP)) {
-      this.directionsFromInput.add(Directions.UP);
-      this.directionLiteral = "up";
-      isDirty = true;
+      direction.setY(Directions.UP);
     } else if (actions.has(InputActions.MOVE_DOWN)) {
-      this.directionsFromInput.add(Directions.DOWN);
-      this.directionLiteral = "down";
-      isDirty = true;
+      direction.setY(Directions.DOWN);
+    } else {
+      direction.setY(Directions.NONE);
     }
 
     if (actions.has(InputActions.MOVE_LEFT)) {
-      this.directionsFromInput.add(Directions.LEFT);
-      this.directionLiteral = "left";
-      isDirty = true;
+      direction.setX(Directions.LEFT);
     } else if (actions.has(InputActions.MOVE_RIGHT)) {
-      this.directionsFromInput.add(Directions.RIGHT);
-      this.directionLiteral = "right";
-      isDirty = true;
+      direction.setX(Directions.RIGHT);
+    } else {
+      direction.setX(Directions.NONE);
     }
-
-    return isDirty;
   }
 
   private doAction1(entity: Entity) {
@@ -83,34 +71,30 @@ export default class PlayerKeyboardSystem extends System {
       return false;
     }
 
-    const direction = entity.getComponent(Direction);
+    this.setDirectionFromKeyboardActions(entity);
 
-    if (this.setDirectionFromKeyboardActions()) {
-      direction.literal = this.directionLiteral;
-    }
-
-    const position = entity.getComponent(Position);
-    const speed = 1;
-
-    if (this.directionsFromInput.has(Directions.UP)) {
-      position.point.y -= speed;
-      direction.y = Directions.UP;
-    } else if (this.directionsFromInput.has(Directions.DOWN)) {
-      position.point.y += speed;
-      direction.y = Directions.DOWN;
-    } else {
-      direction.y = Directions.NONE;
-    }
-
-    if (this.directionsFromInput.has(Directions.LEFT)) {
-      position.point.x -= speed;
-      direction.x = Directions.LEFT;
-    } else if (this.directionsFromInput.has(Directions.RIGHT)) {
-      position.point.x += speed;
-      direction.x = Directions.RIGHT;
-    } else {
-      direction.x = Directions.NONE;
-    }
+    // const position = entity.getComponent(Position);
+    // const speed = 1;
+    //
+    // if (this.directionsFromInput.has(Directions.UP)) {
+    //   position.point.y -= speed;
+    //   direction.y = Directions.UP;
+    // } else if (this.directionsFromInput.has(Directions.DOWN)) {
+    //   position.point.y += speed;
+    //   direction.y = Directions.DOWN;
+    // } else {
+    //   direction.y = Directions.NONE;
+    // }
+    //
+    // if (this.directionsFromInput.has(Directions.LEFT)) {
+    //   position.point.x -= speed;
+    //   direction.x = Directions.LEFT;
+    // } else if (this.directionsFromInput.has(Directions.RIGHT)) {
+    //   position.point.x += speed;
+    //   direction.x = Directions.RIGHT;
+    // } else {
+    //   direction.x = Directions.NONE;
+    // }
   }
 
   private onExit(entity: Entity, component: Walking) {

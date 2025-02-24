@@ -15,6 +15,8 @@ export default class IdleSystem extends System {
 
     component.animationStateName = direction.literal ? `idle_${direction.literal}` : "idle";
 
+    console.log(component.animationStateName);
+
     if (this.world.now - this.lastFrameTime >= 120) {
       component.animationTick += 1;
       this.lastFrameTime = this.world.now;

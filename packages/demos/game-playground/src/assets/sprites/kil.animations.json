@@ -7,6 +7,14 @@
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
+  "idle_down": {
+    "parent": "idle",
+    "width": 64,
+    "height": 96,
+    "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "speedTicks": 1,
+    "hitboxOffset": {"x": 24, "y": 68}
+  },
   "walk_left": {
     "width": 64,
     "height": 96,
@@ -52,6 +60,14 @@
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 68}
   },
+  "walk_down": {
+    "width": 64,
+    "height": 96,
+    "frames": [0, 1, 2, 3, 4, 5, 6, 7],
+    "speedTicks": 1,
+    "hitboxOffset": {"x": 24, "y": 68}
+  },
+
   "throw_boomerang_up": {
     "parent": "walk_up",
     "width": 64,
@@ -60,21 +76,7 @@
     "speedTicks": 1,
     "hitboxOffset": {"x": 24, "y": 52}
   },
-  "walk_down": {
-    "width": 64,
-    "height": 96,
-    "frames": [0, 1, 2, 3, 4, 5, 6, 7],
-    "speedTicks": 1,
-    "hitboxOffset": {"x": 24, "y": 68}
-  },
-  "idle_down": {
-    "parent": "idle",
-    "width": 64,
-    "height": 96,
-    "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    "speedTicks": 1,
-    "hitboxOffset": {"x": 24, "y": 68}
-  },
+
   "throw_boomerang_down": {
     "parent": "walk_down",
     "width": 64,

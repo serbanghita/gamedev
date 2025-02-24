@@ -8,7 +8,7 @@ import Idle from "./component/Idle";
 import Walking from "./component/Walking";
 import IdleSystem from "./system/IdleSystem";
 import WalkingSystem from "./system/WalkingSystem";
-import IsAttackingWithClub from "./component/IsAttackingWithClub";
+import AttackingWithClub from "./component/AttackingWithClub";
 import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
 import { createHtmlUiElements, RenderTiledMapTerrainSystem, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
@@ -48,7 +48,7 @@ async function setup() {
   input.bindKey("s", InputActions.MOVE_DOWN);
   input.bindKey("a", InputActions.MOVE_LEFT);
   input.bindKey("d", InputActions.MOVE_RIGHT);
-  input.bindKey(" ", InputActions.ACTION_1);
+  input.bindKey("f", InputActions.ACTION_1);
   input.listen();
 
   // Create the current "World" (scene).
@@ -64,7 +64,7 @@ async function setup() {
     IsPlayer,
     Idle,
     Walking,
-    IsAttackingWithClub,
+    AttackingWithClub,
     TiledMapFile,
     TileMatrix,
     Tile,
@@ -88,14 +88,17 @@ async function setup() {
     const entity = world.createEntityFromDeclaration(entityDeclaration);
     // Entity Tile is depending on Position and TileMatrix.
     if (entityDeclaration.components["Tile"]) {
-      entity.addComponent(Tile, { point: entity.getComponent(Position).point, matrixConfig: map.getComponent(TileMatrix).matrixConfig });
+      entity.addComponent(Tile, {
+        point: entity.getComponent(Position).point,
+        matrixConfig: map.getComponent(TileMatrix).matrixConfig
+      });
     }
   });
 
   const KeyboardQuery = world.createQuery("KeyboardQuery", { all: [Keyboard] });
   const IdleQuery = world.createQuery("IdleQuery", { all: [Idle] });
   const WalkingQuery = world.createQuery("WalkingQuery", { all: [Walking] });
-  // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [IsAttackingWithClub] });
+  const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Tile] });
   const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [TiledMapFile] });
   const MoveQuery = world.createQuery("MoveQuery", { all: [Tile, IsPlayer] });
@@ -104,7 +107,7 @@ async function setup() {
   world.createSystem(PlayerKeyboardSystem, KeyboardQuery, input);
   world.createSystem(IdleSystem, IdleQuery);
   world.createSystem(WalkingSystem, WalkingQuery);
-  // world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
+  world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
   world.createSystem(RenderSystem, RenderableQuery, animationRegistry, $ctxForeground);
   //world.createSystem(AutoMoveSystem, MoveQuery);
 

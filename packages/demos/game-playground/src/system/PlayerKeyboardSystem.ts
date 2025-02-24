@@ -3,7 +3,7 @@ import { InputActions, Keyboard as KeyboardInput } from "@serbanghita-gamedev/in
 import { Keyboard, Position, Direction, Directions } from "@serbanghita-gamedev/component";
 import Walking from "../component/Walking";
 import Idle from "../component/Idle";
-import IsAttackingWithClub from "../component/IsAttackingWithClub";
+import AttackingWithClub from "../component/AttackingWithClub";
 import { StateStatus } from "../state";
 
 export default class PlayerKeyboardSystem extends System {
@@ -74,9 +74,7 @@ export default class PlayerKeyboardSystem extends System {
   }
 
   private onEnter(entity: Entity, component: Walking) {
-    component.properties.tick = 0;
-    component.properties.animationTick = 0;
-    component.properties.status = StateStatus.STARTED;
+    component.init();
   }
 
   private onUpdate(entity: Entity, component: Walking) {
@@ -88,7 +86,7 @@ export default class PlayerKeyboardSystem extends System {
     const direction = entity.getComponent(Direction);
 
     if (this.setDirectionFromKeyboardActions()) {
-      direction.properties.literal = this.directionLiteral;
+      direction.literal = this.directionLiteral;
     }
 
     const position = entity.getComponent(Position);
@@ -96,27 +94,27 @@ export default class PlayerKeyboardSystem extends System {
 
     if (this.directionsFromInput.has(Directions.UP)) {
       position.point.y -= speed;
-      direction.properties.y = Directions.UP;
+      direction.y = Directions.UP;
     } else if (this.directionsFromInput.has(Directions.DOWN)) {
       position.point.y += speed;
-      direction.properties.y = Directions.DOWN;
+      direction.y = Directions.DOWN;
     } else {
-      direction.properties.y = Directions.NONE;
+      direction.y = Directions.NONE;
     }
 
     if (this.directionsFromInput.has(Directions.LEFT)) {
       position.point.x -= speed;
-      direction.properties.x = Directions.LEFT;
+      direction.x = Directions.LEFT;
     } else if (this.directionsFromInput.has(Directions.RIGHT)) {
       position.point.x += speed;
-      direction.properties.x = Directions.RIGHT;
+      direction.x = Directions.RIGHT;
     } else {
-      direction.properties.x = Directions.NONE;
+      direction.x = Directions.NONE;
     }
   }
 
   private onExit(entity: Entity, component: Walking) {
-    component.properties.status = StateStatus.FINISHED;
+    component.status = StateStatus.FINISHED;
     if (entity.hasComponent(Walking)) {
       entity.removeComponent(Walking);
     }
@@ -125,11 +123,18 @@ export default class PlayerKeyboardSystem extends System {
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
       if (this.input.ongoingActions.has(InputActions.ACTION_1)) {
-        if (!entity.getComponent(Keyboard).properties.action_1) {
+        if (!entity.getComponent(Keyboard).keys.action_1) {
           return;
         }
-        entity.removeComponent(Walking);
-        entity.addComponent(IsAttackingWithClub);
+
+        console.log('PlayerKeyboardSystem -> action_1');
+
+        if (entity.hasComponent(Walking)) {
+          entity.removeComponent(Walking);
+        }
+        if (!entity.hasComponent(AttackingWithClub)) {
+          entity.addComponent(AttackingWithClub);
+        }
         return;
       }
 
@@ -148,12 +153,12 @@ export default class PlayerKeyboardSystem extends System {
 
       const component = entity.getComponent(Walking);
 
-      if (component.properties.status === StateStatus.FINISHED) {
+      if (component.status === StateStatus.FINISHED) {
         entity.removeComponent(Walking);
         return;
       }
 
-      if (component.properties.status === StateStatus.NOT_STARTED) {
+      if (component.status === StateStatus.NOT_STARTED) {
         this.onEnter(entity, component);
       }
 

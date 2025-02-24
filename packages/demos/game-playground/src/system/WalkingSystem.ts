@@ -13,15 +13,15 @@ export default class WalkingSystem extends System {
   private onUpdate(entity: Entity, component: Walking) {
     const direction = entity.getComponent(Direction);
 
-    if (direction.properties.y === Directions.UP) {
+    if (direction.y === Directions.UP) {
       component.animationStateName = "walk_up";
-    } else if (direction.properties.y === Directions.DOWN) {
+    } else if (direction.y === Directions.DOWN) {
       component.animationStateName = "walk_down";
     }
 
-    if (direction.properties.x === Directions.LEFT) {
+    if (direction.x === Directions.LEFT) {
       component.animationStateName = "walk_left";
-    } else if (direction.properties.x === Directions.RIGHT) {
+    } else if (direction.x === Directions.RIGHT) {
       component.animationStateName = "walk_right";
     }
 

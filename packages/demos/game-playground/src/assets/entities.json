@@ -11,7 +11,7 @@
       "Tile": {},
       "IsPlayer": {},
       "Direction": { "x": 0, "y": 0 },
-      "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d" },
+      "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d", "action_1": "f" },
       "Renderable": {},
       "SpriteSheet": {
         "name": "kil",

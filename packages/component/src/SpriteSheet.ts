@@ -1,4 +1,4 @@
-import Component from "../../ecs/src/Component";
+import { Component } from "@serbanghita-gamedev/ecs";
 import { loadLocalImage } from "@serbanghita-gamedev/assets";
 
 export type Animation = {

@@ -3,7 +3,7 @@ import { clearCtx, image, rectangle, AnimationRegistry, AnimationRegistryItem, t
 import { SpriteSheet, Position } from "@serbanghita-gamedev/component";
 import Walking from "../component/Walking";
 import Idle from "../component/Idle";
-import IsAttackingWithClub from "../component/IsAttackingWithClub";
+import AttackingWithClub from "../component/AttackingWithClub";
 
 export default class RenderSystem extends System {
   public constructor(
@@ -30,7 +30,9 @@ export default class RenderSystem extends System {
 
       let component;
 
-      if (entity.hasComponent(Walking)) {
+      if (entity.hasComponent(AttackingWithClub)) {
+        component = entity.getComponent(AttackingWithClub);
+      } else if (entity.hasComponent(Walking)) {
         component = entity.getComponent(Walking);
       } else if (entity.hasComponent(Idle)) {
         component = entity.getComponent(Idle);

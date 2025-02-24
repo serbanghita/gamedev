@@ -20,6 +20,7 @@ import IsRendered from "./component/IsRendered";
  * If entities collide with each other they grow.
  *
  * The idea is to showcase the collision detection based on a Quad Tree.
+ * See: CollisionSystem which is based on the Quad Tree and the entities inside.
  */
 
 const area = new Rectangle(640, 480, new Point(640 / 2, 480 / 2));

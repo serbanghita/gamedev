@@ -7,7 +7,7 @@
         "animationStateName": "idle_down"
       },
       "Body": { "width": 16, "height": 16 },
-      "Position": { "x": 40, "y": 90 },
+      "Position": { "x": 240, "y": 290 },
       "Tile": {},
       "Player": {},
       "Direction": { "x": 0, "y": 0 },
@@ -19,6 +19,27 @@
         "offset_y": 0,
         "spriteSheetImgPath": "./assets/sprites/kil.png",
         "spriteSheetAnimationsPath": "./assets/sprites/kil.animations.json"
+      }
+    }
+  },
+  {
+    "id": "dino-boss",
+    "components": {
+      "Idle": {
+        "stateName": "idle",
+        "animationStateName": "idle_down"
+      },
+      "Body": { "width": 16, "height": 16 },
+      "Position": { "x": 324, "y": 300 },
+      "Tile": {},
+      "Direction": { "x": 0, "y": 0 },
+      "Renderable": {},
+      "SpriteSheet": {
+        "name": "dino-boss",
+        "offset_x": 128,
+        "offset_y": 0,
+        "spriteSheetImgPath": "./assets/sprites/dino-boss.png",
+        "spriteSheetAnimationsPath": "./assets/sprites/dino-boss.animations.json"
       }
     }
   }

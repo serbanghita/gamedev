@@ -5,7 +5,6 @@ import { StateStatus } from "../state";
 import AttackingWithClub from "../component/AttackingWithClub";
 
 export default class AttackingWithClubSystem extends System {
-  private lastFrameTime: DOMHighResTimeStamp = 0;
 
   private onEnter(entity: Entity, component: AttackingWithClub) {
     component.init();
@@ -30,9 +29,9 @@ export default class AttackingWithClubSystem extends System {
       component.animationStateName = "club_attack_one_right";
     }
 
-    if (this.world.now - this.lastFrameTime >= 50) {
+    if (this.world.now - component.lastFrameTime >= 50) {
       component.animationTick += 1;
-      this.lastFrameTime = this.world.now;
+      component.lastFrameTime = this.world.now;
     }
   }
 
@@ -43,8 +42,6 @@ export default class AttackingWithClubSystem extends System {
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
       const component = entity.getComponent(AttackingWithClub);
-
-      console.log("IsAttackingWithClub", entity.id);
 
       if (component.status === StateStatus.FINISHED) {
         entity.removeComponent(AttackingWithClub);

@@ -7,6 +7,7 @@ export default class AttackingWithClub extends Component {
   public animationStateName: string = 'club_attack_one_down';
   public animationTick: number = 0;
   public status: StateStatus = StateStatus.NOT_STARTED;
+  public lastFrameTime: DOMHighResTimeStamp = 0;
 
   public init() {
     this.animationTick = 0;

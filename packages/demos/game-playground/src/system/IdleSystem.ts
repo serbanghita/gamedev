@@ -4,7 +4,6 @@ import Idle from "../component/Idle";
 import { StateStatus } from "../state";
 
 export default class IdleSystem extends System {
-  private lastFrameTime: number = 0;
 
   private onEnter(entity: Entity, component: Idle) {
     component.init();
@@ -15,9 +14,10 @@ export default class IdleSystem extends System {
 
     component.animationStateName = direction.literal ? `idle_${direction.literal}` : "idle";
 
-    if (this.world.now - this.lastFrameTime >= 120) {
+    if (this.world.now - component.lastFrameTime >= 120) {
       component.animationTick += 1;
-      this.lastFrameTime = this.world.now;
+      // Update time for each entity's component.
+      component.lastFrameTime = this.world.now;
     }
   }
 

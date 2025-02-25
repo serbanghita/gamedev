@@ -119,15 +119,18 @@ async function setup() {
   world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, assets["maps/images"]["./assets/sprites/terrain.png"]).runOnlyOnce();
 
   const KeyboardQuery = world.createQuery("KeyboardQuery", { all: [Keyboard] });
-  const IdleQuery = world.createQuery("IdleQuery", { all: [Idle] });
-  const WalkingQuery = world.createQuery("WalkingQuery", { all: [Walking] });
-  const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
-  const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Tile] });
-
   world.createSystem(PlayerKeyboardSystem, KeyboardQuery, input);
+
+  const IdleQuery = world.createQuery("IdleQuery", { all: [Idle] });
   world.createSystem(IdleSystem, IdleQuery);
+
+  const WalkingQuery = world.createQuery("WalkingQuery", { all: [Walking] });
   world.createSystem(WalkingSystem, WalkingQuery);
+
+  const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
+
+  const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Tile] });
   world.createSystem(RenderSystem, RenderableQuery, animationRegistry, $ctxForeground);
 
   world.start({fpsCap: 60});

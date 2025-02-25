@@ -5,7 +5,6 @@ import { StateStatus } from "../state";
 import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
 
 export default class WalkingSystem extends System {
-  private lastFrameTime: DOMHighResTimeStamp = 0;
   private tileMatrix!: TileMatrix;
 
   public constructor(public world: World, public query: Query) {
@@ -63,8 +62,6 @@ export default class WalkingSystem extends System {
         this.tileMatrix.matrix[currentTile] = 0;
         this.tileMatrix.matrix[futureTile] = 2; // @todo Define tile types.
       }
-    } else {
-      console.log('no');
     }
 
     /**
@@ -82,10 +79,9 @@ export default class WalkingSystem extends System {
       component.animationStateName = "walk_right";
     }
 
-
-    if (this.world.now - this.lastFrameTime >= 60) {
+    if (this.world.now - component.lastFrameTime >= 60) {
       component.animationTick += 1;
-      this.lastFrameTime = this.world.now;
+      component.lastFrameTime = this.world.now;
     }
 
   }

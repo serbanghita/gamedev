@@ -6,9 +6,12 @@ export default class Idle extends Component {
   public animationStateName: string = 'idle_down';
   public animationTick: number = 0;
   public status: StateStatus = StateStatus.NOT_STARTED;
+  public lastFrameTime: DOMHighResTimeStamp = 0;
 
   public init() {
     this.animationTick = 0;
     this.status = StateStatus.STARTED;
   }
+
+
 }

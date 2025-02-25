@@ -16,6 +16,7 @@ import { getCoordinatesFromTile } from "@serbanghita-gamedev/matrix";
 import { Point } from "@serbanghita-gamedev/geometry";
 import Player from "./component/Player";
 import AutoMoveSystem from "./system/AutoMoveSystem";
+import AutoMoving from "./component/AutoMoving";
 
 async function setup() {
   /************************************************************
@@ -62,7 +63,7 @@ async function setup() {
     Renderable, SpriteSheet,
     Player, Idle, Walking, AttackingWithClub,
     TiledMapFile, TileMatrix, Tile,
-    Position,
+    Position, AutoMoving
   ]);
 
   /**
@@ -129,6 +130,9 @@ async function setup() {
 
   const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
+
+  const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
+  world.createSystem(AutoMoveSystem, AutoMoveQuery);
 
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Tile] });
   world.createSystem(RenderSystem, RenderableQuery, animationRegistry, $ctxForeground);

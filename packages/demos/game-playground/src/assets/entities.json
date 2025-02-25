@@ -33,6 +33,7 @@
       "Position": { "x": 324, "y": 300 },
       "Tile": {},
       "Direction": { "x": 0, "y": 0 },
+      "AutoMoving": {},
       "Renderable": {},
       "SpriteSheet": {
         "name": "dino-boss",

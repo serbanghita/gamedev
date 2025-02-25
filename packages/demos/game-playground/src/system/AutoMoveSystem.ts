@@ -4,8 +4,13 @@ import { Direction, Directions, TileMatrix, Tile, Position } from "@serbanghita-
 import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
 import Walking from "../component/Walking";
 import { StateStatus } from "../state";
+import AutoMoving from "../component/AutoMoving";
 
 export default class AutoMoveSystem extends System {
+
+  private setPositionBasedOnDestination() {
+
+  }
 
   public update(now: number) {
     const map = this.world.getEntity("map");
@@ -19,27 +24,68 @@ export default class AutoMoveSystem extends System {
       const tileComp = entity.getComponent(Tile);
       const position = entity.getComponent(Position);
       const direction = entity.getComponent(Direction);
+      const autoMoving = entity.getComponent(AutoMoving);
 
-      const destinationX = position.point.x + randomInt(-6, 6);
-      const destinationY = position.point.y + randomInt(-6, 6);
+      let destinationX = autoMoving.destinationX;
+      let destinationY = autoMoving.destinationY;
+
+      /**
+       * Stop if destination is reached.
+       */
+      if (
+        autoMoving.hasNoDestination()
+        ||
+        entity.hasComponent(Walking) &&
+        position.point.x === destinationX &&
+        position.point.y === destinationY
+      ) {
+        if (entity.hasComponent(Walking)) {
+          entity.removeComponent(Walking);
+        }
+        direction.setX(Directions.NONE);
+        direction.setY(Directions.NONE);
+
+        /**
+         * Set new destination
+         */
+        destinationX = position.point.x + randomInt(-64, 64);
+        destinationY = position.point.y + randomInt(-64, 64);
+      }
 
       const currentTile = tileComp.tile;
-      const destinationTile = getTileFromCoordinates(destinationX, destinationY, matrixComponent.properties);
+      let destinationTile = 0;
+      try {
+        destinationTile = getTileFromCoordinates(destinationX, destinationY, matrixComponent.matrixConfig);
+      } catch (e) {
+        return;
+      }
 
-      if (currentTile !== destinationTile && matrix[destinationTile] === 0) {
+      // currentTile !== destinationTile &&
+      if (destinationTile > 0 && matrix[destinationTile] !== 1) {
+        console.log(destinationX, destinationY, destinationTile);
+
         // Compute the direction.
         if (destinationX < position.point.x) {
           direction.setX(Directions.LEFT);
         } else if (destinationX > position.point.x) {
           direction.setX(Directions.RIGHT);
+        } else {
+          direction.setX(Directions.NONE);
         }
         if (destinationY < position.point.y) {
           direction.setY(Directions.UP);
         } else if (destinationY > position.point.y) {
           direction.setY(Directions.DOWN);
+        } else {
+          direction.setY(Directions.NONE);
         }
         // Start the movement.
-        entity.addComponent(Walking);
+        if (!entity.hasComponent(Walking)) {
+          entity.addComponent(Walking);
+        }
+
+        // Save new destination for later checks.
+        autoMoving.setDestination(destinationX, destinationY);
       }
     });
   }

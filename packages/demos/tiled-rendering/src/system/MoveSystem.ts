@@ -17,7 +17,7 @@ export default class MoveSystem extends System {
       throw new Error(`Map entity is not defined.`);
     }
     const matrixComponent = map.getComponent(TileMatrix);
-    const matrix = matrixComponent.properties.matrix;
+    const matrix = matrixComponent.matrix;
 
     this.query.execute().forEach((entity) => {
       const tile = entity.getComponent(Tile);
@@ -26,7 +26,7 @@ export default class MoveSystem extends System {
       let futureY = tile.y + randomInt(-1, 1);
 
       const currentTile = tile.tile;
-      const futureTile = getTileFromCoordinates(futureX, futureY, matrixComponent.properties);
+      const futureTile = getTileFromCoordinates(futureX, futureY, matrixComponent.matrixConfig);
       if (currentTile === futureTile || matrix[futureTile] === 0) {
         tile.point.x = futureX;
         tile.point.y = futureY;

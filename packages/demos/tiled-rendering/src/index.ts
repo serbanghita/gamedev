@@ -55,7 +55,7 @@ async function setup() {
    *  I believe I first statically load the whole list of Maps and then the player will be able to choose one.
    */
   const map = world.createEntity("map");
-  map.addComponent(TiledMapFile, { mapFile: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
+  map.addComponent(TiledMapFile, { mapFileContents: require("./assets/maps/E1MM2.json"), mapFilePath: "./assets/maps/E1MM2.json" });
   // Load the "TiledMap" class wrapper over the json file declaration.
   const tiledMap = new TiledMap(map.getComponent(TiledMapFile).mapFileContents);
   // Add the "collision" layer data to the map.
@@ -73,7 +73,7 @@ async function setup() {
     if (tileValue > 0) {
       const entityId = `collision-tile-${tileIndex}`;
       const collisionTileEntity = world.createEntity(entityId);
-      let { x, y } = getCoordinatesFromTile(tileIndex, map.getComponent(TileMatrix).properties);
+      let { x, y } = getCoordinatesFromTile(tileIndex, map.getComponent(TileMatrix).matrixConfig);
       x = x + tiledMap.getTileSize() / 2;
       y = y + tiledMap.getTileSize() / 2;
       collisionTileEntity.addComponent(Tile, { x, y, point: new Point(x, y, entityId) });

@@ -7,6 +7,18 @@ export default class MinHeap {
     }
   }
 
+  public get size(): number {
+    return this.heap.length;
+  }
+
+  public clear() {
+    this.heap = [];
+  }
+
+  public includes(nodeValue: number): boolean {
+    return this.heap.includes(nodeValue);
+  }
+
   private insertAll(arr: number[]) {
     for(let i = 0; i < arr.length; i++) {
       this.insert(arr[i]);

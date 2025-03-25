@@ -1,36 +1,3 @@
-// const grid1 = [
-//   [{ name: 'A', tile: 0 }, {name: 'B', tile: 1}, {name: 'C', tile: 0}, {name: 'D', tile: 0}, {name: 'E', tile: 0}],
-//   [{name: 'F', tile: 0 }, { name: 'G', tile: 1}, {name: 'H', tile: 0}, {name: 'I', tile: 0}, {name: 'J', tile: 0}],
-//   [{name: 'K', tile: 0}, {name: 'L', tile: 0}, { name: 'M', tile: 0}, {name: 'N', tile: 1}, {name: 'O', tile: 0}],
-// ];
-
-// const grid2 = [
-//   [0,1,0,0,0],
-//   [0,1,0,1,0],
-//   [0,0,0,0,0],
-//   [0,1,0,1,9]
-// ];
-
-
-
-import * as process from "node:process";
-
-const matrix2 = [
-  [0,1,0,0,0],
-  [0,1,0,1,0],
-  [0,0,0,0,0],
-  [0,1,0,1,9]
-];
-
-// const matrix2 = [
-//   [0, 1, 2, 3, 4],
-//   [5, 6, 7, 8, 9],
-//   [10,11,12,13,14],
-//   [15,16,17,18,19]
-// ];
-
-
-
 const directions: [number, number][] = [
   [-1, 0], // left
   [1, 0], // right
@@ -38,17 +5,17 @@ const directions: [number, number][] = [
   [0, 1] // bottom
 ];
 
-class Bfs {
+export default class AStarPathFinding {
   private readonly width!: number;
-  private height!: number;
+  private readonly height!: number;
   private targetTile!: number;
   private readonly flatMatrix: number[] = [];
   private visitedTiles: Set<number> = new Set();
 
-  constructor(private matrix: number[][]) {
-    this.width = matrix[0].length;
-    this.height = matrix.length;
-    this.flatMatrix = matrix.reduce((acc, row) => acc.concat(row), []);
+  constructor(private matrix: number[], width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    this.flatMatrix = matrix;
   }
 
   public visit(tile: number) {
@@ -118,7 +85,3 @@ class Bfs {
 
   }
 }
-
-
-const a = new Bfs(matrix2);
-a.search(0, 19);

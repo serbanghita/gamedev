@@ -15,6 +15,7 @@
   "type": "module",
   "scripts": {
     "build": "esbuild ./src/index.ts --bundle --outfile=dist/pathfinding.js",
+    "dev": "esbuild ./src/index.ts --bundle --sourcemap --watch --loader:.png=dataurl --outfile=dist/demo.js --servedir=dist",
     "test": "vitest --watch=false",
     "lint": "eslint ./src"
   }

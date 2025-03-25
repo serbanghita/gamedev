@@ -29,4 +29,8 @@ export default class TileMatrix extends Component {
   public get matrixConfig() {
     return { width: this.width, height: this.height, tileSize: this.tileSize };
   }
+
+  public get size(): number {
+    return this.width * this.height;
+  }
 }

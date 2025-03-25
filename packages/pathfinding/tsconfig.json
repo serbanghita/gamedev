@@ -11,6 +11,10 @@
     "paths": {
       "@serbanghita-gamedev/renderer/*": ["../../renderer/src/*"],
       "@serbanghita-gamedev/geometry/*": ["../../geometry/src/*"],
+      "@serbanghita-gamedev/assets/*": ["../../assets/src/*"],
+      "@serbanghita-gamedev/ecs/*": ["../../ecs/src/*"],
+      "@serbanghita-gamedev/matrix/*": ["../../matrix/src/*"],
+      "@serbanghita-gamedev/tiled/*": ["../../tiled/src/*"],
     }
   },
   "include": [

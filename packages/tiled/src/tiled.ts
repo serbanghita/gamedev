@@ -72,6 +72,10 @@ export default class TiledMap {
         }
     }
 
+    public getSizeInTiles(): number {
+      return this.mapFile.width * this.mapFile.height;
+    }
+
     public getTileWidth(): number {
         return this.mapFile.tilewidth;
     }

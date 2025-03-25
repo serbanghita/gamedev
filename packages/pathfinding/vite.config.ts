@@ -8,7 +8,7 @@ export default defineConfig({
     globals: true,
     alias: {
       "@serbanghita-gamedev/renderer/": path.join(__dirname, "../renderer/"),
-      "@serbanghita-gamedev/geometry/": path.join(__dirname, "../geometry/"),
+      "@serbanghita-gamedev/assets/": path.join(__dirname, "../assets/"),
     },
     coverage: {
       provider: "istanbul", // or 'v8'

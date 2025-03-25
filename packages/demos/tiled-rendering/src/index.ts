@@ -1,6 +1,5 @@
-import { createHtmlUiElements } from "@serbanghita-gamedev/renderer";
 import { World } from "@serbanghita-gamedev/ecs";
-import { RenderTiledMapTerrainSystem } from "@serbanghita-gamedev/renderer";
+import { RenderTiledMapTerrainSystem, createHtmlUiElements } from "@serbanghita-gamedev/renderer";
 import { TiledMapFile, Tile, Renderable, TileMatrix } from "@serbanghita-gamedev/component";
 import { loadSprites } from "./assets";
 import { Point, Rectangle } from "@serbanghita-gamedev/geometry";

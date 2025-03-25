@@ -9,6 +9,7 @@
     "rootDir": "src",
     "types": ["vitest/globals"],
     "paths": {
+      "@serbanghita-gamedev/component/*": ["../../component/src/*"],
       "@serbanghita-gamedev/renderer/*": ["../../renderer/src/*"],
       "@serbanghita-gamedev/geometry/*": ["../../geometry/src/*"],
       "@serbanghita-gamedev/assets/*": ["../../assets/src/*"],

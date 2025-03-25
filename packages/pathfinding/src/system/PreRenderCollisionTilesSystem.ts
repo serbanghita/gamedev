@@ -12,9 +12,9 @@ export default class PreRenderCollisionTilesSystem extends System {
   }
 
   public update(now: number): void {
-    this.query.execute().forEach((entity) => {
+    this.query.execute().forEach((entity: Entity) => {
       const tile = entity.getComponent(Tile);
-      dot(this.ctx, tile.x, tile.y, "rgb(255,0,0)", 2);
+      dot(this.ctx, tile.x, tile.y, "rgb(0,0,0, 0.5)", 2);
     });
   }
 }

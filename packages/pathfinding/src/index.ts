@@ -60,7 +60,7 @@ async function setup() {
   };
   map.addComponent(TileMatrix, matrixConfig);
   // Transform all collision tiles as Entities.
-  collisionLayer.data.forEach((tileValue, tileIndex) => {
+  collisionLayer.data.forEach((tileValue: number, tileIndex: number) => {
     const entityId = `tile-${tileIndex}`;
     const collisionTileEntity = world.createEntity(entityId);
     let { x, y } = getCoordinatesFromTile(tileIndex, matrixConfig);
@@ -97,7 +97,7 @@ async function setup() {
    * System that computes the path finding.
    */
   const PathFindingQuery = world.createQuery("PathFindingQuery", { all: [Tile] });
-  //world.createSystem(PathFindingSystem, PathFindingQuery, map, 0, 799);
+  // world.createSystem(PathFindingSystem, PathFindingQuery, map, 0, 799);
   world.createSystem(AStarPathFindingSystem, PathFindingQuery, map, 0, 799);
 
   world.start({fpsCap: 60});

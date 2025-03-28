@@ -31,7 +31,7 @@ export type MatrixTileCoordinates = {
 
 export default class AStarPathFinding {
   public queue!: MinHeapWithNodes;
-  private visitedTiles: Set<number> = new Set();
+  public visitedTiles: Set<number> = new Set();
 
   private matrixWidth!: number;
   private matrixHeight!: number;
@@ -43,9 +43,9 @@ export default class AStarPathFinding {
   private searchType: AStarPathFindingSearchType = AStarPathFindingSearchType.CONTINUOUS;
 
   private startCoordinates!: MatrixTileCoordinates;
-  private startTileValue!: number;
+  public startTileValue!: number;
   private finishCoordinates!: MatrixTileCoordinates;
-  private finishTileValue!: number;
+  public finishTileValue!: number;
 
   private insertQueueCallbackFn: (node: MinHeapNode) => void = () => undefined;
 
@@ -69,14 +69,23 @@ export default class AStarPathFinding {
       this.searchType = config.searchType;
     }
 
+    if (
+      config.startCoordinates.x < 0 ||
+      config.startCoordinates.y < 0 ||
+      config.startCoordinates.x > this.matrixWidth - 1 ||
+      config.startCoordinates.y > this.matrixHeight - 1 ||
+      config.finishCoordinates.x < 0 ||
+      config.finishCoordinates.y < 0 ||
+      config.finishCoordinates.x > this.matrixWidth - 1 ||
+      config.finishCoordinates.y > this.matrixHeight - 1
+    ) {
+      throw new Error(`Out of bounds coordinates: start (${config.startCoordinates.x}, ${config.startCoordinates.y}) finish (${config.finishCoordinates.x}, ${config.finishCoordinates.y})`);
+    }
+
     this.startCoordinates = config.startCoordinates;
     this.startTileValue = this.getTileValueFromCoordinates(config.startCoordinates.x, config.startCoordinates.y);
     this.finishCoordinates = config.finishCoordinates;
     this.finishTileValue = this.getTileValueFromCoordinates(config.finishCoordinates.x, config.finishCoordinates.y);
-
-    if (this.startCoordinates.x < 0 || this.startCoordinates.y < 0 || this.finishCoordinates.x < 0 || this.finishCoordinates.y < 0) {
-      throw new Error(`Invalid start coordinates ${this.startCoordinates.x} x ${this.startCoordinates.y} or finish coordinates ${this.finishCoordinates.x} x ${this.finishCoordinates.y}`);
-    }
 
     if (!this.matrixWidth || !this.matrixHeight || !this.matrixTileSize) {
       throw new Error(`Please set matrix data (width, height, tileSize)`);
@@ -104,29 +113,37 @@ export default class AStarPathFinding {
    * Used for continuous (single/multi thread) search. (e.g. WebWorker).
    * @private
    */
-  private searchByLoop() {
+  private searchByLoop(): boolean {
+    let found = false;
+
     while(this.queue.size > 0) {
-      this.doSearch();
+      found = this.doSearch();
     }
+
+    return found;
   }
 
   /**
    * Used for sequential searching (e.g. 30 times / sec)
    * @private
    */
-  private searchByStep() {
+  private searchByStep(): boolean {
+    let found = false;
+
     if (this.queue.size > 0) {
-      this.doSearch();
+      return this.doSearch();
     }
+
+    return false;
   }
 
-  private doSearch() {
+  private doSearch(): boolean {
       const node = this.queue.remove();
       const found = this.visit(node);
 
       if (found) {
         this.queue.clear();
-        return;
+        return true;
       }
 
       // For each direction, plan to visit respective tile.
@@ -139,16 +156,18 @@ export default class AStarPathFinding {
           this.insertQueueCallbackFn(futureNode);
         }
       });
+
+      return false;
     }
 
-  public search() {
+  public search(): boolean {
     if (this.searchType === AStarPathFindingSearchType.CONTINUOUS) {
       return this.searchByLoop();
     }
 
-    if (this.searchType === AStarPathFindingSearchType.BY_STEP) {
+    //if (this.searchType === AStarPathFindingSearchType.BY_STEP) {
       return this.searchByStep();
-    }
+    //}
   }
 
   private getTileValueFromCoordinates(x: number, y: number): number {

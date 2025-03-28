@@ -38,9 +38,12 @@ export default class MinHeapWithNodes {
   public remove() {
       // Place the root element in a var to return later.
       const root = this.heap[0];
-      // Remove the last element in the deepest level and move it to the root.
       const last = this.heap.splice(-1, 1)[0];
-      this.heap[0] = last;
+
+      if (this.heap.length > 0) {
+        // Remove the last element in the deepest level and move it to the root.
+        this.heap[0] = last;
+      }
 
       // Swap
       this.bubbleDown(last, 0);

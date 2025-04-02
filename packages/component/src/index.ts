@@ -4,8 +4,5 @@ export { default as Keyboard } from "./Keyboard";
 export { default as Renderable } from "./Renderable";
 export { default as SpriteSheet, SpriteSheetAnimation, SpriteSheetProps, Animation, AnimationFrame, SpriteSheetPropsDeclaration } from "./SpriteSheet";
 export { default as State } from "./State";
-export { default as TiledMapFile } from "./TiledMapFile";
 export { default as Position } from "./Position";
-export { default as Tile } from "./Tile";
-export { default as TileMatrix } from "./TileMatrix";
 export { default as PhysicsBody, PhysicsBodyPropsDeclaration } from "./PhysicsBody";

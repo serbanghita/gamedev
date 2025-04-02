@@ -1,6 +1,6 @@
 {
-  "name": "@serbanghita-gamedev/pathfinding",
-  "description": "A* path finding",
+  "name": "@serbanghita-gamedev/pathfinding-tiled",
+  "description": "Pathfinding demo",
   "keywords": [
     "pathfinding"
   ],

@@ -2,7 +2,7 @@ import { Direction, Directions, Position, Tile, TileMatrix } from "@serbanghita-
 import { System, Entity, World, Query } from "@serbanghita-gamedev/ecs";
 import Walking from "../component/Walking";
 import { StateStatus } from "../state";
-import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
+import { getTileFromGridCoordinates } from "@serbanghita-gamedev/matrix";
 
 export default class WalkingSystem extends System {
   private tileMatrix!: TileMatrix;
@@ -51,7 +51,7 @@ export default class WalkingSystem extends System {
     }
 
     const currentTile = tile.tile;
-    const futureTile = getTileFromCoordinates(futureX, futureY, this.tileMatrix.matrixConfig);
+    const futureTile = getTileFromGridCoordinates(futureX, futureY, this.tileMatrix.config);
 
     // Allow movement if tile is free.
     if (currentTile === futureTile || this.tileMatrix.matrix[futureTile] === 0) {

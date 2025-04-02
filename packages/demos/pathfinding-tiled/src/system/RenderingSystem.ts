@@ -1,5 +1,5 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import {Tile} from "@serbanghita-gamedev/component";
+import {GridTile} from "@serbanghita-gamedev/grid";
 import { dot, rectangle, text } from "@serbanghita-gamedev/renderer";
 
 export default class RenderingSystem extends System {
@@ -15,10 +15,11 @@ export default class RenderingSystem extends System {
     this.ctx.clearRect(0, 0, 640, 480);
 
     this.query.execute().forEach((entity) => {
-      const tileComp = entity.getComponent(Tile);
+      const tileComp = entity.getComponent(GridTile);
+      const tileCompPixelCoords = tileComp.getPixelCoordinates();
 
-      dot(this.ctx, tileComp.x, tileComp.y, "rgb(0,255,0)", 6);
-      text(this.ctx, `${tileComp.tile}`, tileComp.x, tileComp.y, "9", "arial", "", "black");
+      dot(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, "rgb(0,255,0)", 6);
+      text(this.ctx, `${tileComp.tile}`, tileCompPixelCoords.x, tileCompPixelCoords.y, "9", "arial", "", "black");
     });
 
     // debug

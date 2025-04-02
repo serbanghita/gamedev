@@ -1,5 +1,5 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import {Tile} from "@serbanghita-gamedev/component";
+import {GridTile} from "@serbanghita-gamedev/grid";
 import { dot } from "@serbanghita-gamedev/renderer";
 
 export default class PreRenderCollisionTilesSystem extends System {
@@ -13,8 +13,9 @@ export default class PreRenderCollisionTilesSystem extends System {
 
   public update(now: number): void {
     this.query.execute().forEach((entity: Entity) => {
-      const tile = entity.getComponent(Tile);
-      dot(this.ctx, tile.x, tile.y, "rgb(0,0,0, 0.5)", 2);
+      const tileComp = entity.getComponent(GridTile);
+      const tileCompPixelCoords = tileComp.getPixelCoordinates();
+      dot(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, "rgb(0,0,0, 0.5)", 2);
     });
   }
 }

@@ -1,8 +1,7 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
-import { TiledMapFile } from "@serbanghita-gamedev/component";
+import { TiledMapFile, TiledMap } from "@serbanghita-gamedev/tiled";
 import { renderTile } from "@serbanghita-gamedev/renderer";
-import { TiledMap } from "@serbanghita-gamedev/tiled";
-import { getCoordinatesFromTile } from "@serbanghita-gamedev/matrix";
+import { getPixelCoordinatesFromTile } from "@serbanghita-gamedev/grid";
 import { rectangle } from "./canvas";
 
 export default class RenderTiledMapTerrainSystem extends System {
@@ -49,7 +48,7 @@ export default class RenderTiledMapTerrainSystem extends System {
           continue;
         }
 
-        const tileCoordinates = getCoordinatesFromTile(j, { width: tiledMap.getWidthInTiles(), height: tiledMap.getHeightInTiles(), tileSize: tiledMap.getTileWidth() });
+        const tileCoordinates = getPixelCoordinatesFromTile(j, { width: tiledMap.getWidthInTiles(), height: tiledMap.getHeightInTiles(), tileSize: tiledMap.getTileWidth() });
 
         rectangle(this.ctx, tileCoordinates.x, tileCoordinates.y, tiledMap.getTileWidth(), tiledMap.getTileHeight(), "rgb(125,0,0)", "rgba(255,0,0,0.1)");
         // j,

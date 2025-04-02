@@ -1,6 +1,6 @@
 {
-  "name": "@serbanghita-gamedev/matrix",
-  "description": "Operations with matrices",
+  "name": "@serbanghita-gamedev/grid",
+  "description": "Operations on a grid",
   "keywords": ["matrix", "matrices", "grid", "binary matrix"],
   "version": "1.0.0",
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",

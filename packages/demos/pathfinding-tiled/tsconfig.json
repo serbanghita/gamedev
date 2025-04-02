@@ -14,8 +14,9 @@
       "@serbanghita-gamedev/geometry/*": ["../../geometry/src/*"],
       "@serbanghita-gamedev/assets/*": ["../../assets/src/*"],
       "@serbanghita-gamedev/ecs/*": ["../../ecs/src/*"],
-      "@serbanghita-gamedev/matrix/*": ["../../matrix/src/*"],
-      "@serbanghita-gamedev/tiled/*": ["../../tiled/src/*"]
+      "@serbanghita-gamedev/grid/*": ["../../grid/src/*"],
+      "@serbanghita-gamedev/tiled/*": ["../../tiled/src/*"],
+      "@serbanghita-gamedev/pathfinding/*": ["../../pathfinding/src/*"]
     }
   },
   "include": [

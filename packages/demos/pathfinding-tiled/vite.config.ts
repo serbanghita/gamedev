@@ -12,7 +12,7 @@ export default defineConfig({
     },
     coverage: {
       provider: "istanbul", // or 'v8'
-      exclude: ["./src/assets", "./src/demo2.ts"],
+      exclude: ["./src/assets"],
     },
   },
 });

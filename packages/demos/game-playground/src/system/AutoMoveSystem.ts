@@ -1,7 +1,7 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { randomInt } from "../utils";
 import { Direction, Directions, TileMatrix, Tile, Position } from "@serbanghita-gamedev/component";
-import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
+import { getTileFromGridCoordinates } from "@serbanghita-gamedev/matrix";
 import Walking from "../component/Walking";
 import { StateStatus } from "../state";
 import AutoMoving from "../component/AutoMoving";
@@ -55,7 +55,7 @@ export default class AutoMoveSystem extends System {
       const currentTile = tileComp.tile;
       let destinationTile = 0;
       try {
-        destinationTile = getTileFromCoordinates(destinationX, destinationY, matrixComponent.matrixConfig);
+        destinationTile = getTileFromGridCoordinates(destinationX, destinationY, matrixComponent.config);
       } catch (e) {
         return;
       }

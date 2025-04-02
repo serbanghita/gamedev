@@ -5,7 +5,7 @@ describe('AStarPathFinding', () => {
     test('constructor - out of bounds startCoordinates x', () => {
       expect(() => {
         new AStarPathFinding({
-          matrix: [
+          matrix2D: [
             [0,1,0,0,0],
             [0,1,0,1,0],
             [0,0,0,1,0],
@@ -20,7 +20,7 @@ describe('AStarPathFinding', () => {
     test('constructor - out of bounds negative startCoordinates x', () => {
       expect(() => {
         new AStarPathFinding({
-          matrix: [
+          matrix2D: [
             [0,1,0,0,0],
             [0,1,0,1,0],
             [0,0,0,1,0],
@@ -35,7 +35,7 @@ describe('AStarPathFinding', () => {
     test('constructor - out of bounds startCoordinates y', () => {
       expect(() => {
         new AStarPathFinding({
-          matrix: [
+          matrix2D: [
             [0,1,0,0,0],
             [0,1,0,1,0],
             [0,0,0,1,0],
@@ -50,7 +50,7 @@ describe('AStarPathFinding', () => {
     test('constructor - out of bounds negative startCoordinates y', () => {
       expect(() => {
         new AStarPathFinding({
-          matrix: [
+          matrix2D: [
             [0,1,0,0,0],
             [0,1,0,1,0],
             [0,0,0,1,0],
@@ -65,7 +65,7 @@ describe('AStarPathFinding', () => {
     test('constructor - out of bounds finishCoordinates x', () => {
       expect(() => {
         new AStarPathFinding({
-          matrix: [
+          matrix2D: [
             [0,1,0,0,0],
             [0,1,0,1,0],
             [0,0,0,1,0],
@@ -80,7 +80,7 @@ describe('AStarPathFinding', () => {
     test('constructor - out of bounds negative finishCoordinates x', () => {
       expect(() => {
         new AStarPathFinding({
-          matrix: [
+          matrix2D: [
             [0,1,0,0,0],
             [0,1,0,1,0],
             [0,0,0,1,0],
@@ -95,7 +95,7 @@ describe('AStarPathFinding', () => {
     test('constructor - out of bounds finishCoordinates y', () => {
       expect(() => {
         new AStarPathFinding({
-          matrix: [
+          matrix2D: [
             [0,1,0,0,0],
             [0,1,0,1,0],
             [0,0,0,1,0],
@@ -110,7 +110,7 @@ describe('AStarPathFinding', () => {
     test('constructor - out of bounds negative finishCoordinates y', () => {
       expect(() => {
         new AStarPathFinding({
-          matrix: [
+          matrix2D: [
             [0,1,0,0,0],
             [0,1,0,1,0],
             [0,0,0,1,0],
@@ -124,7 +124,7 @@ describe('AStarPathFinding', () => {
     });
     test('constructor - start and finish tile are calculated', () => {
       const aStar = new AStarPathFinding({
-        matrix: [
+        matrix2D: [
           [0,1,0,0,0],
           [0,1,0,1,0],
           [0,0,0,1,0],
@@ -138,33 +138,115 @@ describe('AStarPathFinding', () => {
       expect(aStar.startTileValue).toEqual(5);
       expect(aStar.finishTileValue).toEqual(14);
     });
-  });
-
-  test('constructor - invalid matrix size', () => {});
-  test('constructor - invalid matrix', () => {});
-
-  test('constructor - queue', () => {
-    const aStar = new AStarPathFinding({
-      matrix: [
-        [0,1,0,0,1,1,0,0,0,1,0],
-        [0,1,0,0,0,0,0,1,0,0,0],
-        [0,1,0,1,0,1,1,1,0,0,0],
-        [0,0,0,1,0,1,0,0,0,1,0],
-        [0,0,0,1,0,0,0,1,1,1,0]
-      ],
-      matrixTileSize: 16,
-      searchType: AStarPathFindingSearchType.BY_STEP,
-      startCoordinates: { x: 0, y: 0 },
-      finishCoordinates: { x: 10, y: 4 }
+    test('constructor - empty 1D matrix', () => {
+      expect(() => {
+        new AStarPathFinding({
+          matrix1D: [ ],
+          matrixTileSize: 1,
+          searchType: AStarPathFindingSearchType.BY_STEP,
+          startCoordinates: { x: 0, y: 0 },
+          finishCoordinates: { x: 0, y: 0 }
+        });
+      }).toThrow(`Please set the matrix before attempting a search.`);
     });
+    test('constructor - empty 2D matrix', () => {
+      expect(() => {
+        new AStarPathFinding({
+          matrix2D: [ ],
+          matrixTileSize: 1,
+          searchType: AStarPathFindingSearchType.BY_STEP,
+          startCoordinates: { x: 0, y: 0 },
+          finishCoordinates: { x: 0, y: 0 }
+        });
+      }).toThrow(`Please set the matrix before attempting a search.`);
+    });
+    test('constructor - missing matrices', () => {
+      expect(() => {
+        new AStarPathFinding({
+          matrixTileSize: 1,
+          searchType: AStarPathFindingSearchType.BY_STEP,
+          startCoordinates: { x: 0, y: 0 },
+          finishCoordinates: { x: 0, y: 0 }
+        });
+      }).toThrow(`No matrix has been defined.`);
+    });
+    test('constructor - queue', () => {
+      const aStar = new AStarPathFinding({
+        matrix2D: [
+          [0,1,0,0,1,1,0,0,0,1,0],
+          [0,1,0,0,0,0,0,1,0,0,0],
+          [0,1,0,1,0,1,1,1,0,0,0],
+          [0,0,0,1,0,1,0,0,0,1,0],
+          [0,0,0,1,0,0,0,1,1,1,0]
+        ],
+        matrixTileSize: 16,
+        searchType: AStarPathFindingSearchType.BY_STEP,
+        startCoordinates: { x: 0, y: 0 },
+        finishCoordinates: { x: 10, y: 4 }
+      });
 
-    expect(aStar.queue.size).toEqual(1);
+      expect(aStar.queue.size).toEqual(1);
+    });
   });
 
   describe('search - BY_STEP', () => {
-    test('success - only one path possible', () => {
+    test('success - 1D matrix - only one path possible', () => {
       const aStar = new AStarPathFinding({
-        matrix: [
+        matrix1D: [0,1,0,0,0,0,1,0,1,0,0,0,0,1,0],
+        matrixWidth: 5,
+        matrixHeight: 3,
+        matrixTileSize: 1,
+        searchType: AStarPathFindingSearchType.BY_STEP,
+        startCoordinates: { x: 0, y: 0 },
+        finishCoordinates: { x: 4, y: 2 }
+      });
+      let result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5,10]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5,10,11]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5,10,11,12]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5,10,11,12,7]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5,10,11,12,7,2]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5,10,11,12,7,2,3]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5,10,11,12,7,2,3,4]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5,10,11,12,7,2,3,4,9]);
+      expect(result).toBe(false);
+
+      result = aStar.search();
+      expect([...aStar.visitedTiles]).toEqual([0,5,10,11,12,7,2,3,4,9,14]);
+      expect(result).toBe(true);
+    });
+    test('success - 2D matrix - only one path possible', () => {
+      const aStar = new AStarPathFinding({
+        matrix2D: [
           [0,1,0,0,0],
           [0,1,0,1,0],
           [0,0,0,1,0],
@@ -220,11 +302,10 @@ describe('AStarPathFinding', () => {
     });
   });
 
-
   describe('search - CONTINUOUS', () => {
     test('success - only one path possible', () => {
       const aStar = new AStarPathFinding({
-        matrix: [
+        matrix2D: [
           [0,1,0,0,0],
           [0,1,0,1,0],
           [0,0,0,1,0],

@@ -12,7 +12,7 @@ import AttackingWithClub from "./component/AttackingWithClub";
 import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
 import { createHtmlUiElements, RenderTiledMapTerrainSystem, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
 import { TiledMap } from "@serbanghita-gamedev/tiled";
-import { getCoordinatesFromTile } from "@serbanghita-gamedev/matrix";
+import { getPixelCoordinatesFromTile } from "@serbanghita-gamedev/matrix";
 import { Point } from "@serbanghita-gamedev/geometry";
 import Player from "./component/Player";
 import AutoMoveSystem from "./system/AutoMoveSystem";
@@ -90,7 +90,7 @@ async function setup() {
     if (tileValue > 0) {
       const entityId = `collision-tile-${tileIndex}`;
       const collisionTileEntity = world.createEntity(entityId);
-      let { x, y } = getCoordinatesFromTile(tileIndex, map.getComponent(TileMatrix).properties);
+      let { x, y } = getPixelCoordinatesFromTile(tileIndex, map.getComponent(TileMatrix).properties);
       x = x + tiledMap.getTileSize() / 2;
       y = y + tiledMap.getTileSize() / 2;
       collisionTileEntity.addComponent(Tile, { x, y, point: new Point(x, y, entityId) });
@@ -103,11 +103,11 @@ async function setup() {
    */
   assets["entities/declarations"].forEach((entityDeclaration) => {
     const entity = world.createEntityFromDeclaration(entityDeclaration);
-    // Entity Tile is depending on Position and TileMatrix.
+    // Entity Tile is depending on Position and Grid.
     if (entityDeclaration.components["Tile"]) {
       entity.addComponent(Tile, {
         point: entity.getComponent(Position).point,
-        matrixConfig: map.getComponent(TileMatrix).matrixConfig
+        matrixConfig: map.getComponent(TileMatrix).config
       });
     }
   });

@@ -1,7 +1,7 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { randomInt } from "../utils";
 import {Tile, TileMatrix} from "@serbanghita-gamedev/component";
-import { getTileFromCoordinates } from "@serbanghita-gamedev/matrix";
+import { getTileFromGridCoordinates } from "@serbanghita-gamedev/matrix";
 
 export default class MoveSystem extends System {
   public constructor(
@@ -26,7 +26,7 @@ export default class MoveSystem extends System {
       let futureY = tile.y + randomInt(-1, 1);
 
       const currentTile = tile.tile;
-      const futureTile = getTileFromCoordinates(futureX, futureY, matrixComponent.matrixConfig);
+      const futureTile = getTileFromGridCoordinates(futureX, futureY, matrixComponent.config);
       if (currentTile === futureTile || matrix[futureTile] === 0) {
         tile.point.x = futureX;
         tile.point.y = futureY;

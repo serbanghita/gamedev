@@ -13,7 +13,15 @@ export enum AStarPathFindingSearchType {
 }
 
 export type AStarPathFindingInit = {
-  matrix: number[][];
+
+  // 2d matrix.
+  matrix2D?: number[][];
+
+  // 1d flat matrix.
+  matrix1D?: number[];
+  matrixWidth?: number;
+  matrixHeight?: number;
+
   matrixTileSize: number;
 
   startCoordinates: MatrixTileCoordinates;
@@ -21,7 +29,6 @@ export type AStarPathFindingInit = {
 
   insertQueueCallbackFn?: (node: MinHeapNode) => any;
   searchType?: AStarPathFindingSearchType;
-
 }
 
 export type MatrixTileCoordinates = {
@@ -36,8 +43,8 @@ export default class AStarPathFinding {
   private matrixWidth!: number;
   private matrixHeight!: number;
   private matrixTileSize!: number;
-  private matrix: number[][] = [];
-  private matrixFlat: number[] = [];
+  private matrix2D: number[][] = [];
+  private matrix1D: number[] = [];
   private matrixSize!: number;
 
   private searchType: AStarPathFindingSearchType = AStarPathFindingSearchType.CONTINUOUS;
@@ -53,18 +60,57 @@ export default class AStarPathFinding {
     this.init(config);
   }
 
-  public init(config: AStarPathFindingInit): void {
-    this.matrix = config.matrix;
-    this.matrixFlat = config.matrix.reduce((acc, row) => [...acc, ...row], []);
+  private checkMatrix1D(config: AStarPathFindingInit): void {
+    if (config.matrix1D?.length === 0) {
+      throw new Error(`Please set the matrix before attempting a search.`);
+    }
+    if (!config.matrixWidth || !config.matrixHeight) {
+      throw new Error(`Matrix width/height for 1D matrix have not been defined.`);
+    }
+    if (config.matrixWidth * config.matrixHeight !== config.matrix1D?.length) {
+      throw new Error(`Matrix width/height does not match the 1D matrix.`);
+    }
+    if (!config.matrixTileSize) {
+      throw new Error(`Please set matrix tile size.`);
+    }
+  }
 
-    this.matrixWidth = config.matrix[0].length;
-    this.matrixHeight = config.matrix.length;
+  private checkMatrix2D(config: AStarPathFindingInit): void {
+    if (!Array.isArray(config.matrix2D) || config.matrix2D?.length === 0) {
+      throw new Error(`Please set the matrix before attempting a search.`);
+    }
+
+    if (config.matrix2D[0]?.length === 0 || config.matrix2D.length === 1) {
+      throw new Error(`Please set matrix rows.`);
+    }
+
+    if (!config.matrixTileSize) {
+      throw new Error(`Please set matrix tile size.`);
+    }
+  }
+
+  public init(config: AStarPathFindingInit): void {
+    if (config.matrix2D) {
+      this.checkMatrix2D(config);
+      this.matrix1D = config.matrix2D.reduce((acc, row) => [...acc, ...row], []);
+      this.matrixWidth = config.matrix2D[0]?.length;
+      this.matrixHeight = config.matrix2D.length;
+    } else if (config.matrix1D) {
+      this.checkMatrix1D(config);
+      this.matrix1D = config.matrix1D;
+      this.matrixWidth = config.matrixWidth as number;
+      this.matrixHeight = config.matrixHeight as number;
+    } else {
+      throw new Error(`No matrix has been defined.`);
+    }
+
     this.matrixTileSize = config.matrixTileSize;
     this.matrixSize = this.matrixWidth * this.matrixHeight;
 
     if (config.insertQueueCallbackFn) {
       this.insertQueueCallbackFn = config.insertQueueCallbackFn;
     }
+
     if (config.searchType) {
       this.searchType = config.searchType;
     }
@@ -87,19 +133,11 @@ export default class AStarPathFinding {
     this.finishCoordinates = config.finishCoordinates;
     this.finishTileValue = this.getTileValueFromCoordinates(config.finishCoordinates.x, config.finishCoordinates.y);
 
-    if (!this.matrixWidth || !this.matrixHeight || !this.matrixTileSize) {
-      throw new Error(`Please set matrix data (width, height, tileSize)`);
-    }
-
-    if (this.matrix.length === 0 || this.matrixFlat.length === 0) {
-      throw new Error(`Please set the matrix before attempting a search.`);
-    }
-
     // Push the first "Start" tile in order to start searching.
     this.queue = new MinHeapWithNodes([{value: this.startTileValue, cost: 0}]);
   }
 
-  public setQueueCallbackFn(fn: (node: MinHeapNode) => any) {
+  public setInsertQueueCallbackFn(fn: (node: MinHeapNode) => any) {
     this.insertQueueCallbackFn = fn;
   }
 
@@ -230,7 +268,7 @@ export default class AStarPathFinding {
     }
 
     // Check if it's blocked. This can be custom fn.
-    if (this.matrixFlat[futureTileValue] > 0) {
+    if (this.matrix1D[futureTileValue] > 0) {
       return null;
     }
 

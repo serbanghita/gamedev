@@ -320,4 +320,52 @@ describe('AStarPathFinding', () => {
       expect(result).toBe(true);
     });
   });
+
+  describe('internal functions', () => {
+    describe('20x15 matrix', () => {
+      let aStar: AStarPathFinding;
+      beforeEach(() => {
+        aStar = new AStarPathFinding({
+          matrix1D: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+            5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5,
+            5, 0, 0, 0, 0, 5, 0, 0, 5, 0, 5, 5, 5, 5, 0, 5, 0, 5, 0, 5,
+            5, 0, 0, 0, 0, 5, 0, 0, 5, 0, 5, 0, 0, 5, 0, 5, 0, 5, 0, 5,
+            5, 0, 0, 0, 0, 5, 0, 0, 5, 0, 5, 0, 0, 5, 0, 5, 0, 0, 5, 5,
+            5, 0, 0, 0, 0, 5, 0, 5, 5, 0, 5, 5, 0, 5, 5, 5, 0, 5, 0, 5,
+            5, 0, 0, 0, 0, 5, 0, 5, 0, 0, 0, 5, 0, 0, 0, 0, 5, 5, 0, 5,
+            5, 0, 0, 0, 0, 5, 0, 5, 0, 0, 0, 5, 0, 0, 0, 0, 5, 5, 0, 5,
+            5, 0, 0, 0, 0, 5, 0, 5, 5, 5, 5, 5, 5, 5, 5, 0, 5, 0, 0, 5,
+            5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5,
+            5, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 0, 0, 5, 0, 0, 0, 0, 5,
+            5, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5,
+            5, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 5,
+            5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5,
+            5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+          matrixWidth: 20,
+          matrixHeight: 15,
+          matrixTileSize: 1,
+          searchType: AStarPathFindingSearchType.BY_STEP,
+          startCoordinates: { x: 0, y: 0 },
+          finishCoordinates: { x: 4, y: 2 }
+        });
+      });
+      test('getTileValueFromCoordinates', () => {
+        expect(aStar.getTileValueFromCoordinates(0, 0)).toEqual(0);
+        expect(aStar.getTileValueFromCoordinates(1, 0)).toEqual(1);
+        expect(aStar.getTileValueFromCoordinates(19, 0)).toEqual(19);
+        expect(aStar.getTileValueFromCoordinates(19, 1)).toEqual(39);
+        expect(aStar.getTileValueFromCoordinates(19, 14)).toEqual(299);
+      });
+      test('getCoordinatesFromTileValue', () => {
+        expect(aStar.getCoordinatesFromTileValue(0)).toEqual({x: 0, y: 0});
+        expect(aStar.getCoordinatesFromTileValue(1)).toEqual({x: 1, y: 0});
+        expect(aStar.getCoordinatesFromTileValue(19)).toEqual({x: 19, y: 0});
+        expect(aStar.getCoordinatesFromTileValue(39)).toEqual({x: 19, y: 1});
+        expect(aStar.getCoordinatesFromTileValue(299)).toEqual({x: 19, y: 14});
+      });
+      test('computeEuclideanDistanceBetweenTwoTiles', () => {
+        
+      });
+    });
+  });
 });

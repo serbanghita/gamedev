@@ -45,7 +45,7 @@ async function setup() {
    *  I believe I first statically load the whole list of Maps and then the player will be able to choose one.
    */
   const map = world.createEntity("map");
-  map.addComponent(TiledMapFile, { mapFileContents: require("./assets/map1.json"), mapFilePath: "./assets/map1.json" });
+  map.addComponent(TiledMapFile, { mapFileContents: require("./assets/map2.json"), mapFilePath: "./assets/map2.json" });
   // Load the "TiledMap" class wrapper over the json file declaration.
   const tiledMap = new TiledMap(map.getComponent(TiledMapFile).mapFileContents);
   // Add the "collision" layer data to the map.
@@ -58,13 +58,12 @@ async function setup() {
     height: collisionLayer.height,
     tileSize: tiledMap.getTileSize(),
   };
-  console.log(gridConfig);
   map.addComponent(Grid, gridConfig);
   // Transform all collision tiles as Entities.
   collisionLayer.data.forEach((tileValue: number, tileIndex: number) => {
     const entityId = `tile-${tileIndex}`;
     const collisionTileEntity = world.createEntity(entityId);
-    let { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
+    const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
 
     console.log(tileIndex, x, y);
 
@@ -107,7 +106,8 @@ async function setup() {
    */
   const PathFindingQuery = world.createQuery("PathFindingQuery", { all: [GridTile] });
   // world.createSystem(PathFindingSystem, PathFindingQuery, map, {x: 0, y: 0}, {x: 39, y: 19});
-  world.createSystem(AStarPathFindingSystem, PathFindingQuery, map, {x: 0, y: 0}, {x: 39, y: 19});
+  // world.createSystem(AStarPathFindingSystem, PathFindingQuery, map, {x: 0, y: 0}, {x: 39, y: 19});
+  world.createSystem(AStarPathFindingSystem, PathFindingQuery, map, {x: 9, y: 6}, {x: 11, y: 4});
 
   world.start({fpsCap: 60});
 }

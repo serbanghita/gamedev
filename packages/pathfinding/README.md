@@ -2,6 +2,8 @@
 
 > Pathfinding library that implements A* with Euclidean or Manhattan distance.
 
+![](./demo-astar.gif)
+
 ### Install
 
 ```

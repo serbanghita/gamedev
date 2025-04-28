@@ -1,16 +1,9 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import {Grid, GridTile} from "@serbanghita-gamedev/grid";
+import {Grid} from "@serbanghita-gamedev/grid";
 import TileToBeExplored from "../component/TileToBeExplored";
 import RenderedInForeground from "../component/RenderedInForeground";
-import {MinHeapWithNodes, MinHeapNode} from "@serbanghita-gamedev/pathfinding";
+import {MinHeapNode} from "@serbanghita-gamedev/pathfinding";
 import {AStarPathFinding, AStarPathFindingSearchType} from "@serbanghita-gamedev/pathfinding";
-
-const directions: [number, number][] = [
-  [-1, 0], // left
-  [1, 0], // right
-  [0, -1], // top
-  [0, 1] // bottom
-];
 
 export default class AStarPathFindingSystem extends System {
   private aStar: AStarPathFinding;
@@ -45,9 +38,22 @@ export default class AStarPathFindingSystem extends System {
       }
     });
 
+    this.aStar.setFoundCallbackFn((node: MinHeapNode) => {
+      let current: number = node.value;
+      const path: number[] = [current];
+
+      while(this.aStar.cameFromTiles.has(current)) {
+        const cameFrom: number = this.aStar.cameFromTiles.get(current) as number;
+        path.push(cameFrom);
+        current = cameFrom
+      }
+
+      console.log(path);
+    });
+
   }
 
-  public update(now: number): void {
+  public update(): void {
       this.aStar.search();
   }
 }

@@ -1,6 +1,6 @@
 import { loadAssets } from "./assets";
 import { World } from "@serbanghita-gamedev/ecs";
-import { Body, Direction, Keyboard, Renderable, SpriteSheet, TiledMapFile, TileMatrix, Tile, Position } from "@serbanghita-gamedev/component";
+import { Body, Direction, Keyboard, Renderable, SpriteSheet, Position } from "@serbanghita-gamedev/component";
 import { Keyboard as KeyboardInput, InputActions } from "@serbanghita-gamedev/input";
 import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
 import RenderSystem from "./system/RenderSystem";
@@ -11,8 +11,8 @@ import WalkingSystem from "./system/WalkingSystem";
 import AttackingWithClub from "./component/AttackingWithClub";
 import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
 import { createHtmlUiElements, RenderTiledMapTerrainSystem, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
-import { TiledMap } from "@serbanghita-gamedev/tiled";
-import { getPixelCoordinatesFromTile } from "@serbanghita-gamedev/matrix";
+import { TiledMap, TiledMapFile } from "@serbanghita-gamedev/tiled";
+import { getPixelCoordinatesFromTile } from "@serbanghita-gamedev/grid";
 import { Point } from "@serbanghita-gamedev/geometry";
 import Player from "./component/Player";
 import AutoMoveSystem from "./system/AutoMoveSystem";
@@ -77,12 +77,13 @@ async function setup() {
   map.addComponent(TiledMapFile, { mapFileContents, mapFilePath });
   const tiledMap = new TiledMap(mapFileContents);
   const collisionLayer = tiledMap.getCollisionLayers()[0];
-  map.addComponent(TileMatrix, {
+  const gridConfig = {
     matrix: collisionLayer.data,
     width: collisionLayer.width,
     height: collisionLayer.height,
     tileSize: tiledMap.getTileSize(),
-  });
+  };
+  map.addComponent(Grid, gridConfig);
   /**
    * Transform all collision tiles as Entities.
    */

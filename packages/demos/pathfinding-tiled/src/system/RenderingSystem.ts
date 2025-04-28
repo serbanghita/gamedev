@@ -1,6 +1,6 @@
-import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
+import { System, Query, World } from "@serbanghita-gamedev/ecs";
 import {GridTile} from "@serbanghita-gamedev/grid";
-import { dot, rectangle, text } from "@serbanghita-gamedev/renderer";
+import { dot, text } from "@serbanghita-gamedev/renderer";
 
 export default class RenderingSystem extends System {
   public constructor(
@@ -18,8 +18,8 @@ export default class RenderingSystem extends System {
       const tileComp = entity.getComponent(GridTile);
       const tileCompPixelCoords = tileComp.getPixelCoordinates();
 
-      dot(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, "rgb(0,255,0)", 6);
-      text(this.ctx, `${tileComp.tile}`, tileCompPixelCoords.x, tileCompPixelCoords.y, "9", "arial", "", "black");
+      dot(this.ctx, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 4, "rgb(0,255,0)", 6);
+      text(this.ctx, `${tileComp.tile}`, tileCompPixelCoords.x, tileCompPixelCoords.y + 8, "9", "arial", "", "black");
     });
 
     // debug

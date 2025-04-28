@@ -11,7 +11,7 @@ export default class PreRenderCollisionTilesSystem extends System {
     super(world, query);
   }
 
-  public update(now: number): void {
+  public update(): void {
     this.query.execute().forEach((entity: Entity) => {
       const tileComp = entity.getComponent(GridTile);
       const tileCompPixelCoords = tileComp.getPixelCoordinates();

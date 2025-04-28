@@ -12,6 +12,13 @@ export enum AStarPathFindingSearchType {
   BY_STEP = 0x2
 }
 
+export enum AStarPathFindingSearchStatus {
+  INIT = 0x1,
+  SEARCHING = 0x2,
+  FOUND = 0x3,
+  NOT_FOUND = 0x4
+}
+
 export type AStarPathFindingInit = {
 
   // 2d matrix.
@@ -28,6 +35,7 @@ export type AStarPathFindingInit = {
   finishCoordinates: MatrixTileCoordinates;
 
   insertQueueCallbackFn?: (node: MinHeapNode) => any;
+  foundCallbackFn?: (node: MinHeapNode) => any;
   searchType?: AStarPathFindingSearchType;
 }
 
@@ -39,6 +47,8 @@ export type MatrixTileCoordinates = {
 export default class AStarPathFinding {
   public queue!: MinHeapWithNodes;
   public visitedTiles: Set<number> = new Set();
+  // Map<tile, cameFromTile>
+  public cameFromTiles: Map<number, number> = new Map();
 
   private matrixWidth!: number;
   private matrixHeight!: number;
@@ -54,7 +64,10 @@ export default class AStarPathFinding {
   private finishCoordinates!: MatrixTileCoordinates;
   public finishTileValue!: number;
 
+  public status: AStarPathFindingSearchStatus = AStarPathFindingSearchStatus.INIT;
+
   private insertQueueCallbackFn: (node: MinHeapNode) => void = () => undefined;
+  private foundCallbackFn: (node: MinHeapNode) => void = () => undefined;
 
   public constructor(config: AStarPathFindingInit) {
     this.init(config);
@@ -90,6 +103,8 @@ export default class AStarPathFinding {
   }
 
   public init(config: AStarPathFindingInit): void {
+    this.status = AStarPathFindingSearchStatus.INIT;
+
     if (config.matrix2D) {
       this.checkMatrix2D(config);
       this.matrix1D = config.matrix2D.reduce((acc, row) => [...acc, ...row], []);
@@ -109,6 +124,10 @@ export default class AStarPathFinding {
 
     if (config.insertQueueCallbackFn) {
       this.insertQueueCallbackFn = config.insertQueueCallbackFn;
+    }
+
+    if (config.foundCallbackFn) {
+      this.foundCallbackFn = config.foundCallbackFn;
     }
 
     if (config.searchType) {
@@ -141,6 +160,10 @@ export default class AStarPathFinding {
     this.insertQueueCallbackFn = fn;
   }
 
+  public setFoundCallbackFn(fn: (node: MinHeapNode) => any) {
+    this.foundCallbackFn = fn;
+  }
+
   private visit(node: MinHeapNode): boolean {
     this.visitedTiles.add(node.value);
 
@@ -166,10 +189,13 @@ export default class AStarPathFinding {
    * @private
    */
   private searchByStep(): boolean {
-    let found = false;
 
     if (this.queue.size > 0) {
       return this.doSearch();
+    }
+
+    if (this.queue.size === 0) {
+      this.status = AStarPathFindingSearchStatus.NOT_FOUND;
     }
 
     return false;
@@ -180,7 +206,10 @@ export default class AStarPathFinding {
       const found = this.visit(node);
 
       if (found) {
+        this.status = AStarPathFindingSearchStatus.FOUND;
         this.queue.clear();
+        // console.log(this.cameFromTiles);
+        this.foundCallbackFn(node);
         return true;
       }
 
@@ -190,6 +219,7 @@ export default class AStarPathFinding {
 
         if (futureNode!== null && !this.queue.includes(futureNode.value) && futureNode.value !== node.value) {
           this.queue.insert(futureNode);
+          this.cameFromTiles.set(futureNode.value, node.value);
 
           this.insertQueueCallbackFn(futureNode);
         }
@@ -199,6 +229,9 @@ export default class AStarPathFinding {
     }
 
   public search(): boolean {
+
+    this.status = AStarPathFindingSearchStatus.SEARCHING;
+
     if (this.searchType === AStarPathFindingSearchType.CONTINUOUS) {
       return this.searchByLoop();
     }
@@ -208,8 +241,8 @@ export default class AStarPathFinding {
     //}
   }
 
-  private getTileValueFromCoordinates(x: number, y: number): number {
-    const tileIndex = Math.floor(x / this.matrixTileSize) + this.matrixWidth * Math.floor(y / this.matrixTileSize);
+  public getTileValueFromCoordinates(x: number, y: number): number {
+    const tileIndex = x + this.matrixWidth * y;
 
     if (tileIndex < 0 || tileIndex > this.matrixWidth * this.matrixHeight - 1) {
       throw new Error(`Invalid tile ${tileIndex} resulted from ${x} and ${y}`);
@@ -218,18 +251,18 @@ export default class AStarPathFinding {
     return tileIndex;
   }
 
-  private getCoordinatesFromTileValue(tileValue: number): {x: number, y: number } {
+  public getCoordinatesFromTileValue(tileValue: number): {x: number, y: number } {
     return {
-      x: this.matrixTileSize * (tileValue % this.matrixWidth),
-      y: Math.floor(tileValue / this.matrixWidth) * this.matrixTileSize,
+      x: tileValue % this.matrixWidth,
+      y: Math.floor(tileValue / this.matrixWidth),
     };
   }
 
-  private computeEuclidianDistanceBetweenTwoTiles(start: number, finish: number): number {
+  public computeEuclideanDistanceBetweenTwoTiles(start: number, finish: number): number {
     const startCoords = this.getCoordinatesFromTileValue(start);
     const finishCoords = this.getCoordinatesFromTileValue(finish);
 
-    return Math.sqrt(Math.pow(startCoords.x - startCoords.x, 2) + Math.pow(finishCoords.y - finishCoords.y, 2));
+    return Math.sqrt(Math.pow(startCoords.x - finishCoords.x, 2) + Math.pow(startCoords.y - finishCoords.y, 2));
   }
 
   private computeFutureTileValueAndCostFromDirection(node: MinHeapNode, [directionX, directionY]: [number, number]): MinHeapNode | null {
@@ -239,7 +272,8 @@ export default class AStarPathFinding {
     if (directionX !== 0) {
       futureTileValue = node.value + directionX;
       // Calculate this based on heuristic?
-      futureCost = this.computeEuclidianDistanceBetweenTwoTiles(futureTileValue, this.finishTileValue);
+      futureCost = this.computeEuclideanDistanceBetweenTwoTiles(futureTileValue, this.finishTileValue);
+      console.log("futureCost", futureCost);
 
       // Check out of bounds.
       if (
@@ -252,7 +286,8 @@ export default class AStarPathFinding {
     } else if (directionY !== 0) {
       futureTileValue = node.value + (directionY * this.matrixWidth);
       // Calculate this based on heuristic?
-      futureCost = this.computeEuclidianDistanceBetweenTwoTiles(futureTileValue, this.finishTileValue);
+      futureCost = this.computeEuclideanDistanceBetweenTwoTiles(futureTileValue, this.finishTileValue);
+      console.log("futureCost", futureCost);
     } else {
       return null;
     }

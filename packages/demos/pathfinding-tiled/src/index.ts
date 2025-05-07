@@ -12,6 +12,7 @@ import AStarPathFindingSystem from "./system/AStarPathFindingSystem";
 import TileToBeExplored from "./component/TileToBeExplored";
 import { getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid/utils";
 import { GridTileType } from "@serbanghita-gamedev/grid/component/GridTile";
+import TileIsInThePathFound from "./component/TileIsInThePathFound";
 
 async function setup() {
   /**
@@ -36,7 +37,7 @@ async function setup() {
    * Because we assign them different bitmasks so we can have fast checks in the local ECS library when
    * performing a Query of Entities.
    */
-  world.registerComponents([TiledMapFile, Grid, GridTile, PreRendered, RenderedInForeground, TileToBeExplored]);
+  world.registerComponents([TiledMapFile, Grid, GridTile, PreRendered, RenderedInForeground, TileToBeExplored, TileIsInThePathFound]);
 
   /**
    *  Load the map from Tiled json file declaration.
@@ -98,7 +99,7 @@ async function setup() {
   /**
    * System that renders all Entities that will appear in the foreground.
    */
-  const RenderingQuery = world.createQuery("RenderingQuery", { all: [RenderedInForeground, TileToBeExplored] });
+  const RenderingQuery = world.createQuery("RenderingQuery", { all: [RenderedInForeground, TileToBeExplored, TileIsInThePathFound] });
   world.createSystem(RenderingSystem, RenderingQuery, $ctxForeground);
 
   /**

@@ -4,6 +4,7 @@ import TileToBeExplored from "../component/TileToBeExplored";
 import RenderedInForeground from "../component/RenderedInForeground";
 import {MinHeapNode} from "@serbanghita-gamedev/pathfinding";
 import {AStarPathFinding, AStarPathFindingSearchType} from "@serbanghita-gamedev/pathfinding";
+import TileIsInThePathFound from "../component/TileIsInThePathFound";
 
 export default class AStarPathFindingSystem extends System {
   private aStar: AStarPathFinding;
@@ -26,29 +27,26 @@ export default class AStarPathFindingSystem extends System {
       matrixTileSize: gridComp.tileSize,
       searchType: AStarPathFindingSearchType.BY_STEP,
       startCoordinates: startGridCoordinates,
-      finishCoordinates: endGridCoordinates
-    });
+      finishCoordinates: endGridCoordinates,
+      onInsertQueue: ((node: MinHeapNode) => {
+        const tileValue = node.value;
+        const tileEntity = this.world.getEntity(`tile-${tileValue}`);
+        if (tileEntity) {
+          tileEntity.addComponent(TileToBeExplored);
+          tileEntity.addComponent(RenderedInForeground);
+        }
+      }),
+      onSuccess: (() => {
+        console.log(this.aStar.path);
+        this.aStar.path.forEach((tileValue) => {
+          const tileEntity = this.world.getEntity(`tile-${tileValue}`);
+          if (tileEntity) {
+            tileEntity.addComponent(TileIsInThePathFound);
+            tileEntity.addComponent(RenderedInForeground);
+          }
+        });
+      }),
 
-    this.aStar.setInsertQueueCallbackFn((node: MinHeapNode) => {
-      const tileValue = node.value;
-      const tileEntity = this.world.getEntity(`tile-${tileValue}`);
-      if (tileEntity) {
-        tileEntity.addComponent(TileToBeExplored);
-        tileEntity.addComponent(RenderedInForeground);
-      }
-    });
-
-    this.aStar.setFoundCallbackFn((node: MinHeapNode) => {
-      let current: number = node.value;
-      const path: number[] = [current];
-
-      while(this.aStar.cameFromTiles.has(current)) {
-        const cameFrom: number = this.aStar.cameFromTiles.get(current) as number;
-        path.push(cameFrom);
-        current = cameFrom
-      }
-
-      console.log(path);
     });
 
   }

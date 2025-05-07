@@ -1,6 +1,8 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
 import {GridTile} from "@serbanghita-gamedev/grid";
 import { dot, text } from "@serbanghita-gamedev/renderer";
+import TileToBeExplored from "../component/TileToBeExplored";
+import TileIsInThePathFound from "../component/TileIsInThePathFound";
 
 export default class RenderingSystem extends System {
   public constructor(
@@ -18,8 +20,13 @@ export default class RenderingSystem extends System {
       const tileComp = entity.getComponent(GridTile);
       const tileCompPixelCoords = tileComp.getPixelCoordinates();
 
-      dot(this.ctx, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 4, "rgb(0,255,0)", 6);
-      text(this.ctx, `${tileComp.tile}`, tileCompPixelCoords.x, tileCompPixelCoords.y + 8, "9", "arial", "", "black");
+      if (entity.hasComponent(TileToBeExplored)) {
+        dot(this.ctx, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 4, "rgb(0,255,0)", 6);
+        text(this.ctx, `${tileComp.tile}`, tileCompPixelCoords.x, tileCompPixelCoords.y + 8, "9", "arial", "", "black");
+      }
+      if (entity.hasComponent(TileIsInThePathFound)) {
+        dot(this.ctx, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 4, "rgb(0,0,0)", 6);
+      }
     });
 
     // debug

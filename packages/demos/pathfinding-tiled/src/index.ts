@@ -66,7 +66,7 @@ async function setup() {
     const collisionTileEntity = world.createEntity(entityId);
     const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
 
-    console.log(tileIndex, x, y);
+    // console.log(tileIndex, x, y);
 
     collisionTileEntity.addComponent(
       GridTile,

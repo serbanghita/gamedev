@@ -38,7 +38,7 @@ export default class AStarPathFindingSystem extends System {
         }
       }),
       onSuccess: (() => {
-        console.log(this.aStar.path);
+        console.log('path', this.aStar.path);
         this.aStar.path.forEach((tileValue) => {
           const tileEntity = this.world.getEntity(`tile-${tileValue}`);
           if (tileEntity) {

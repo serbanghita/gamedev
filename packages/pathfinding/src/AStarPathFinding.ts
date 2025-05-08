@@ -12,6 +12,11 @@ export enum AStarPathFindingSearchType {
   BY_STEP = 0x2
 }
 
+export enum AStarPathFindingResultType {
+  FULL_PATH_ARRAY = 0x1,
+  WAYPOINT_PATH_ARRAY = 0x2
+}
+
 export enum AStarPathFindingSearchStatus {
   INIT = 0x1,
   SEARCHING = 0x2,
@@ -29,11 +34,10 @@ export type AStarPathFindingInit = {
   matrixWidth?: number;
   matrixHeight?: number;
 
-  matrixTileSize: number;
-
   startCoordinates: MatrixTileCoordinates;
   finishCoordinates: MatrixTileCoordinates;
   searchType?: AStarPathFindingSearchType;
+  resultType?: AStarPathFindingResultType;
 
   onInsertQueue?: (node: MinHeapNode) => any;
   onSuccess?: () => any;
@@ -54,12 +58,12 @@ export default class AStarPathFinding {
 
   private matrixWidth!: number;
   private matrixHeight!: number;
-  private matrixTileSize!: number;
   private matrix2D: number[][] = [];
   private matrix1D: number[] = [];
   private matrixSize!: number;
 
   private searchType: AStarPathFindingSearchType = AStarPathFindingSearchType.CONTINUOUS;
+  private resultType: AStarPathFindingResultType = AStarPathFindingResultType.FULL_PATH_ARRAY;
 
   private startCoordinates!: MatrixTileCoordinates;
   public startTileValue!: number;
@@ -85,9 +89,6 @@ export default class AStarPathFinding {
     if (config.matrixWidth * config.matrixHeight !== config.matrix1D?.length) {
       throw new Error(`Matrix width/height does not match the 1D matrix.`);
     }
-    if (!config.matrixTileSize) {
-      throw new Error(`Please set matrix tile size.`);
-    }
   }
 
   private checkMatrix2D(config: AStarPathFindingInit): void {
@@ -99,9 +100,6 @@ export default class AStarPathFinding {
       throw new Error(`Please set matrix rows.`);
     }
 
-    if (!config.matrixTileSize) {
-      throw new Error(`Please set matrix tile size.`);
-    }
   }
 
   public init(config: AStarPathFindingInit): void {
@@ -121,11 +119,13 @@ export default class AStarPathFinding {
       throw new Error(`No matrix has been defined.`);
     }
 
-    this.matrixTileSize = config.matrixTileSize;
     this.matrixSize = this.matrixWidth * this.matrixHeight;
 
     if (config.searchType) {
       this.searchType = config.searchType;
+    }
+    if (config.resultType) {
+      this.resultType = config.resultType;
     }
 
     if (config.onInsertQueue) {
@@ -205,7 +205,11 @@ export default class AStarPathFinding {
         this.status = AStarPathFindingSearchStatus.FOUND;
         this.queue.clear();
         // console.log(this.cameFromTiles);
-        this.doBacktrack(node);
+        if (this.resultType === AStarPathFindingResultType.WAYPOINT_PATH_ARRAY) {
+          this.doBacktrackInflection(node);
+        } else {
+          this.doBacktrackAll(node);
+        }
         this.onSuccess();
         return true;
       }
@@ -225,15 +229,40 @@ export default class AStarPathFinding {
       return false;
   }
 
-  private doBacktrack(node: MinHeapNode) {
+  private doBacktrackAll(node: MinHeapNode) {
     let current: number = node.value;
     const path: number[] = [current];
 
     while(this.cameFromTiles.has(current)) {
       const cameFrom: number = this.cameFromTiles.get(current) as number;
       path.unshift(cameFrom);
-      current = cameFrom
+      current = cameFrom;
     }
+
+    this.path = path;
+  }
+
+  private doBacktrackInflection(node: MinHeapNode) {
+
+    let current: number = node.value;
+    let lastAdded: number = node.value;
+    const path: number[] = [current];
+
+    while(this.cameFromTiles.has(current)) {
+      const cameFrom: number = this.cameFromTiles.get(current) as number;
+
+      const cameFromXY = this.getCoordinatesFromTileValue(cameFrom)
+      const lasAddedXY = this.getCoordinatesFromTileValue(lastAdded);
+      // Check if the current tile has changed direction (row or column).
+      if (cameFromXY.x !== lasAddedXY.x && cameFromXY.y !== lasAddedXY.y) {
+        lastAdded = cameFrom;
+        path.unshift(current);
+      }
+      current = cameFrom;
+    }
+
+    // Add the starting tile.
+    path.unshift(current);
 
     this.path = path;
   }

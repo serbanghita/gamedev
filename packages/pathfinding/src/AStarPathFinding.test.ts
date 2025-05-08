@@ -10,7 +10,6 @@ describe('AStarPathFinding', () => {
             [0,1,0,1,0],
             [0,0,0,1,0],
           ],
-          matrixTileSize: 16,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 5, y: 0 },
           finishCoordinates: { x: 0, y: 0 }
@@ -25,7 +24,6 @@ describe('AStarPathFinding', () => {
             [0,1,0,1,0],
             [0,0,0,1,0],
           ],
-          matrixTileSize: 16,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: -1, y: 0 },
           finishCoordinates: { x: 0, y: 0 }
@@ -40,7 +38,6 @@ describe('AStarPathFinding', () => {
             [0,1,0,1,0],
             [0,0,0,1,0],
           ],
-          matrixTileSize: 16,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: 5 },
           finishCoordinates: { x: 0, y: 0 }
@@ -55,7 +52,6 @@ describe('AStarPathFinding', () => {
             [0,1,0,1,0],
             [0,0,0,1,0],
           ],
-          matrixTileSize: 16,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: -1 },
           finishCoordinates: { x: 0, y: 0 }
@@ -70,7 +66,6 @@ describe('AStarPathFinding', () => {
             [0,1,0,1,0],
             [0,0,0,1,0],
           ],
-          matrixTileSize: 16,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: 0 },
           finishCoordinates: { x: 5, y: 0 }
@@ -85,7 +80,6 @@ describe('AStarPathFinding', () => {
             [0,1,0,1,0],
             [0,0,0,1,0],
           ],
-          matrixTileSize: 16,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: 0 },
           finishCoordinates: { x: -1, y: 0 }
@@ -100,7 +94,6 @@ describe('AStarPathFinding', () => {
             [0,1,0,1,0],
             [0,0,0,1,0],
           ],
-          matrixTileSize: 16,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: 0 },
           finishCoordinates: { x: 0, y: 5 }
@@ -115,7 +108,6 @@ describe('AStarPathFinding', () => {
             [0,1,0,1,0],
             [0,0,0,1,0],
           ],
-          matrixTileSize: 16,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: 0 },
           finishCoordinates: { x: 0, y: -1 }
@@ -129,7 +121,6 @@ describe('AStarPathFinding', () => {
           [0,1,0,1,0],
           [0,0,0,1,0],
         ],
-        matrixTileSize: 1,
         searchType: AStarPathFindingSearchType.BY_STEP,
         startCoordinates: { x: 0, y: 1 },
         finishCoordinates: { x: 4, y: 2 }
@@ -142,7 +133,6 @@ describe('AStarPathFinding', () => {
       expect(() => {
         new AStarPathFinding({
           matrix1D: [ ],
-          matrixTileSize: 1,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: 0 },
           finishCoordinates: { x: 0, y: 0 }
@@ -153,7 +143,6 @@ describe('AStarPathFinding', () => {
       expect(() => {
         new AStarPathFinding({
           matrix2D: [ ],
-          matrixTileSize: 1,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: 0 },
           finishCoordinates: { x: 0, y: 0 }
@@ -163,7 +152,6 @@ describe('AStarPathFinding', () => {
     test('constructor - missing matrices', () => {
       expect(() => {
         new AStarPathFinding({
-          matrixTileSize: 1,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: 0 },
           finishCoordinates: { x: 0, y: 0 }
@@ -179,7 +167,6 @@ describe('AStarPathFinding', () => {
           [0,0,0,1,0,1,0,0,0,1,0],
           [0,0,0,1,0,0,0,1,1,1,0]
         ],
-        matrixTileSize: 16,
         searchType: AStarPathFindingSearchType.BY_STEP,
         startCoordinates: { x: 0, y: 0 },
         finishCoordinates: { x: 10, y: 4 }
@@ -195,7 +182,6 @@ describe('AStarPathFinding', () => {
         matrix1D: [0,1,0,0,0,0,1,0,1,0,0,0,0,1,0],
         matrixWidth: 5,
         matrixHeight: 3,
-        matrixTileSize: 1,
         searchType: AStarPathFindingSearchType.BY_STEP,
         startCoordinates: { x: 0, y: 0 },
         finishCoordinates: { x: 4, y: 2 }
@@ -251,7 +237,6 @@ describe('AStarPathFinding', () => {
           [0,1,0,1,0],
           [0,0,0,1,0],
         ],
-        matrixTileSize: 1,
         searchType: AStarPathFindingSearchType.BY_STEP,
         startCoordinates: { x: 0, y: 0 },
         finishCoordinates: { x: 4, y: 2 }
@@ -310,7 +295,6 @@ describe('AStarPathFinding', () => {
           [0,1,0,1,0],
           [0,0,0,1,0],
         ],
-        matrixTileSize: 1,
         searchType: AStarPathFindingSearchType.CONTINUOUS,
         startCoordinates: { x: 0, y: 0 },
         finishCoordinates: { x: 4, y: 2 }
@@ -343,7 +327,6 @@ describe('AStarPathFinding', () => {
             5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
           matrixWidth: 20,
           matrixHeight: 15,
-          matrixTileSize: 1,
           searchType: AStarPathFindingSearchType.BY_STEP,
           startCoordinates: { x: 0, y: 0 },
           finishCoordinates: { x: 4, y: 2 }

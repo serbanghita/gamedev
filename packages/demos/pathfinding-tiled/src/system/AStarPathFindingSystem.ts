@@ -5,6 +5,7 @@ import RenderedInForeground from "../component/RenderedInForeground";
 import {MinHeapNode} from "@serbanghita-gamedev/pathfinding";
 import {AStarPathFinding, AStarPathFindingSearchType} from "@serbanghita-gamedev/pathfinding";
 import TileIsInThePathFound from "../component/TileIsInThePathFound";
+import { AStarPathFindingResultType } from "@serbanghita-gamedev/pathfinding/AStarPathFinding";
 
 export default class AStarPathFindingSystem extends System {
   private aStar: AStarPathFinding;
@@ -24,8 +25,8 @@ export default class AStarPathFindingSystem extends System {
       matrix1D: gridComp.matrix,
       matrixWidth: gridComp.width,
       matrixHeight: gridComp.height,
-      matrixTileSize: gridComp.tileSize,
       searchType: AStarPathFindingSearchType.BY_STEP,
+      resultType: AStarPathFindingResultType.WAYPOINT_PATH_ARRAY,
       startCoordinates: startGridCoordinates,
       finishCoordinates: endGridCoordinates,
       onInsertQueue: ((node: MinHeapNode) => {

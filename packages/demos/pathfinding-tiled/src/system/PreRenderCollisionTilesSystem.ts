@@ -15,7 +15,7 @@ export default class PreRenderCollisionTilesSystem extends System {
     this.query.execute().forEach((entity: Entity) => {
       const tileComp = entity.getComponent(GridTile);
       const tileCompPixelCoords = tileComp.getPixelCoordinates();
-      dot(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, "rgb(0,0,0, 0.5)", 2);
+      dot(this.ctx, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 4, "rgb(0,0,0, 0.5)", 2);
     });
   }
 }

@@ -22,7 +22,7 @@ export default class RenderingSystem extends System {
 
       if (entity.hasComponent(TileToBeExplored)) {
         dot(this.ctx, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 4, "rgb(0,255,0)", 6);
-        text(this.ctx, `${tileComp.tile}`, tileCompPixelCoords.x, tileCompPixelCoords.y + 8, "9", "arial", "", "black");
+        // text(this.ctx, `${tileComp.tile}`, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 8, "9", "arial", "", "#cccccc");
       }
       if (entity.hasComponent(TileIsInThePathFound)) {
         dot(this.ctx, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 4, "rgb(0,0,0)", 6);

@@ -1,11 +1,11 @@
-import { Direction, Directions, Position, Tile, TileMatrix } from "@serbanghita-gamedev/component";
+import { Direction, Directions, Position } from "@serbanghita-gamedev/component";
 import { System, Entity, World, Query } from "@serbanghita-gamedev/ecs";
 import Walking from "../component/Walking";
 import { StateStatus } from "../state";
-import { getTileFromGridCoordinates } from "@serbanghita-gamedev/matrix";
+import { getTileFromPixelCoordinates, GridTile, Grid } from "@serbanghita-gamedev/grid";
 
 export default class WalkingSystem extends System {
-  private tileMatrix!: TileMatrix;
+  private grid!: Grid;
 
   public constructor(public world: World, public query: Query) {
     super(world, query);
@@ -14,7 +14,7 @@ export default class WalkingSystem extends System {
     if (!map) {
       throw new Error(`Map entity is not defined.`);
     }
-    this.tileMatrix = map.getComponent(TileMatrix);
+    this.grid = map.getComponent(Grid);
   }
 
   private onEnter(entity: Entity, component: Walking) {
@@ -26,10 +26,10 @@ export default class WalkingSystem extends System {
      * Position (based on Direction)
      * Checks if next tile is occupied.
      */
-    const tile = entity.getComponent(Tile);
+    const tile = entity.getComponent(GridTile);
     const direction = entity.getComponent(Direction);
     const position = entity.getComponent(Position);
-    const speed = 1;
+    const speed = 2;
 
     let futureX = position.point.x;
     let futureY = position.point.y;
@@ -51,16 +51,18 @@ export default class WalkingSystem extends System {
     }
 
     const currentTile = tile.tile;
-    const futureTile = getTileFromGridCoordinates(futureX, futureY, this.tileMatrix.config);
+    const futureTile = getTileFromPixelCoordinates(futureX, futureY, this.grid.config);
+
+    //console.log(currentTile, futureTile);
 
     // Allow movement if tile is free.
-    if (currentTile === futureTile || this.tileMatrix.matrix[futureTile] === 0) {
+    if (currentTile === futureTile || this.grid.matrix[futureTile] === 0) {
       position.point.y = futureY;
       position.point.x = futureX;
 
       if (currentTile !== futureTile) {
-        this.tileMatrix.matrix[currentTile] = 0;
-        this.tileMatrix.matrix[futureTile] = 2; // @todo Define tile types.
+        this.grid.matrix[currentTile] = 0;
+        this.grid.matrix[futureTile] = 0; // @todo Define tile types.
       }
     }
 
@@ -95,14 +97,17 @@ export default class WalkingSystem extends System {
       const component = entity.getComponent(Walking);
 
       if (component.status === StateStatus.FINISHED) {
+        // console.log('FINISHED');
         entity.removeComponent(Walking);
         return;
       }
 
       if (component.status === StateStatus.NOT_STARTED) {
+        //console.log('NOT_STARTED');
         this.onEnter(entity, component);
       }
 
+      // console.log('onUpdate');
       this.onUpdate(entity, component);
 
       return true;

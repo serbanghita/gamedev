@@ -1,6 +1,5 @@
-import { SpriteSheetAnimation } from "@serbanghita-gamedev/component";
+import { PhysicsBodyPropsDeclaration, SpriteSheetAnimation, SpriteSheetPropsDeclaration } from "@serbanghita-gamedev/component";
 import { TiledMapFileContents } from "@serbanghita-gamedev/tiled";
-import { PhysicsBodyPropsDeclaration, SpriteSheetPropsDeclaration } from "@serbanghita-gamedev/component";
 
 export async function loadLocalImage(data: string): Promise<HTMLImageElement> {
   const img = new Image();
@@ -16,6 +15,19 @@ export async function loadLocalImage(data: string): Promise<HTMLImageElement> {
       resolve(this as HTMLImageElement);
     };
   });
+}
+
+export async function loadTileMapFile(path: string): Promise<TiledMapFileContents> {
+  try {
+    const response = await fetch(path);
+    if (!response.ok) {
+      throw new Error(`Could not fetch the map file at ${path}`);
+    }
+    return await response.json();
+  } catch (e) {
+    console.log(`Error loading ${path}`, e);
+    throw e;
+  }
 }
 
 export type Assets = {

@@ -1,11 +1,10 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import {Grid} from "@serbanghita-gamedev/grid";
+import { Grid } from "@serbanghita-gamedev/grid";
 import TileToBeExplored from "../component/TileToBeExplored";
 import RenderedInForeground from "../component/RenderedInForeground";
-import {MinHeapNode} from "@serbanghita-gamedev/pathfinding";
-import {AStarPathFinding, AStarPathFindingSearchType} from "@serbanghita-gamedev/pathfinding";
+import { MinHeapNode } from "@serbanghita-gamedev/pathfinding";
+import { AStarPathFinding, AStarPathFindingSearchType, AStarPathFindingResultType } from "@serbanghita-gamedev/pathfinding";
 import TileIsInThePathFound from "../component/TileIsInThePathFound";
-import { AStarPathFindingResultType } from "@serbanghita-gamedev/pathfinding/AStarPathFinding";
 
 export default class AStarPathFindingSystem extends System {
   private aStar: AStarPathFinding;
@@ -14,8 +13,8 @@ export default class AStarPathFindingSystem extends System {
     public world: World,
     public query: Query,
     public map: Entity,
-    public startGridCoordinates: {x: number, y: number},
-    public endGridCoordinates: { x: number, y: number }
+    public startGridCoordinates: { x: number; y: number },
+    public endGridCoordinates: { x: number; y: number },
   ) {
     super(world, query);
 
@@ -26,19 +25,19 @@ export default class AStarPathFindingSystem extends System {
       matrixWidth: gridComp.width,
       matrixHeight: gridComp.height,
       searchType: AStarPathFindingSearchType.BY_STEP,
-      resultType: AStarPathFindingResultType.WAYPOINT_PATH_ARRAY,
+      resultType: AStarPathFindingResultType.FULL_PATH_ARRAY,
       startCoordinates: startGridCoordinates,
       finishCoordinates: endGridCoordinates,
-      onInsertQueue: ((node: MinHeapNode) => {
+      onInsertQueue: (node: MinHeapNode) => {
         const tileValue = node.value;
         const tileEntity = this.world.getEntity(`tile-${tileValue}`);
         if (tileEntity) {
-          tileEntity.addComponent(TileToBeExplored);
+          tileEntity.addComponent(TileToBeExplored, { fCost: node.fCost });
           tileEntity.addComponent(RenderedInForeground);
         }
-      }),
-      onSuccess: (() => {
-        console.log('path', this.aStar.path);
+      },
+      onSuccess: () => {
+        console.log("path", this.aStar.path);
         this.aStar.path.forEach((tileValue) => {
           const tileEntity = this.world.getEntity(`tile-${tileValue}`);
           if (tileEntity) {
@@ -46,13 +45,11 @@ export default class AStarPathFindingSystem extends System {
             tileEntity.addComponent(RenderedInForeground);
           }
         });
-      }),
-
+      },
     });
-
   }
 
   public update(): void {
-      this.aStar.search();
+    this.aStar.search();
   }
 }

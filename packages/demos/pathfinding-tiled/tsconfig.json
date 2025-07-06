@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "target": "ES2021",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    "module": "commonjs",                                /* Specify what module code is generated. */
+    "module": "CommonJS",                                /* Specify what module code is generated. */
     "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
+    "allowImportingTsExtensions": true,
     "strict": true,                                      /* Enable all strict type-checking options. */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
-    "rootDir": "src",
+    "rootDirs": ["src"],
     "types": ["vitest/globals"],
     "paths": {
       "@serbanghita-gamedev/component/*": ["../../component/src/*"],
@@ -15,8 +16,7 @@
       "@serbanghita-gamedev/assets/*": ["../../assets/src/*"],
       "@serbanghita-gamedev/ecs/*": ["../../ecs/src/*"],
       "@serbanghita-gamedev/grid/*": ["../../grid/src/*"],
-      "@serbanghita-gamedev/tiled/*": ["../../tiled/src/*"],
-      "@serbanghita-gamedev/pathfinding/*": ["../../pathfinding/src/*"]
+      "@serbanghita-gamedev/tiled/*": ["../../tiled/src/*"]
     }
   },
   "include": [

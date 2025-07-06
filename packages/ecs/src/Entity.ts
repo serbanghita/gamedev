@@ -2,6 +2,11 @@ import Component from "./Component";
 import { addBit, hasBit, removeBit } from "@serbanghita-gamedev/bitmask";
 import World from "./World";
 
+type PropsInitFor<T extends typeof Component> =
+  T extends new (props: infer P) => any
+    ? P
+    : never;
+
 export default class Entity {
   // Bitmask for storing Entity's components.
   public componentsBitmask = 0n;
@@ -13,7 +18,7 @@ export default class Entity {
     public id: string,
   ) {}
 
-  public addComponent<T extends typeof Component>(declaration: T, properties: object = {}): Entity {
+  public addComponent<T extends typeof Component>(declaration: T, properties: PropsInitFor<T> = {} as PropsInitFor<T>): Entity {
     let instance = this.components.get(declaration.name);
     // If the Component's instance is already in our cache, just re-use the instance and lazy init it.
     if (instance) {

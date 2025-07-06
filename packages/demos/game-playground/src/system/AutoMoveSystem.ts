@@ -1,7 +1,7 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { randomInt } from "../utils";
-import { Direction, Directions, TileMatrix, Tile, Position } from "@serbanghita-gamedev/component";
-import { getTileFromGridCoordinates } from "@serbanghita-gamedev/matrix";
+import { Direction, Directions, Position } from "@serbanghita-gamedev/component";
+import { getTileFromPixelCoordinates, GridTile, Grid } from "@serbanghita-gamedev/grid";
 import Walking from "../component/Walking";
 import { StateStatus } from "../state";
 import AutoMoving from "../component/AutoMoving";
@@ -17,11 +17,11 @@ export default class AutoMoveSystem extends System {
     if (!map) {
       throw new Error(`Map entity is not defined.`);
     }
-    const matrixComponent = map.getComponent(TileMatrix);
+    const matrixComponent = map.getComponent(Grid);
     const matrix = matrixComponent.matrix;
 
     this.query.execute().forEach((entity) => {
-      const tileComp = entity.getComponent(Tile);
+      const tileComp = entity.getComponent(GridTile);
       const position = entity.getComponent(Position);
       const direction = entity.getComponent(Direction);
       const autoMoving = entity.getComponent(AutoMoving);
@@ -55,7 +55,7 @@ export default class AutoMoveSystem extends System {
       const currentTile = tileComp.tile;
       let destinationTile = 0;
       try {
-        destinationTile = getTileFromGridCoordinates(destinationX, destinationY, matrixComponent.config);
+        destinationTile = getTileFromPixelCoordinates(destinationX, destinationY, matrixComponent.config);
       } catch (e) {
         return;
       }

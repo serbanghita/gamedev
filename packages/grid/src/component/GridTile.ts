@@ -11,14 +11,16 @@ export enum GridTileType {
 }
 
 export interface GridTileInitProps {
-  point: Point;
-  grid: Grid; // Reference to the Grid so we can compute x, y
+  x: number; // x on grid (not canvas)
+  y: number; // y on grid (not canvas)
+  tile: number; // the tile index on grid
   type: GridTileType;
 }
 
 export default class GridTile extends Component {
-  public point!: Point;
-  private grid!: Grid;
+  public x!: number;
+  public y!: number;
+  public tile!: number;
   public type!: GridTileType;
 
   constructor(public properties: GridTileInitProps) {
@@ -27,20 +29,21 @@ export default class GridTile extends Component {
   }
 
   public init(properties: GridTileInitProps) {
-    this.point = properties.point;
-    this.grid = properties.grid;
+    this.x = properties.x;
+    this.y = properties.y;
+    this.tile = properties.tile;
     this.type = properties.type;
   }
 
-  public get tile(): number {
-    return getTileFromGridCoordinates(this.point.x, this.point.y, this.grid.config);
-  }
-
-  public getGridCoordinates(): {x : number, y: number } {
-    return { x: this.point.x, y: this.point.y };
-  }
-
-  public getPixelCoordinates(): {x: number, y: number } {
-    return { x: this.point.x * this.grid.tileSize, y: this.point.y * this.grid.tileSize };
-  }
+  // public get tile(): number {
+  //   return getTileFromGridCoordinates(this.point.x, this.point.y, this.grid.config);
+  // }
+  //
+  // public getGridCoordinates(): {x : number, y: number } {
+  //   return { x: this.point.x, y: this.point.y };
+  // }
+  //
+  // public getPixelCoordinates(): {x: number, y: number } {
+  //   return { x: this.point.x * this.grid.tileSize, y: this.point.y * this.grid.tileSize };
+  // }
 }

@@ -1,7 +1,11 @@
 import { Component } from "@serbanghita-gamedev/ecs";
 
 export default class TileToBeExplored extends Component {
-  constructor(public properties: Record<string, never>) {
+  public fCost: number = 0;
+
+  constructor(public properties: { fCost: number }) {
     super(properties);
+
+    this.fCost = properties.fCost;
   }
 }

@@ -20,7 +20,7 @@ export default class MinHeap {
   }
 
   private insertAll(arr: number[]) {
-    for(let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
       this.insert(arr[i]);
     }
   }
@@ -31,25 +31,27 @@ export default class MinHeap {
   }
 
   public remove() {
-      // Place the root element in a var to return later.
-      const root = this.heap[0];
-      // Remove the last element in the deepest level and move it to the root.
-      const last = this.heap.splice(-1, 1)[0];
-      this.heap[0] = last;
+    // Place the root element in a var to return later.
+    const root = this.heap[0];
+    // Remove the last element in the deepest level and move it to the root.
+    const last = this.heap.splice(-1, 1)[0];
+    this.heap[0] = last;
 
-      // Swap
-      this.bubbleDown(last, 0);
+    // Swap
+    this.bubbleDown(last, 0);
 
-      return root;
+    return root;
   }
 
   private bubbleDown(nodeValue: number, nodeIndex: number): void {
     // If it's the last node, then stop processing.
-    if (nodeIndex === this.heap.length - 1) { return; }
+    if (nodeIndex === this.heap.length - 1) {
+      return;
+    }
 
-    const leftChildIndex = (nodeIndex * 2) + 1;
+    const leftChildIndex = nodeIndex * 2 + 1;
     const leftChildValue = this.heap[leftChildIndex];
-    const rightChildIndex = (nodeIndex * 2) + 2;
+    const rightChildIndex = nodeIndex * 2 + 2;
     const rightChildValue = this.heap[rightChildIndex];
 
     if (nodeValue > leftChildValue) {
@@ -67,7 +69,9 @@ export default class MinHeap {
 
   private bubbleUp(nodeValue: number, nodeIndex: number): void {
     // If it's root node, then stop processing.
-    if (nodeIndex === 0) { return; }
+    if (nodeIndex === 0) {
+      return;
+    }
 
     const parentNodeIndex = nodeIndex > 2 ? Math.floor((nodeIndex - 1) / 2) : 0;
     const parentNodeValue = this.heap[parentNodeIndex];

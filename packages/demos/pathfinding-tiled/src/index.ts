@@ -11,8 +11,9 @@ import RenderedInForeground from "./component/RenderedInForeground";
 import AStarPathFindingSystem from "./system/AStarPathFindingSystem";
 import TileToBeExplored from "./component/TileToBeExplored";
 import { getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid/utils";
-import { GridTileType } from "@serbanghita-gamedev/grid/component/GridTile";
+import { GridTileInitProps, GridTileType } from "@serbanghita-gamedev/grid/component/GridTile";
 import TileIsInThePathFound from "./component/TileIsInThePathFound";
+import { loadTileMapFile } from "@serbanghita-gamedev/assets";
 
 async function setup() {
   /**
@@ -45,8 +46,11 @@ async function setup() {
    *  I will have to figure a way to dynamically load this.
    *  I believe I first statically load the whole list of Maps and then the player will be able to choose one.
    */
+  const mapFilePath = "./assets/map3.json";
+  const mapFileContents = await loadTileMapFile(mapFilePath);
+
   const map = world.createEntity("map");
-  map.addComponent(TiledMapFile, { mapFileContents: require("./assets/map2.json"), mapFilePath: "./assets/map2.json" });
+  map.addComponent(TiledMapFile, { mapFileContents, mapFilePath });
   // Load the "TiledMap" class wrapper over the json file declaration.
   const tiledMap = new TiledMap(map.getComponent(TiledMapFile).mapFileContents);
   // Add the "collision" layer data to the map.
@@ -60,6 +64,7 @@ async function setup() {
     tileSize: tiledMap.getTileSize(),
   };
   map.addComponent(Grid, gridConfig);
+
   // Transform all collision tiles as Entities.
   collisionLayer.data.forEach((tileValue: number, tileIndex: number) => {
     const entityId = `tile-${tileIndex}`;
@@ -68,14 +73,12 @@ async function setup() {
 
     // console.log(tileIndex, x, y);
 
-    collisionTileEntity.addComponent(
-      GridTile,
-      {
-        point: new Point(x, y, entityId),
-        grid: map.getComponent(Grid),
-        type: tileValue > 0 ? GridTileType.BLOCKED : GridTileType.FREE
-      }
-    );
+    collisionTileEntity.addComponent(GridTile, {
+      x,
+      y,
+      tile: tileIndex,
+      type: tileValue > 0 ? GridTileType.BLOCKED : GridTileType.FREE,
+    });
     if (tileValue > 0) {
       collisionTileEntity.addComponent(PreRendered);
     }
@@ -87,7 +90,6 @@ async function setup() {
    */
   const TiledMapQuery = world.createQuery("TiledMapQuery", { all: [TiledMapFile] });
   world.createSystem(RenderTiledMapTerrainSystem, TiledMapQuery, $ctxBackground, SPRITES["./assets/terrain_sprite.png"]).runOnlyOnce();
-
 
   /**
    *  Pre-rendering of the collision tiles for debug purposes.
@@ -108,9 +110,10 @@ async function setup() {
   const PathFindingQuery = world.createQuery("PathFindingQuery", { all: [GridTile] });
   // world.createSystem(PathFindingSystem, PathFindingQuery, map, {x: 0, y: 0}, {x: 39, y: 19});
   // world.createSystem(AStarPathFindingSystem, PathFindingQuery, map, {x: 0, y: 0}, {x: 39, y: 19});
-  world.createSystem(AStarPathFindingSystem, PathFindingQuery, map, {x: 9, y: 6}, {x: 11, y: 4});
+  // world.createSystem(AStarPathFindingSystem, PathFindingQuery, map, { x: 9, y: 6 }, { x: 11, y: 4 });
+  world.createSystem(AStarPathFindingSystem, PathFindingQuery, map, { x: 9, y: 1 }, { x: 18, y: 13 });
 
-  world.start({fpsCap: 60});
+  world.start(/*{fpsCap: 60}*/);
 }
 
 setup().then(() => console.log("Game started ..."));

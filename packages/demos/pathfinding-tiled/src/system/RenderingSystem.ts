@@ -1,9 +1,10 @@
 import { System, Query, World } from "@serbanghita-gamedev/ecs";
-import {GridTile} from "@serbanghita-gamedev/grid";
+import { GridTile, getPixelCoordinatesFromTile, Grid } from "@serbanghita-gamedev/grid";
 import { dot, text } from "@serbanghita-gamedev/renderer";
 import TileToBeExplored from "../component/TileToBeExplored";
 import TileIsInThePathFound from "../component/TileIsInThePathFound";
-
+import { Entity } from "@serbanghita-gamedev/ecs";
+import {} from "@serbanghita-gamedev/grid";
 export default class RenderingSystem extends System {
   public constructor(
     public world: World,
@@ -15,17 +16,21 @@ export default class RenderingSystem extends System {
 
   public update(now: number): void {
     this.ctx.clearRect(0, 0, 640, 480);
+    const map = this.world.getEntity("map") as Entity;
+    const grid = map.getComponent(Grid);
 
     this.query.execute().forEach((entity) => {
       const tileComp = entity.getComponent(GridTile);
-      const tileCompPixelCoords = tileComp.getPixelCoordinates();
+      const tileCompPixelCoords = getPixelCoordinatesFromTile(tileComp.tile, grid.config);
 
       if (entity.hasComponent(TileToBeExplored)) {
-        dot(this.ctx, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 4, "rgb(0,255,0)", 6);
-        // text(this.ctx, `${tileComp.tile}`, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 8, "9", "arial", "", "#cccccc");
+        const tComp = entity.getComponent(TileToBeExplored);
+        dot(this.ctx, tileCompPixelCoords.x + 8, tileCompPixelCoords.y + 6, "rgb(0,255,0)", 2);
+        // text(this.ctx, `${tileComp}`, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 8, "9", "arial", "", "#cccccc");
+        text(this.ctx, `${tComp.fCost}`, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 8, "9", "arial", "", "#cccccc");
       }
       if (entity.hasComponent(TileIsInThePathFound)) {
-        dot(this.ctx, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 4, "rgb(0,0,0)", 6);
+        dot(this.ctx, tileCompPixelCoords.x + 8, tileCompPixelCoords.y + 6, "rgb(0,0,0)", 6);
       }
     });
 

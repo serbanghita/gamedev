@@ -12,7 +12,7 @@ import AttackingWithClub from "./component/AttackingWithClub";
 import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
 import { createHtmlUiElements, RenderTiledMapTerrainSystem, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
 import { TiledMap, TiledMapFile } from "@serbanghita-gamedev/tiled";
-import { getPixelCoordinatesFromTile } from "@serbanghita-gamedev/grid";
+import { getPixelCoordinatesFromTile, getGridCoordinatesFromTile, getTileFromPixelCoordinates, Grid, GridTile, GridTileType } from "@serbanghita-gamedev/grid";
 import { Point } from "@serbanghita-gamedev/geometry";
 import Player from "./component/Player";
 import AutoMoveSystem from "./system/AutoMoveSystem";
@@ -62,7 +62,7 @@ async function setup() {
     Body, Direction, Keyboard,
     Renderable, SpriteSheet,
     Player, Idle, Walking, AttackingWithClub,
-    TiledMapFile, TileMatrix, Tile,
+    TiledMapFile, Grid, GridTile,
     Position, AutoMoving
   ]);
 
@@ -87,14 +87,13 @@ async function setup() {
   /**
    * Transform all collision tiles as Entities.
    */
-  collisionLayer.data.forEach((tileValue, tileIndex) => {
+  collisionLayer.data.forEach((tileValue: number, tileIndex: number) => {
     if (tileValue > 0) {
       const entityId = `collision-tile-${tileIndex}`;
       const collisionTileEntity = world.createEntity(entityId);
-      let { x, y } = getPixelCoordinatesFromTile(tileIndex, map.getComponent(TileMatrix).properties);
-      x = x + tiledMap.getTileSize() / 2;
-      y = y + tiledMap.getTileSize() / 2;
-      collisionTileEntity.addComponent(Tile, { x, y, point: new Point(x, y, entityId) });
+      const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
+      const type = tileValue > 0 ? GridTileType.BLOCKED : GridTileType.FREE;
+      collisionTileEntity.addComponent(GridTile, { x, y, tile: tileIndex, type });
       // collisionTileEntity.addComponent(PreRendered);
     }
   });
@@ -105,11 +104,11 @@ async function setup() {
   assets["entities/declarations"].forEach((entityDeclaration) => {
     const entity = world.createEntityFromDeclaration(entityDeclaration);
     // Entity Tile is depending on Position and Grid.
-    if (entityDeclaration.components["Tile"]) {
-      entity.addComponent(Tile, {
-        point: entity.getComponent(Position).point,
-        matrixConfig: map.getComponent(TileMatrix).config
-      });
+    if (entityDeclaration.components["GridTile"]) {
+      const position = entity.getComponent(Position);
+      const tileIndex = getTileFromPixelCoordinates(position.point.x, position.point.y, gridConfig);
+      const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
+      entity.addComponent(GridTile, {x, y, tile: tileIndex, type: GridTileType.FREE });
     }
   });
 
@@ -132,10 +131,10 @@ async function setup() {
   const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
 
-  const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
-  world.createSystem(AutoMoveSystem, AutoMoveQuery);
+  // const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
+  // world.createSystem(AutoMoveSystem, AutoMoveQuery);
 
-  const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, Tile] });
+  const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, GridTile] });
   world.createSystem(RenderSystem, RenderableQuery, animationRegistry, $ctxForeground);
 
   world.start({fpsCap: 60});

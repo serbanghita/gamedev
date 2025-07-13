@@ -106,24 +106,25 @@ export default class PlayerKeyboardSystem extends System {
 
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
-      if (this.input.ongoingActions.has(InputActions.ACTION_1)) {
-        if (!entity.getComponent(Keyboard).keys.action_1) {
-          return;
-        }
-
-        console.log('PlayerKeyboardSystem -> action_1');
-
-        if (entity.hasComponent(Walking)) {
-          entity.removeComponent(Walking);
-        }
-        if (!entity.hasComponent(AttackingWithClub)) {
-          entity.addComponent(AttackingWithClub);
-        }
-        return;
-      }
+      // if (this.input.ongoingActions.has(InputActions.ACTION_1)) {
+      //   if (!entity.getComponent(Keyboard).keys.action_1) {
+      //     return;
+      //   }
+      //
+      //   console.log('PlayerKeyboardSystem -> action_1');
+      //
+      //   if (entity.hasComponent(Walking)) {
+      //     entity.removeComponent(Walking);
+      //   }
+      //   if (!entity.hasComponent(AttackingWithClub)) {
+      //     entity.addComponent(AttackingWithClub);
+      //   }
+      //   return;
+      // }
 
       if (!this.input.areMovementKeysPressed()) {
         if (entity.hasComponent(Walking)) {
+          //console.log('no keys pressed, remove Walking, add Idle');
           entity.removeComponent(Walking);
           entity.addComponent(Idle);
         }
@@ -131,6 +132,7 @@ export default class PlayerKeyboardSystem extends System {
       }
 
       if (!entity.hasComponent(Walking)) {
+        //console.log('add Walking');
         entity.addComponent(Walking);
         // entity.removeComponent(IsIdle);
       }
@@ -138,14 +140,17 @@ export default class PlayerKeyboardSystem extends System {
       const component = entity.getComponent(Walking);
 
       if (component.status === StateStatus.FINISHED) {
+        //console.log('FINISHED, remove Walking');
         entity.removeComponent(Walking);
         return;
       }
 
       if (component.status === StateStatus.NOT_STARTED) {
+        //console.log('NOT_STARTED, onEnter');
         this.onEnter(entity, component);
       }
 
+      //console.log('onUpdate');
       this.onUpdate(entity, component);
 
       return true;

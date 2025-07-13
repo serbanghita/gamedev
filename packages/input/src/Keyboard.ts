@@ -16,55 +16,62 @@ export enum InputActions {
 }
 
 export default class Keyboard {
-    public ongoingActions: Set<InputActions> = new Set([]);
-    protected boundKeys: Map<string, InputActions> = new Map([]);
+  public ongoingActions: Set<InputActions> = new Set([]);
+  protected boundKeys: Map<string, InputActions> = new Map([]);
 
-    public bindKey(keyCode: string, action: InputActions) {
-        this.boundKeys.set(keyCode, action);
+  private isListening = false;
+  
+  private handleKeyDown = (e: KeyboardEvent): void => {
+    if (this.isBoundKey(e.key)) {
+      e.stopPropagation();
+      const action = this.boundKeys.get(e.key) as InputActions;
+      this.ongoingActions.add(action);
     }
+  };
 
-    public unbindKey(keyCode: string) {
-        this.boundKeys.delete(keyCode);
+  private handleKeyUp = (e: KeyboardEvent): void => {
+    if (this.isBoundKey(e.key)) {
+      e.stopPropagation();
+      const action = this.boundKeys.get(e.key) as InputActions;
+      this.ongoingActions.delete(action);
     }
+  };
 
-    public areKeysPressed()
-    {
-        return this.ongoingActions.size > 0;
-    }
+  public bindKey(keyCode: string, action: InputActions) {
+    this.boundKeys.set(keyCode, action);
+  }
 
-    public areMovementKeysPressed()
-    {
-        return this.ongoingActions.has(InputActions.MOVE_UP) ||
-            this.ongoingActions.has(InputActions.MOVE_DOWN) ||
-            this.ongoingActions.has(InputActions.MOVE_LEFT) ||
-            this.ongoingActions.has(InputActions.MOVE_RIGHT);
-    }
+  public unbindKey(keyCode: string) {
+    this.boundKeys.delete(keyCode);
+  }
 
-    public isBoundKey(keyCode: string) {
-        return this.boundKeys.has(keyCode);
-    }
+  public areKeysPressed(): boolean {
+    return this.ongoingActions.size > 0;
+  }
 
-    public keyDownCallback(e: { key: string; preventDefault: () => void; stopPropagation: () => void; }) {
-        // console.log("keyDownCallback", e.key);
-        e.preventDefault();
-        e.stopPropagation();
-        if (this.isBoundKey(e.key)) {
-            const action = this.boundKeys.get(e.key) as InputActions;
-            this.ongoingActions.add(action);
-        }
-    }
+  public areMovementKeysPressed(): boolean {
+    return this.ongoingActions.has(InputActions.MOVE_UP) ||
+      this.ongoingActions.has(InputActions.MOVE_DOWN) ||
+      this.ongoingActions.has(InputActions.MOVE_LEFT) ||
+      this.ongoingActions.has(InputActions.MOVE_RIGHT);
+  }
 
-    public keyUpCallback(e: { key: string; preventDefault: () => void; stopPropagation: () => void; }) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (this.isBoundKey(e.key)) {
-            const action = this.boundKeys.get(e.key) as InputActions;
-            this.ongoingActions.delete(action);
-        }
-    }
+  public isBoundKey(keyCode: string): boolean {
+    return this.boundKeys.has(keyCode);
+  }
 
-    public listen() {
-        window.addEventListener("keydown", this.keyDownCallback.bind(this), { capture: false });
-        window.addEventListener("keyup", this.keyUpCallback.bind(this), { capture: false });
-    }
+  public listen() {
+    if (this.isListening) return;
+    this.isListening = true;
+    window.addEventListener("keydown", this.handleKeyDown);
+    window.addEventListener("keyup", this.handleKeyUp);
+  }
+
+  public unlisten() {
+    if (!this.isListening) return;
+    this.isListening = false;
+    window.removeEventListener("keydown", this.handleKeyDown);
+    window.removeEventListener("keyup", this.handleKeyUp);
+  }
 }
+

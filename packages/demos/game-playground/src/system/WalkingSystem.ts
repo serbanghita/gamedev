@@ -21,7 +21,9 @@ export default class WalkingSystem extends System {
     component.init();
   }
 
-  private onUpdate(entity: Entity, component: Walking) {
+  private onUpdate(entity: Entity) {
+    const deltaTime = this.world.frameDuration;
+
     /**
      * Position (based on Direction)
      * Checks if next tile is occupied.
@@ -29,29 +31,30 @@ export default class WalkingSystem extends System {
     const tile = entity.getComponent(GridTile);
     const direction = entity.getComponent(Direction);
     const position = entity.getComponent(Position);
-    const speed = 2;
+    const speed = 100;
+    const movementAmount = speed * (deltaTime / 1000);
 
     let futureX = position.point.x;
     let futureY = position.point.y;
 
     if (direction.y === Directions.UP) {
-      futureY -= speed;
+      futureY -= movementAmount;
     } else if (direction.y === Directions.DOWN) {
-      futureY += speed;
+      futureY += movementAmount;
     } else {
       direction.y = Directions.NONE;
     }
 
     if (direction.x === Directions.LEFT) {
-      futureX -= speed;
+      futureX -= movementAmount;
     } else if (direction.x === Directions.RIGHT) {
-      futureX += speed;
+      futureX += movementAmount;
     } else {
       direction.x = Directions.NONE;
     }
 
     const currentTile = tile.tile;
-    const futureTile = getTileFromPixelCoordinates(futureX, futureY, this.grid.config);
+    const futureTile = getTileFromPixelCoordinates(Math.round(futureX), Math.round(futureY), this.grid.config);
 
     //console.log(currentTile, futureTile);
 
@@ -65,27 +68,6 @@ export default class WalkingSystem extends System {
         this.grid.matrix[futureTile] = 0; // @todo Define tile types.
       }
     }
-
-    /**
-     * Animation
-     */
-    if (direction.y === Directions.UP) {
-      component.animationStateName = "walk_up";
-    } else if (direction.y === Directions.DOWN) {
-      component.animationStateName = "walk_down";
-    }
-
-    if (direction.x === Directions.LEFT) {
-      component.animationStateName = "walk_left";
-    } else if (direction.x === Directions.RIGHT) {
-      component.animationStateName = "walk_right";
-    }
-
-    if (this.world.now - component.lastFrameTime >= 60) {
-      component.animationTick += 1;
-      component.lastFrameTime = this.world.now;
-    }
-
   }
 
   private onExit(entity: Entity, component: Walking) {
@@ -108,7 +90,7 @@ export default class WalkingSystem extends System {
       }
 
       // console.log('onUpdate');
-      this.onUpdate(entity, component);
+      this.onUpdate(entity);
 
       return true;
     });

@@ -7,19 +7,23 @@ import { StateStatus } from "../state";
 import AutoMoving from "../component/AutoMoving";
 
 export default class AutoMoveSystem extends System {
+  private grid!: Grid;
+
+  public constructor(public world: World, public query: Query) {
+    super(world, query);
+
+    const map = this.world.getEntity("map");
+    if (!map) {
+      throw new Error(`Map entity is not defined.`);
+    }
+    this.grid = map.getComponent(Grid);
+  }
 
   private setPositionBasedOnDestination() {
 
   }
 
   public update(now: number) {
-    const map = this.world.getEntity("map");
-    if (!map) {
-      throw new Error(`Map entity is not defined.`);
-    }
-    const matrixComponent = map.getComponent(Grid);
-    const matrix = matrixComponent.matrix;
-
     this.query.execute().forEach((entity) => {
       const tileComp = entity.getComponent(GridTile);
       const position = entity.getComponent(Position);
@@ -28,41 +32,46 @@ export default class AutoMoveSystem extends System {
 
       let destinationX = autoMoving.destinationX;
       let destinationY = autoMoving.destinationY;
+      let destinationTile = getTileFromPixelCoordinates(destinationX, destinationY, this.grid.config);
 
       /**
        * Stop if destination is reached.
        */
-      if (
-        autoMoving.hasNoDestination()
-        ||
-        entity.hasComponent(Walking) &&
-        position.point.x === destinationX &&
-        position.point.y === destinationY
-      ) {
+      if (tileComp.tile === destinationTile) {
+        console.log('Destination tile reached');
         if (entity.hasComponent(Walking)) {
           entity.removeComponent(Walking);
         }
         direction.setX(Directions.NONE);
         direction.setY(Directions.NONE);
-
-        /**
-         * Set new destination
-         */
-        destinationX = position.point.x + randomInt(-64, 64);
-        destinationY = position.point.y + randomInt(-64, 64);
-      }
-
-      const currentTile = tileComp.tile;
-      let destinationTile = 0;
-      try {
-        destinationTile = getTileFromPixelCoordinates(destinationX, destinationY, matrixComponent.config);
-      } catch (e) {
         return;
       }
 
+
+      if (autoMoving.hasNoDestination()) {
+        /**
+         * Set new destination
+         */
+        const player = this.world.getEntity('player') as Entity;
+        const playerPosition = player.getComponent(Position);
+        const playerTile = player.getComponent(GridTile);
+
+        // Already there.
+        if (tileComp.tile === playerTile.tile) {
+          console.log('Already at destination tile');
+          return;
+        }
+
+        destinationX = playerPosition.point.x
+        destinationY = playerPosition.point.y;
+
+        // destinationX = position.point.x + randomInt(-64, 64);
+        // destinationY = position.point.y + randomInt(-64, 64);
+      }
+
       // currentTile !== destinationTile &&
-      if (destinationTile > 0 && matrix[destinationTile] !== 1) {
-        console.log(destinationX, destinationY, destinationTile);
+      if (destinationTile > 0 && this.grid.matrix[destinationTile] !== 1) {
+        console.log(destinationX, destinationY, destinationTile, this.grid.matrix[destinationTile]);
 
         // Compute the direction.
         if (destinationX < position.point.x) {

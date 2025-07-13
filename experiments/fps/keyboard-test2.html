@@ -1,0 +1,17 @@
+<canvas id="canvas" tabindex="0"></canvas>
+<script>
+  const canvas = document.getElementById('canvas');
+  canvas.style.border = '1px solid black';
+  canvas.focus();
+
+  function listenerFn(e) {
+    console.log(e.key);
+  }
+  window.removeEventListener('keydown', listenerFn);
+  window.addEventListener('keydown', listenerFn, false);
+
+  function loop() {
+    requestAnimationFrame(loop);
+  }
+  loop();
+</script>

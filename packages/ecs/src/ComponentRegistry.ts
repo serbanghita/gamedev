@@ -2,8 +2,9 @@
 import Component from "./Component";
 
 export default class ComponentRegistry {
-  private bitmask: bigint = 1n;
   private static instance: ComponentRegistry;
+
+  private bitmask: bigint = 1n;
   private components: Map<string, typeof Component> = new Map();
 
   private constructor() {}
@@ -15,17 +16,26 @@ export default class ComponentRegistry {
     return ComponentRegistry.instance;
   }
 
-  public registerComponent(ComponentDeclaration: typeof Component) {
-    // @todo: Safety check if Base was already registered.
-    ComponentDeclaration.prototype.bitmask = (this.bitmask <<= 1n);
+  public registerComponent<TProps extends NonNullable<object>, TComp extends Component<TProps>>(
+    componentDeclaration: new (properties: TProps) => TComp
+  ) {
+    // componentDeclaration.prototype.bitmask = (this.bitmask <<= 1n);
+    if (componentDeclaration.prototype && typeof componentDeclaration.prototype === 'object') {
+      Object.defineProperty(componentDeclaration.prototype, 'bitmask', {
+        value: (this.bitmask <<= 1n),
+        writable: true,
+        configurable: true
+      });
+    }
+    this.components.set(componentDeclaration.prototype.constructor.name, componentDeclaration as typeof Component);
 
-    this.components.set(ComponentDeclaration.prototype.constructor.name, ComponentDeclaration);
-
-    return ComponentDeclaration;
+    return componentDeclaration;
   }
-  public registerComponents(declarations: Array<typeof Component>)
+  public registerComponents<TProps extends NonNullable<object>, TComp extends Component<TProps>>(
+    componentDeclarations: Array<new (properties: TProps) => TComp>
+  )
   {
-    declarations.forEach((declaration) => {
+    componentDeclarations.forEach((declaration) => {
       this.registerComponent(declaration);
     });
   }

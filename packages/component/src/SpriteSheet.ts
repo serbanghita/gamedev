@@ -1,5 +1,4 @@
 import { Component } from "@serbanghita-gamedev/ecs";
-import { loadLocalImage } from "@serbanghita-gamedev/assets";
 
 export type Animation = {
   frames: AnimationFrame[];
@@ -40,15 +39,8 @@ export type SpriteSheetProps = {
 
 export type SpriteSheetPropsDeclaration = Pick<SpriteSheetProps, "name" | "offset_x" | "offset_y" | "spriteSheetImgPath" | "spriteSheetAnimationsPath">;
 
-export default class SpriteSheet extends Component {
+export default class SpriteSheet extends Component<SpriteSheetProps> {
   constructor(public properties: SpriteSheetProps) {
     super(properties);
-
-    // this.properties.img = loadLocalImage(
-    //     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    //     require(this.properties.spriteSheetImgPath)
-    // );
-    // // eslint-disable-next-line @typescript-eslint/no-var-requires
-    // this.properties.animationsDeclaration = require(this.properties.spriteSheetAnimationsPath) as ISpriteSheetAnimation[];
   }
 }

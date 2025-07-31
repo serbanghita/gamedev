@@ -1,8 +1,8 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { randomInt } from "../utils";
-import { Direction, Directions, Position } from "@serbanghita-gamedev/component";
-import { getTileFromPixelCoordinates, GridTile, Grid } from "@serbanghita-gamedev/grid";
-import Walking from "../component/Walking";
+import { Direction, Directions, PositionOnScreen } from "@serbanghita-gamedev/component";
+import { getTileFromPixelCoordinates, GridTile, Grid, PositionOnGrid } from "@serbanghita-gamedev/grid";
+import { Walking } from "../component/Walking";
 import { StateStatus } from "../state";
 import AutoMoving from "../component/AutoMoving";
 
@@ -23,12 +23,32 @@ export default class AutoMoveSystem extends System {
 
   }
 
+  private pickNewDestinationOnGrid() {
+    /**
+     * Set new destination
+     */
+    const player = this.world.getEntity('player') as Entity;
+    const playerPositionOnGrid = player.getComponent(PositionOnGrid);
+    // const playerTile = player.getComponent(GridTile);
+    // destinationX = position.point.x + randomInt(-64, 64);
+    // destinationY = position.point.y + randomInt(-64, 64);
+
+    return { x: playerPositionOnGrid.x, y: playerPositionOnGrid.y };
+  }
+
   public update(now: number) {
     this.query.execute().forEach((entity) => {
+      // console.log(entity.id);
       const tileComp = entity.getComponent(GridTile);
-      const position = entity.getComponent(Position);
+      const position = entity.getComponent(PositionOnScreen);
       const direction = entity.getComponent(Direction);
       const autoMoving = entity.getComponent(AutoMoving);
+
+      if (!autoMoving.hasDestination()) {
+        const {x, y} = this.pickNewDestinationOnGrid();
+        autoMoving.setDestination(x, y);
+        return;
+      }
 
       let destinationX = autoMoving.destinationX;
       let destinationY = autoMoving.destinationY;
@@ -44,57 +64,34 @@ export default class AutoMoveSystem extends System {
         }
         direction.setX(Directions.NONE);
         direction.setY(Directions.NONE);
+        autoMoving.clearDestination();
         return;
       }
 
-
-      if (autoMoving.hasNoDestination()) {
-        /**
-         * Set new destination
-         */
-        const player = this.world.getEntity('player') as Entity;
-        const playerPosition = player.getComponent(Position);
-        const playerTile = player.getComponent(GridTile);
-
-        // Already there.
-        if (tileComp.tile === playerTile.tile) {
-          console.log('Already at destination tile');
-          return;
-        }
-
-        destinationX = playerPosition.point.x
-        destinationY = playerPosition.point.y;
-
-        // destinationX = position.point.x + randomInt(-64, 64);
-        // destinationY = position.point.y + randomInt(-64, 64);
-      }
-
-      // currentTile !== destinationTile &&
       if (destinationTile > 0 && this.grid.matrix[destinationTile] !== 1) {
-        console.log(destinationX, destinationY, destinationTile, this.grid.matrix[destinationTile]);
-
         // Compute the direction.
-        if (destinationX < position.point.x) {
+        if (destinationX < Math.round(position.x)) {
           direction.setX(Directions.LEFT);
-        } else if (destinationX > position.point.x) {
+          console.log("2", destinationX, Math.round(position.x));
+        } else if (destinationX > Math.round(position.x)) {
           direction.setX(Directions.RIGHT);
+          console.log("3", destinationX, Math.round(position.x));
         } else {
           direction.setX(Directions.NONE);
         }
-        if (destinationY < position.point.y) {
+        if (destinationY < Math.round(position.y)) {
           direction.setY(Directions.UP);
-        } else if (destinationY > position.point.y) {
+          console.log("4");
+        } else if (destinationY > Math.round(position.y)) {
           direction.setY(Directions.DOWN);
+          console.log("5");
         } else {
           direction.setY(Directions.NONE);
         }
         // Start the movement.
         if (!entity.hasComponent(Walking)) {
-          entity.addComponent(Walking);
+          entity.addComponent(Walking, Walking.defaultProps);
         }
-
-        // Save new destination for later checks.
-        autoMoving.setDestination(destinationX, destinationY);
       }
     });
   }

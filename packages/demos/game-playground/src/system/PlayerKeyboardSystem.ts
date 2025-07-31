@@ -1,8 +1,8 @@
 import { Entity, Query, System, World } from "@serbanghita-gamedev/ecs";
 import { InputActions, Keyboard as KeyboardInput } from "@serbanghita-gamedev/input";
-import { Keyboard, Position, Direction, Directions } from "@serbanghita-gamedev/component";
-import Walking from "../component/Walking";
-import Idle from "../component/Idle";
+import { Keyboard, Direction, Directions } from "@serbanghita-gamedev/component";
+import { Walking } from "../component/Walking";
+import { Idle } from "../component/Idle";
 import AttackingWithClub from "../component/AttackingWithClub";
 import { StateStatus } from "../state";
 
@@ -98,7 +98,7 @@ export default class PlayerKeyboardSystem extends System {
   }
 
   private onExit(entity: Entity, component: Walking) {
-    component.status = StateStatus.FINISHED;
+    component.properties.status = StateStatus.FINISHED;
     if (entity.hasComponent(Walking)) {
       entity.removeComponent(Walking);
     }
@@ -126,26 +126,26 @@ export default class PlayerKeyboardSystem extends System {
         if (entity.hasComponent(Walking)) {
           //console.log('no keys pressed, remove Walking, add Idle');
           entity.removeComponent(Walking);
-          entity.addComponent(Idle);
+          entity.addComponent(Idle, Idle.defaultProps);
         }
         return;
       }
 
       if (!entity.hasComponent(Walking)) {
         //console.log('add Walking');
-        entity.addComponent(Walking);
+        entity.addComponent(Walking, Walking.defaultProps);
         // entity.removeComponent(IsIdle);
       }
 
       const component = entity.getComponent(Walking);
 
-      if (component.status === StateStatus.FINISHED) {
+      if (component.properties.status === StateStatus.FINISHED) {
         //console.log('FINISHED, remove Walking');
         entity.removeComponent(Walking);
         return;
       }
 
-      if (component.status === StateStatus.NOT_STARTED) {
+      if (component.properties.status === StateStatus.NOT_STARTED) {
         //console.log('NOT_STARTED, onEnter');
         this.onEnter(entity, component);
       }

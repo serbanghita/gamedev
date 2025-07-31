@@ -1,31 +1,34 @@
 import {Component} from "@serbanghita-gamedev/ecs";
 
-export type AutoMovingInitProps = {
+export type AutoMovingProps = {
   destinationX: number;
   destinationY: number;
 }
 
-export default class AutoMoving extends Component {
-  public destinationX: number = 0;
-  public destinationY: number = 0;
-
-  constructor(public properties: AutoMovingInitProps) {
+export default class AutoMoving extends Component<AutoMovingProps> {
+  constructor(public properties: AutoMovingProps) {
     super(properties);
-
-    this.init(properties);
   }
 
-  public init(properties: AutoMovingInitProps) {
-    this.destinationX = properties.destinationX;
-    this.destinationY = properties.destinationY;
+  public get destinationX(): number {
+    return this.properties.destinationX;
+  }
+
+  public get destinationY(): number {
+    return this.properties.destinationY;
   }
 
   public setDestination(x: number, y: number) {
-    this.destinationX = x;
-    this.destinationY = y;
+    this.properties.destinationX = x;
+    this.properties.destinationY = y;
   }
 
-  public hasNoDestination(): boolean {
-    return !this.destinationX && !this.destinationY;
+  public clearDestination() {
+    this.properties.destinationX = 0;
+    this.properties.destinationY = 0;
+  }
+
+  public hasDestination(): boolean {
+    return !!this.properties.destinationX && !!this.properties.destinationY;
   }
 }

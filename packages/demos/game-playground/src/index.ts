@@ -1,19 +1,18 @@
 import { loadAssets } from "./assets";
 import { World } from "@serbanghita-gamedev/ecs";
-import { Body, Direction, Keyboard, Renderable, SpriteSheet, Position } from "@serbanghita-gamedev/component";
+import { Body, Direction, Keyboard, Renderable, SpriteSheet, PositionOnScreen } from "@serbanghita-gamedev/component";
 import { Keyboard as KeyboardInput, InputActions } from "@serbanghita-gamedev/input";
 import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
 import RenderSystem from "./system/RenderSystem";
-import Idle from "./component/Idle";
-import Walking from "./component/Walking";
+import { Idle } from "./component/Idle";
+import { Walking } from "./component/Walking";
 import IdleSystem from "./system/IdleSystem";
 import WalkingSystem from "./system/WalkingSystem";
 import AttackingWithClub from "./component/AttackingWithClub";
 import AttackingWithClubSystem from "./system/AttackingWithClubSystem";
 import { createHtmlUiElements, RenderTiledMapTerrainSystem, loadAnimationRegistry } from "@serbanghita-gamedev/renderer";
 import { TiledMap, TiledMapFile } from "@serbanghita-gamedev/tiled";
-import { getPixelCoordinatesFromTile, getGridCoordinatesFromTile, getTileFromPixelCoordinates, Grid, GridTile, GridTileType } from "@serbanghita-gamedev/grid";
-import { Point } from "@serbanghita-gamedev/geometry";
+import { getPixelCoordinatesFromTile, getGridCoordinatesFromTile, getTileFromPixelCoordinates, Grid, GridTile, GridTileType, PositionOnGrid } from "@serbanghita-gamedev/grid";
 import Player from "./component/Player";
 import AutoMoveSystem from "./system/AutoMoveSystem";
 import AutoMoving from "./component/AutoMoving";
@@ -59,13 +58,21 @@ async function setup() {
   const world = new World();
 
   // Register "Components".
-  world.registerComponents([
-    Body, Direction, Keyboard,
-    Renderable, SpriteSheet,
-    Player, Idle, Walking, AttackingWithClub,
-    TiledMapFile, Grid, GridTile,
-    Position, AutoMoving
-  ]);
+  world.registerComponent(Body);
+  world.registerComponent(Direction);
+  world.registerComponent(Keyboard);
+  world.registerComponent(Renderable);
+  world.registerComponent(SpriteSheet);
+  world.registerComponent(Player);
+  world.registerComponent(Idle);
+  world.registerComponent(Walking);
+  world.registerComponent(AttackingWithClub);
+  world.registerComponent(TiledMapFile);
+  world.registerComponent(Grid);
+  world.registerComponent(GridTile);
+  world.registerComponent(PositionOnScreen);
+  world.registerComponent(PositionOnGrid);
+  world.registerComponent(AutoMoving);
 
   /**
    * Create the globally known Map entity.
@@ -92,9 +99,9 @@ async function setup() {
     if (tileValue > 0) {
       const entityId = `collision-tile-${tileIndex}`;
       const collisionTileEntity = world.createEntity(entityId);
-      const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
+      // const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
       const type = tileValue > 0 ? GridTileType.BLOCKED : GridTileType.FREE;
-      collisionTileEntity.addComponent(GridTile, { x, y, tile: tileIndex, type });
+      collisionTileEntity.addComponent(GridTile, { tile: tileIndex, type });
       // collisionTileEntity.addComponent(PreRendered);
     }
   });
@@ -106,10 +113,10 @@ async function setup() {
     const entity = world.createEntityFromDeclaration(entityDeclaration);
     // Entity Tile is depending on Position and Grid.
     if (entityDeclaration.components["GridTile"]) {
-      const position = entity.getComponent(Position);
-      const tileIndex = getTileFromPixelCoordinates(position.point.x, position.point.y, gridConfig);
-      const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
-      entity.addComponent(GridTile, {x, y, tile: tileIndex, type: GridTileType.FREE });
+      const position = entity.getComponent(PositionOnScreen);
+      const tileIndex = getTileFromPixelCoordinates(position.x, position.y, gridConfig);
+      // const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
+      entity.addComponent(GridTile, {tile: tileIndex, type: GridTileType.FREE });
     }
   });
 

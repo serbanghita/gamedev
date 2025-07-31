@@ -1,6 +1,6 @@
 import { Component } from "@serbanghita-gamedev/ecs";
 
-export interface GridInitProps {
+export interface GridProps {
   // Flat array matrix with all the possible entities, obstacles, etc.
   matrix: number[];
   // Width in tiles.
@@ -11,19 +11,25 @@ export interface GridInitProps {
   tileSize: number;
 }
 
-export default class Grid extends Component {
-  public width: number;
-  public height: number;
-  public tileSize: number;
-  public matrix: number[];
-
-  constructor(public properties: GridInitProps) {
+export default class Grid extends Component<GridProps> {
+  constructor(public properties: GridProps) {
     super(properties);
+  }
 
-    this.width = properties.width;
-    this.height = properties.height;
-    this.tileSize = properties.tileSize;
-    this.matrix = properties.matrix;
+  public get width(): number {
+    return this.properties.width;
+  }
+
+  public get height(): number {
+    return this.properties.height;
+  }
+
+  public get tileSize(): number {
+    return this.properties.tileSize;
+  }
+
+  public get matrix(): number[] {
+    return this.properties.matrix;
   }
 
   public get config() {

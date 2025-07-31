@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A playground for demos made with the game engine library.",
   "scripts": {
-    "build": "esbuild ./src/index.ts --bundle --sourcemap --loader:.png=dataurl --outfile=dist/demo.js",
+    "build": "esbuild ./src/index.ts --bundle --sourcemap --loader:.png=dataurl --outfile=dist/demo.js --keep-names",
     "dev": "esbuild ./src/index.ts --bundle --sourcemap --watch --loader:.png=dataurl --outfile=dist/demo.js --servedir=dist",
     "test": "echo \"Error: no test specified for glhf-demo yet.\""
   },

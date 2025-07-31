@@ -1,6 +1,6 @@
-import Component from "../../ecs/src/Component";
+import { Component } from "@serbanghita-gamedev/ecs";
 
-export default class Renderable extends Component {
+export default class Renderable extends Component<object> {
     constructor(public properties: Record<string, never>) {
         super(properties);
     }

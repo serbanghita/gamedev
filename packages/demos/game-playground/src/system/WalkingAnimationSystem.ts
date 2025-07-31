@@ -1,6 +1,6 @@
-import { System, Entity, World, Query } from "@serbanghita-gamedev/ecs";
-import { Direction, Directions, Position } from "@serbanghita-gamedev/component";
-import Walking from "../component/Walking";
+import { System, World, Query } from "@serbanghita-gamedev/ecs";
+import { Direction, Directions } from "@serbanghita-gamedev/component";
+import { Walking } from "../component/Walking";
 
 export default class WalkingAnimationSystem extends System {
 
@@ -16,22 +16,26 @@ export default class WalkingAnimationSystem extends System {
        * Animation
        */
       if (direction.y === Directions.UP) {
-        component.animationStateName = "walk_up";
+        component.properties.animationStateName = "walk_up";
       } else if (direction.y === Directions.DOWN) {
-        component.animationStateName = "walk_down";
+        component.properties.animationStateName = "walk_down";
       }
 
       if (direction.x === Directions.LEFT) {
-        component.animationStateName = "walk_left";
+        component.properties.animationStateName = "walk_left";
       } else if (direction.x === Directions.RIGHT) {
-        component.animationStateName = "walk_right";
+        component.properties.animationStateName = "walk_right";
       }
 
-      if (this.world.now - component.lastFrameTime >= 60) {
-        //console.log('here wtf');
-        component.animationTick += 1;
-        component.lastFrameTime = this.world.now;
+      console.log(this.world.now, component.properties.lastFrameTime);
+
+      if (this.world.now - component.properties.lastFrameTime >= 60) {
+        console.log('here wtf');
+        component.properties.animationTick += 1;
+        component.properties.lastFrameTime = this.world.now;
       }
+
+      console.log(component.properties);
     });
   }
 }

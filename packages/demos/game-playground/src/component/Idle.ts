@@ -1,17 +1,30 @@
 import { Component } from "@serbanghita-gamedev/ecs";
 import { StateStatus } from "../state";
 
-export default class Idle extends Component {
-  public stateName: string = 'idle';
-  public animationStateName: string = 'idle_down';
-  public animationTick: number = 0;
-  public status: StateStatus = StateStatus.NOT_STARTED;
-  public lastFrameTime: DOMHighResTimeStamp = 0;
+export interface IdleProps {
+  stateName: string;
+  animationStateName: string;
+  animationTick: number;
+  status: StateStatus;
+  lastFrameTime: DOMHighResTimeStamp;
+}
 
-  public init() {
-    this.animationTick = 0;
-    this.status = StateStatus.STARTED;
+export class Idle extends Component<IdleProps> {
+  static defaultProps = {
+    stateName: 'idle',
+    animationStateName: 'idle_down',
+    animationTick: 0,
+    status: StateStatus.STARTED,
+    lastFrameTime: 0,
+  };
+
+  public constructor(props: IdleProps) {
+    super(props);
+
+    this.init();
   }
 
-
+  public init() {
+    this.properties = {...Idle.defaultProps};
+  }
 }

@@ -1,6 +1,6 @@
-import { Direction, Directions, Position } from "@serbanghita-gamedev/component";
+import { Direction, Directions, PositionOnScreen } from "@serbanghita-gamedev/component";
 import { System, Entity, World, Query } from "@serbanghita-gamedev/ecs";
-import Walking from "../component/Walking";
+import { Walking } from "../component/Walking";
 import { StateStatus } from "../state";
 import { getTileFromPixelCoordinates, GridTile, Grid } from "@serbanghita-gamedev/grid";
 
@@ -30,19 +30,19 @@ export default class WalkingSystem extends System {
      */
     const tile = entity.getComponent(GridTile);
     const direction = entity.getComponent(Direction);
-    const position = entity.getComponent(Position);
+    const positionOnScreen = entity.getComponent(PositionOnScreen);
     const speed = 100;
     const movementAmount = speed * (deltaTime / 1000);
 
-    let futureX = position.point.x;
-    let futureY = position.point.y;
+    let futureX = positionOnScreen.x;
+    let futureY = positionOnScreen.y;
 
     if (direction.y === Directions.UP) {
       futureY -= movementAmount;
     } else if (direction.y === Directions.DOWN) {
       futureY += movementAmount;
     } else {
-      direction.y = Directions.NONE;
+      direction.setY(Directions.NONE);
     }
 
     if (direction.x === Directions.LEFT) {
@@ -50,7 +50,7 @@ export default class WalkingSystem extends System {
     } else if (direction.x === Directions.RIGHT) {
       futureX += movementAmount;
     } else {
-      direction.x = Directions.NONE;
+      direction.setX(Directions.NONE);
     }
 
     const currentTile = tile.tile;
@@ -60,8 +60,7 @@ export default class WalkingSystem extends System {
 
     // Allow movement if tile is free.
     if (currentTile === futureTile || this.grid.matrix[futureTile] === 0) {
-      position.point.y = futureY;
-      position.point.x = futureX;
+      positionOnScreen.setXY(futureX, futureY);
 
       if (currentTile !== futureTile) {
         this.grid.matrix[currentTile] = 0;
@@ -71,20 +70,20 @@ export default class WalkingSystem extends System {
   }
 
   private onExit(entity: Entity, component: Walking) {
-    component.status = StateStatus.FINISHED;
+    component.properties.status = StateStatus.FINISHED;
   }
 
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
       const component = entity.getComponent(Walking);
 
-      if (component.status === StateStatus.FINISHED) {
+      if (component.properties.status === StateStatus.FINISHED) {
         // console.log('FINISHED');
         entity.removeComponent(Walking);
         return;
       }
 
-      if (component.status === StateStatus.NOT_STARTED) {
+      if (component.properties.status === StateStatus.NOT_STARTED) {
         //console.log('NOT_STARTED');
         this.onEnter(entity, component);
       }

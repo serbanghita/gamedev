@@ -1,8 +1,8 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { clearCtx, image, rectangle, AnimationRegistry, AnimationRegistryItem, text } from "@serbanghita-gamedev/renderer";
-import { SpriteSheet, Position } from "@serbanghita-gamedev/component";
-import Walking from "../component/Walking";
-import Idle from "../component/Idle";
+import { SpriteSheet, PositionOnScreen } from "@serbanghita-gamedev/component";
+import { Walking } from "../component/Walking";
+import { Idle } from "../component/Idle";
 import AttackingWithClub from "../component/AttackingWithClub";
 
 export default class RenderSystem extends System {
@@ -20,7 +20,7 @@ export default class RenderSystem extends System {
     clearCtx(this.ctx, 0, 0, 640, 480);
 
     this.query.execute().forEach((entity) => {
-      const position = entity.getComponent(Position);
+      const position = entity.getComponent(PositionOnScreen);
       const spriteSheet = entity.getComponent(SpriteSheet);
       const spriteSheetImg = this.animationRegistry.assets["entities/images"][spriteSheet.properties.spriteSheetImgPath];
 
@@ -44,26 +44,26 @@ export default class RenderSystem extends System {
       if (!animationItem) {
         throw new Error(`Animations were not loaded for ${spriteSheet.properties.spriteSheetAnimationsPath}.`);
       }
-      const animation = animationItem.animations.get(component.animationStateName);
+      const animation = animationItem.animations.get(component.properties.animationStateName);
 
       if (!animation) {
         throw new Error(
-          `Animation is not declared in ${spriteSheet.properties.spriteSheetAnimationsPath} for state ${component.animationStateName}.`,
+          `Animation is not declared in ${spriteSheet.properties.spriteSheetAnimationsPath} for state ${component.properties.animationStateName}.`,
         );
       }
 
-      if (component.animationTick >= animation.frames.length) {
-        component.animationTick = 0;
+      if (component.properties.animationTick >= animation.frames.length) {
+        component.properties.animationTick = 0;
       }
 
-      const animationFrame = animation.frames[component.animationTick];
+      const animationFrame = animation.frames[component.properties.animationTick];
       const hitboxOffset = animation.hitboxOffset;
 
-      const destPositionX = hitboxOffset?.x ? position.point.x - hitboxOffset.x : position.point.x;
-      const destPositionY = hitboxOffset?.y ? position.point.y - hitboxOffset.y : position.point.y;
+      const destPositionX = hitboxOffset?.x ? position.x - hitboxOffset.x : position.x;
+      const destPositionY = hitboxOffset?.y ? position.y - hitboxOffset.y : position.y;
 
       if (!animationFrame) {
-        throw new Error(`Cannot find animation frame ${component.animationTick} for "${component.animationStateName}".`);
+        throw new Error(`Cannot find animation frame ${component.properties.animationTick} for "${component.properties.animationStateName}".`);
       }
 
       image(

@@ -1,7 +1,4 @@
-import Entity from "./Entity";
-import System from "./System";
-import Query, { IQueryFilters } from "./Query";
-import Component from "./Component";
+import { Component, Entity,System, Query, IQueryFilters } from "@serbanghita-gamedev/ecs";
 import { hasBit } from "@serbanghita-gamedev/bitmask";
 import ComponentRegistry from "./ComponentRegistry";
 import { EntityDeclaration } from "@serbanghita-gamedev/assets";
@@ -29,12 +26,18 @@ export default class World {
   public callbackFnAfterSystemsUpdate: (() => void) | undefined = undefined;
   public now: DOMHighResTimeStamp = 0;
 
-  public registerComponent(declaration: typeof Component) {
-    this.declarations.components.registerComponent(declaration);
+  // Shortcut to ComponentRegistry
+  public registerComponent<TProps extends NonNullable<object>, TComp extends Component<TProps>>(
+    componentDeclaration: new (properties: TProps) => TComp
+  ) {
+    this.declarations.components.registerComponent(componentDeclaration);
   }
 
-  public registerComponents(declarations: (typeof Component)[]) {
-    this.declarations.components.registerComponents(declarations);
+  // Shortcut to ComponentRegistry
+  public registerComponents(
+    componentDeclarations: Array<new (properties: any) => Component<any>>
+  ) {
+    this.declarations.components.registerComponents(componentDeclarations);
   }
 
   public createQuery(id: string, filters: IQueryFilters): Query {
@@ -146,9 +149,9 @@ export default class World {
    * @param entity
    * @param component
    */
-  public notifyQueriesOfEntityComponentAddition(entity: Entity, component: Component) {
+  public notifyQueriesOfEntityComponentAddition<T extends NonNullable<object>>(entity: Entity, component: Component<T>) {
     this.queries.forEach((query) => {
-      if (hasBit(query.all, component.bitmask)) {
+      if (hasBit(query.all, component.bitmask as bigint)) {
         query.add(entity);
       }
     });
@@ -161,9 +164,9 @@ export default class World {
    * @param entity
    * @param component
    */
-  public notifyQueriesOfEntityComponentRemoval(entity: Entity, component: Component) {
+  public notifyQueriesOfEntityComponentRemoval<T extends NonNullable<object>>(entity: Entity, component: Component<T>) {
     this.queries.forEach((query) => {
-      if (hasBit(query.all, component.bitmask)) {
+      if (hasBit(query.all, component.bitmask as bigint)) {
         query.remove(entity);
       }
     });
@@ -197,8 +200,8 @@ export default class World {
     let frames = 0;
     let lastFpsTime = 0;
 
-    let fpsCap = this.fpsCap;
-    let fpsCapDurationTime = this.fpsCapDuration = 1000 / fpsCap;
+    const fpsCap = this.fpsCap;
+    const fpsCapDurationTime = this.fpsCapDuration = 1000 / fpsCap;
     let fpsCapLastFrameTime = 0;
     let logicFrames = 0;
 

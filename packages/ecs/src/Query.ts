@@ -5,7 +5,7 @@ import Component from "./Component";
 import World from "./World";
 
 export interface IQueryFilters {
-    all?: typeof Component[];
+    all?: Array<typeof Component<NonNullable<object>>>;
     any?: typeof Component[];
     none?: typeof Component[];
 }
@@ -50,19 +50,19 @@ export default class Query {
     private processFiltersAsBitMasks(): void {
         if (this.filters.all) {
             this.filters.all.forEach((component) => {
-                this.all = addBit(this.all, component.prototype.bitmask);
+                this.all = addBit(this.all, component.prototype.bitmask as bigint);
             });
         }
 
         if (this.filters.any) {
             this.filters.any.forEach((component) => {
-                this.any = addBit(this.any, component.prototype.bitmask);
+                this.any = addBit(this.any, component.prototype.bitmask as bigint);
             });
         }
 
         if (this.filters.none) {
             this.filters.none.forEach((component) => {
-                this.none = addBit(this.none, component.prototype.bitmask);
+                this.none = addBit(this.none, component.prototype.bitmask as bigint);
             });
         }
     }

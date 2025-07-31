@@ -2,46 +2,50 @@ import Component from "./Component";
 import { addBit, hasBit, removeBit } from "@serbanghita-gamedev/bitmask";
 import World from "./World";
 
-type PropsInitFor<T extends typeof Component> =
-  T extends new (props: infer P) => any
-    ? P
-    : never;
+// type PropsInitFor<T extends typeof Component> =
+//   T extends new (props: infer P) => any
+//     ? P
+//     : never;
 
 export default class Entity {
   // Bitmask for storing Entity's components.
   public componentsBitmask = 0n;
   // Cache of Component instances.
-  public components = new Map<string, Component>();
+  public components: Map<string, Component<NonNullable<object>>> = new Map();
 
   constructor(
     public world: World,
     public id: string,
   ) {}
 
-  public addComponent<T extends typeof Component>(declaration: T, properties: PropsInitFor<T> = {} as PropsInitFor<T>): Entity {
-    let instance = this.components.get(declaration.name);
+  public addComponent<TProps extends NonNullable<object>, TComp extends Component<TProps>>(
+    componentDeclaration: new (properties: TProps) => TComp,
+    properties: TProps
+  ) {
+    let instance = this.components.get(componentDeclaration.name);
+
     // If the Component's instance is already in our cache, just re-use the instance and lazy init it.
     if (instance) {
       instance.init(properties);
     } else {
-      instance = new declaration(properties);
+      instance = new componentDeclaration(properties);
     }
-
-    this.components.set(instance.constructor.name, instance);
 
     if (typeof instance.bitmask === "undefined") {
       throw new Error(`Please register the component ${instance.constructor.name} in the ComponentRegistry.`);
     }
 
+    this.components.set(componentDeclaration.name, instance);
     this.componentsBitmask = addBit(this.componentsBitmask, instance.bitmask);
-
     this.onAddComponent(instance);
 
     return this;
   }
 
-  public getComponent<T extends typeof Component>(declaration: T): InstanceType<T> {
-    const instance = this.components.get(declaration.name) as InstanceType<T>;
+  public getComponent<TProps extends NonNullable<object>, TComp extends Component<TProps>>(
+    declaration: new (properties: TProps) => TComp,
+  ) {
+    const instance = this.components.get(declaration.name) as InstanceType<new (properties: TProps) => TComp>;
 
     if (!instance) {
       throw new Error(`Component requested ${declaration.name} is non-existent.`);
@@ -50,8 +54,8 @@ export default class Entity {
     return instance;
   }
 
-  public getComponentByName(name: string): Component {
-    const instance = this.components.get(name);
+  public getComponentByName<T extends typeof Component>(name: string): InstanceType<T> {
+    const instance = this.components.get(name) as InstanceType<T>;
 
     if (!instance) {
       throw new Error(`Component requested ${name} is non-existent.`);
@@ -60,8 +64,14 @@ export default class Entity {
     return instance;
   }
 
-  public removeComponent<T extends typeof Component>(declaration: T): Entity {
-    const component = this.getComponent(declaration);
+  public removeComponent<TProps extends NonNullable<object>, TComp extends Component<TProps>>(
+    componentDeclaration: new (properties: TProps) => TComp
+  ): Entity {
+    const component = this.getComponent(componentDeclaration);
+
+    if (typeof component.bitmask === "undefined") {
+      throw new Error(`Component ${componentDeclaration.name} has no bitmask.`);
+    }
 
     this.componentsBitmask = removeBit(this.componentsBitmask, component.bitmask);
 
@@ -70,19 +80,21 @@ export default class Entity {
     return this;
   }
 
-  public hasComponent(declaration: typeof Component): boolean {
-    if (typeof declaration.prototype.bitmask === "undefined") {
-      throw new Error(`Please register the component ${declaration.name} in the ComponentRegistry.`);
+  public hasComponent<TProps extends NonNullable<object>, TComp extends Component<TProps>>(
+    componentDeclaration: new (properties: TProps) => TComp
+  ): boolean {
+    if (typeof componentDeclaration.prototype.bitmask === "undefined") {
+      throw new Error(`Please register the component ${componentDeclaration.name} in the ComponentRegistry.`);
     }
-    return hasBit(this.componentsBitmask, declaration.prototype.bitmask);
+    return hasBit(this.componentsBitmask, componentDeclaration.prototype.bitmask);
   }
 
-  private onAddComponent(newComponent: Component) {
+  private onAddComponent<T extends NonNullable<object>>(newComponent: Component<T>) {
     this.world.notifyQueriesOfEntityComponentAddition(this, newComponent);
     return this;
   }
 
-  private onRemoveComponent(oldComponent: Component) {
+  private onRemoveComponent<T extends NonNullable<object>>(oldComponent: Component<T>) {
     this.world.notifyQueriesOfEntityComponentRemoval(this, oldComponent);
   }
 }

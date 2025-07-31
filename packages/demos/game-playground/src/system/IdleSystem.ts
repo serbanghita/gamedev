@@ -1,6 +1,6 @@
 import { Direction } from "@serbanghita-gamedev/component";
 import { System, Entity } from "@serbanghita-gamedev/ecs";
-import Idle from "../component/Idle";
+import { Idle } from "../component/Idle";
 import { StateStatus } from "../state";
 
 export default class IdleSystem extends System {
@@ -12,17 +12,17 @@ export default class IdleSystem extends System {
   private onUpdate(entity: Entity, component: Idle) {
     const direction = entity.getComponent(Direction);
 
-    component.animationStateName = direction.literal ? `idle_${direction.literal}` : "idle";
+    component.properties.animationStateName = direction.literal ? `idle_${direction.literal}` : "idle";
 
-    if (this.world.now - component.lastFrameTime >= 120) {
-      component.animationTick += 1;
+    if (this.world.now - component.properties.lastFrameTime >= 120) {
+      component.properties.animationTick += 1;
       // Update time for each entity's component.
-      component.lastFrameTime = this.world.now;
+      component.properties.lastFrameTime = this.world.now;
     }
   }
 
   private onExit(entity: Entity, component: Idle) {
-    component.status = StateStatus.FINISHED;
+    component.properties.status = StateStatus.FINISHED;
   }
 
   public update(now: number): void {
@@ -31,12 +31,12 @@ export default class IdleSystem extends System {
 
       // console.log('IsIdle', entity.id);
 
-      if (component.status === StateStatus.FINISHED) {
+      if (component.properties.status === StateStatus.FINISHED) {
         entity.removeComponent(Idle);
         return;
       }
 
-      if (component.status === StateStatus.NOT_STARTED) {
+      if (component.properties.status === StateStatus.NOT_STARTED) {
         this.onEnter(entity, component);
       }
 

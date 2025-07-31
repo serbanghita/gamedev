@@ -1,16 +1,30 @@
 import { Component } from "@serbanghita-gamedev/ecs";
 import { StateStatus } from "../state";
-import { extend } from "../utils";
 
-export default class Walking extends Component {
-  public stateName: string = 'walking';
-  public animationStateName: string = 'walk_down';
-  public animationTick: number = 0;
-  public status: StateStatus = StateStatus.NOT_STARTED;
-  public lastFrameTime: DOMHighResTimeStamp = 0;
+export interface WalkingProps {
+  stateName: string;
+  animationStateName: string;
+  animationTick: number;
+  status: StateStatus;
+  lastFrameTime: DOMHighResTimeStamp;
+}
+
+export class Walking extends Component<WalkingProps> {
+  static defaultProps = {
+    stateName: 'walking',
+    animationStateName: 'walk_down',
+    animationTick: 0,
+    status: StateStatus.STARTED,
+    lastFrameTime: 0,
+  };
+
+  public constructor(props: WalkingProps) {
+    super(props);
+
+    this.init();
+  }
 
   public init() {
-    this.animationTick = 0;
-    this.status = StateStatus.STARTED;
+    this.properties = {...Walking.defaultProps};
   }
 }

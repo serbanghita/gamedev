@@ -2,7 +2,7 @@ import { Direction, Directions, PositionOnScreen } from "@serbanghita-gamedev/co
 import { System, Entity, World, Query } from "@serbanghita-gamedev/ecs";
 import { Walking } from "../component/Walking";
 import { StateStatus } from "../state";
-import { getTileFromPixelCoordinates, GridTile, Grid } from "@serbanghita-gamedev/grid";
+import { getTileFromPixelCoordinates, GridTile, Grid, PositionOnGrid, getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid";
 
 export default class WalkingSystem extends System {
   private grid!: Grid;
@@ -28,8 +28,9 @@ export default class WalkingSystem extends System {
      * Position (based on Direction)
      * Checks if next tile is occupied.
      */
-    const tile = entity.getComponent(GridTile);
+    const gridTile = entity.getComponent(GridTile);
     const direction = entity.getComponent(Direction);
+    const positionOnGrid = entity.getComponent(PositionOnGrid);
     const positionOnScreen = entity.getComponent(PositionOnScreen);
     const speed = 100;
     const movementAmount = speed * (deltaTime / 1000);
@@ -53,7 +54,7 @@ export default class WalkingSystem extends System {
       direction.setX(Directions.NONE);
     }
 
-    const currentTile = tile.tile;
+    const currentTile = gridTile.tile;
     const futureTile = getTileFromPixelCoordinates(Math.round(futureX), Math.round(futureY), this.grid.config);
 
     //console.log(currentTile, futureTile);
@@ -61,8 +62,11 @@ export default class WalkingSystem extends System {
     // Allow movement if tile is free.
     if (currentTile === futureTile || this.grid.matrix[futureTile] === 0) {
       positionOnScreen.setXY(futureX, futureY);
+      const { x: gridX, y: gridY } = getGridCoordinatesFromTile(futureTile, this.grid.config);
+      positionOnGrid.setXY(gridX, gridY);
 
       if (currentTile !== futureTile) {
+        gridTile.setTile(futureTile);
         this.grid.matrix[currentTile] = 0;
         this.grid.matrix[futureTile] = 0; // @todo Define tile types.
       }

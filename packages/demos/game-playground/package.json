@@ -4,7 +4,7 @@
   "description": "A playground for demos made with the game engine library.",
   "scripts": {
     "build": "esbuild ./src/index.ts --bundle --sourcemap --loader:.png=dataurl --outfile=dist/demo.js --keep-names",
-    "dev": "esbuild ./src/index.ts --bundle --sourcemap --watch --loader:.png=dataurl --outfile=dist/demo.js --servedir=dist",
+    "dev": "esbuild ./src/index.ts --bundle --sourcemap --watch --loader:.png=dataurl --outfile=dist/demo.js --servedir=dist --keep-names",
     "test": "echo \"Error: no test specified for glhf-demo yet.\""
   },
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",

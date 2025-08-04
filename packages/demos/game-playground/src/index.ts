@@ -112,11 +112,14 @@ async function setup() {
   assets["entities/declarations"].forEach((entityDeclaration) => {
     const entity = world.createEntityFromDeclaration(entityDeclaration);
     // Entity Tile is depending on Position and Grid.
-    if (entityDeclaration.components["GridTile"]) {
+    if (entityDeclaration.components["GridTile"]  && entityDeclaration.components["PositionOnGrid"]) {
       const position = entity.getComponent(PositionOnScreen);
+
       const tileIndex = getTileFromPixelCoordinates(position.x, position.y, gridConfig);
-      // const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
       entity.addComponent(GridTile, {tile: tileIndex, type: GridTileType.FREE });
+
+      const gridCoordinates = getGridCoordinatesFromTile(tileIndex, gridConfig);
+      entity.addComponent(PositionOnGrid, {...gridCoordinates });
     }
   });
 

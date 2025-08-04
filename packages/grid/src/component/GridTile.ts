@@ -24,4 +24,8 @@ export default class GridTile extends Component<GridTileProps> {
   public get type(): GridTileType {
     return this.properties.type;
   }
+
+  public setTile(tile: number): void {
+    this.properties.tile = tile;
+  }
 }

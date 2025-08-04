@@ -1,9 +1,8 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { randomInt } from "../utils";
 import { Direction, Directions, PositionOnScreen } from "@serbanghita-gamedev/component";
-import { getTileFromPixelCoordinates, GridTile, Grid, PositionOnGrid } from "@serbanghita-gamedev/grid";
+import { getTileFromPixelCoordinates, getPixelCoordinatesFromTile, getTileFromGridCoordinates, GridTile, Grid, PositionOnGrid } from "@serbanghita-gamedev/grid";
 import { Walking } from "../component/Walking";
-import { StateStatus } from "../state";
 import AutoMoving from "../component/AutoMoving";
 
 export default class AutoMoveSystem extends System {
@@ -50,9 +49,11 @@ export default class AutoMoveSystem extends System {
         return;
       }
 
-      let destinationX = autoMoving.destinationX;
-      let destinationY = autoMoving.destinationY;
-      let destinationTile = getTileFromPixelCoordinates(destinationX, destinationY, this.grid.config);
+      let gridDestinationX = autoMoving.destinationX;
+      let gridDestinationY = autoMoving.destinationY;
+      // let destinationTile = getTileFromPixelCoordinates(destinationX, destinationY, this.grid.config);
+      let destinationTile = getTileFromGridCoordinates(gridDestinationX, gridDestinationY, this.grid.config);
+      let { x: destinationX, y: destinationY } = getPixelCoordinatesFromTile(destinationTile, this.grid.config);
 
       /**
        * Stop if destination is reached.

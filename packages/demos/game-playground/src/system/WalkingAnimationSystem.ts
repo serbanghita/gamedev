@@ -27,15 +27,15 @@ export default class WalkingAnimationSystem extends System {
         component.properties.animationStateName = "walk_right";
       }
 
-      console.log(this.world.now, component.properties.lastFrameTime);
+      // console.log(this.world.now, component.properties.lastFrameTime);
 
       if (this.world.now - component.properties.lastFrameTime >= 60) {
-        console.log('here wtf');
+        // console.log('here wtf');
         component.properties.animationTick += 1;
         component.properties.lastFrameTime = this.world.now;
       }
 
-      console.log(component.properties);
+      // console.log(component.properties);
     });
   }
 }

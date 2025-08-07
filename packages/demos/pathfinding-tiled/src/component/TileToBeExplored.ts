@@ -1,6 +1,6 @@
 import { Component } from "@serbanghita-gamedev/ecs";
 
-export default class TileToBeExplored extends Component {
+export default class TileToBeExplored extends Component<{ fCost: number }> {
   public fCost: number = 0;
 
   constructor(public properties: { fCost: number }) {

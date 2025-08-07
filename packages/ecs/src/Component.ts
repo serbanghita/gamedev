@@ -4,8 +4,8 @@ export default class Component<T extends NonNullable<object>> {
   constructor(public properties: T) {}
 
   // Lazy init / Re-init.
-  init(properties: T) {
-      this.properties = properties;
+  init(properties?: T) {
+      this.properties = properties || {} as T;
   }
 
   // Use this when saving the state.

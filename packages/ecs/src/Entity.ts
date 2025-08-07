@@ -20,7 +20,7 @@ export default class Entity {
 
   public addComponent<TProps extends NonNullable<object>, TComp extends Component<TProps>>(
     componentDeclaration: new (properties: TProps) => TComp,
-    properties: TProps
+    properties?: TProps
   ) {
     let instance = this.components.get(componentDeclaration.name);
 

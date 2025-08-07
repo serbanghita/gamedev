@@ -73,19 +73,15 @@ export default class AutoMoveSystem extends System {
         // Compute the direction.
         if (destinationX < Math.round(position.x)) {
           direction.setX(Directions.LEFT);
-          console.log("2", destinationX, Math.round(position.x));
         } else if (destinationX > Math.round(position.x)) {
           direction.setX(Directions.RIGHT);
-          console.log("3", destinationX, Math.round(position.x));
         } else {
           direction.setX(Directions.NONE);
         }
         if (destinationY < Math.round(position.y)) {
           direction.setY(Directions.UP);
-          console.log("4");
         } else if (destinationY > Math.round(position.y)) {
           direction.setY(Directions.DOWN);
-          console.log("5");
         } else {
           direction.setY(Directions.NONE);
         }

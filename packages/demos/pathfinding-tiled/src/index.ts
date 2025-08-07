@@ -2,16 +2,13 @@ import { createHtmlUiElements, RenderTiledMapTerrainSystem } from "@serbanghita-
 import { loadSprites } from "./assets";
 import { World } from "@serbanghita-gamedev/ecs";
 import { TiledMapFile, TiledMap } from "@serbanghita-gamedev/tiled";
-import { Point } from "@serbanghita-gamedev/geometry";
-import { Grid, GridTile } from "@serbanghita-gamedev/grid";
+import { Grid, GridTile, GridTileType, getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid";
 import PreRendered from "./component/PreRendered";
 import PreRenderCollisionTilesSystem from "./system/PreRenderCollisionTilesSystem";
 import RenderingSystem from "./system/RenderingSystem";
 import RenderedInForeground from "./component/RenderedInForeground";
 import AStarPathFindingSystem from "./system/AStarPathFindingSystem";
 import TileToBeExplored from "./component/TileToBeExplored";
-import { getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid/utils";
-import { GridTileInitProps, GridTileType } from "@serbanghita-gamedev/grid/component/GridTile";
 import TileIsInThePathFound from "./component/TileIsInThePathFound";
 import { loadTileMapFile } from "@serbanghita-gamedev/assets";
 
@@ -69,13 +66,11 @@ async function setup() {
   collisionLayer.data.forEach((tileValue: number, tileIndex: number) => {
     const entityId = `tile-${tileIndex}`;
     const collisionTileEntity = world.createEntity(entityId);
-    const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
+    // const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
 
     // console.log(tileIndex, x, y);
 
     collisionTileEntity.addComponent(GridTile, {
-      x,
-      y,
       tile: tileIndex,
       type: tileValue > 0 ? GridTileType.BLOCKED : GridTileType.FREE,
     });

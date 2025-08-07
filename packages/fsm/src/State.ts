@@ -1,4 +1,4 @@
-export enum StateStatus {
+export enum StateStatus {Scratch is an easy, interactive, collaborative programming environment designed for creation of interactive stories, animations, games, music, and art
     NOT_STARTED = 0,
     STARTED = 1,
     RUNNING = 2,

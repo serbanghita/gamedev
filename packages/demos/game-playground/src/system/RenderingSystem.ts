@@ -5,7 +5,7 @@ import { Walking } from "../component/Walking";
 import { Idle } from "../component/Idle";
 import AttackingWithClub from "../component/AttackingWithClub";
 
-export default class RenderSystem extends System {
+export default class RenderingSystem extends System {
   public constructor(
     public world: World,
     public query: Query,

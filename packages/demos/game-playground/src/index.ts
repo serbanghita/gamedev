@@ -3,7 +3,7 @@ import { World } from "@serbanghita-gamedev/ecs";
 import { Body, Direction, Keyboard, Renderable, SpriteSheet, PositionOnScreen } from "@serbanghita-gamedev/component";
 import { Keyboard as KeyboardInput, InputActions } from "@serbanghita-gamedev/input";
 import PlayerKeyboardSystem from "./system/PlayerKeyboardSystem";
-import RenderSystem from "./system/RenderSystem";
+import RenderingSystem from "./system/RenderingSystem";
 import { Idle } from "./component/Idle";
 import { Walking } from "./component/Walking";
 import IdleSystem from "./system/IdleSystem";
@@ -17,6 +17,11 @@ import Player from "./component/Player";
 import AutoMoveSystem from "./system/AutoMoveSystem";
 import AutoMoving from "./component/AutoMoving";
 import WalkingAnimationSystem from "./system/WalkingAnimationSystem";
+import AStarPathFindingSystem from "./system/AStarPathFindingSystem";
+import TileIsInThePathFound from "./component/TileIsInThePathFound";
+import DebugRenderingSystem from "./system/DebugRenderingSystem";
+import DebugRenderedInForeground from "./component/DebugRenderedInForeground";
+import TileToBeExplored from "./component/TileToBeExplored";
 
 async function setup() {
   /************************************************************
@@ -73,6 +78,9 @@ async function setup() {
   world.registerComponent(PositionOnScreen);
   world.registerComponent(PositionOnGrid);
   world.registerComponent(AutoMoving);
+  world.registerComponent(TileIsInThePathFound);
+  world.registerComponent(TileToBeExplored);
+  world.registerComponent(DebugRenderedInForeground);
 
   /**
    * Create the globally known Map entity.
@@ -96,14 +104,14 @@ async function setup() {
    * Transform all collision tiles as Entities.
    */
   collisionLayer.data.forEach((tileValue: number, tileIndex: number) => {
-    if (tileValue > 0) {
-      const entityId = `collision-tile-${tileIndex}`;
+    //if (tileValue > 0) {
+      const entityId = `tile-${tileIndex}`;
       const collisionTileEntity = world.createEntity(entityId);
       // const { x, y } = getGridCoordinatesFromTile(tileIndex, gridConfig);
       const type = tileValue > 0 ? GridTileType.BLOCKED : GridTileType.FREE;
       collisionTileEntity.addComponent(GridTile, { tile: tileIndex, type });
       // collisionTileEntity.addComponent(PreRendered);
-    }
+    //}
   });
 
   /**
@@ -143,11 +151,20 @@ async function setup() {
   // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   // world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
 
-  const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
-  world.createSystem(AutoMoveSystem, AutoMoveQuery);
+  // const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
+  // world.createSystem(AutoMoveSystem, AutoMoveQuery);
 
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, GridTile] });
-  world.createSystem(RenderSystem, RenderableQuery, animationRegistry, $ctxForeground);
+  world.createSystem(RenderingSystem, RenderableQuery, animationRegistry, $ctxForeground);
+
+  const DebugRenderableQuery = world.createQuery("DebugRenderableQuery", { all: [GridTile, DebugRenderedInForeground] });
+  world.createSystem(DebugRenderingSystem, DebugRenderableQuery, $ctxForeground);
+
+  /**
+   * System that computes the path finding.
+   */
+  const PathFindingQuery = world.createQuery("PathFindingQuery", { all: [GridTile] });
+  world.createSystem(AStarPathFindingSystem, PathFindingQuery, map);
 
   world.start(/*{fpsCap: 60}*/);
 

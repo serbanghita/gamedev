@@ -27,12 +27,12 @@ export default class DebugRenderingSystem extends System {
         const tComp = entity.getComponent(TileToBeExplored);
       //   dot(this.ctx, tileCompPixelCoords.x + 8, tileCompPixelCoords.y + 6, "rgb(0,255,0)", 2);
       //   // text(this.ctx, `${tileComp}`, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 8, "9", "arial", "", "#cccccc");
-      //   text(this.ctx, `${tComp.fCost}`, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 8, "9", "arial", "", "#cccccc");
+        text(this.ctx, `${tComp.fCost}`, tileCompPixelCoords.x + 4, tileCompPixelCoords.y + 8, "9", "arial", "", "#cccccc");
         rectangle(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, 16, 16, "grey");
       }
       if (entity.hasComponent(TileIsInThePathFound)) {
         //dot(this.ctx, tileCompPixelCoords.x + 5, tileCompPixelCoords.y + 10, "rgb(0,0,0)", 10);
-        rectangle(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, 16, 16, "red", "black");
+        rectangle(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, 16, 16, "red", "rgba(0,0,0,0.5)");
       }
     });
 

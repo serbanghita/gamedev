@@ -18,22 +18,22 @@ export default class AutoMoveSystem extends System {
     this.grid = map.getComponent(Grid);
   }
 
-  private setPositionBasedOnDestination() {
-
-  }
-
-  private pickNewDestinationOnGrid() {
-    /**
-     * Set new destination
-     */
-    const player = this.world.getEntity('player') as Entity;
-    const playerPositionOnGrid = player.getComponent(PositionOnGrid);
-    // const playerTile = player.getComponent(GridTile);
-    // destinationX = position.point.x + randomInt(-64, 64);
-    // destinationY = position.point.y + randomInt(-64, 64);
-
-    return { x: playerPositionOnGrid.x, y: playerPositionOnGrid.y };
-  }
+  // private setPositionBasedOnDestination() {
+  //
+  // }
+  //
+  // private pickNewDestinationOnGrid() {
+  //   /**
+  //    * Set new destination
+  //    */
+  //   const player = this.world.getEntity('player') as Entity;
+  //   const playerPositionOnGrid = player.getComponent(PositionOnGrid);
+  //   // const playerTile = player.getComponent(GridTile);
+  //   // destinationX = position.point.x + randomInt(-64, 64);
+  //   // destinationY = position.point.y + randomInt(-64, 64);
+  //
+  //   return { x: playerPositionOnGrid.x, y: playerPositionOnGrid.y };
+  // }
 
   public update(now: number) {
     this.query.execute().forEach((entity) => {
@@ -44,8 +44,9 @@ export default class AutoMoveSystem extends System {
       const autoMoving = entity.getComponent(AutoMoving);
 
       if (!autoMoving.hasDestination()) {
-        const {x, y} = this.pickNewDestinationOnGrid();
-        autoMoving.setDestination(x, y);
+        // const {x, y} = this.pickNewDestinationOnGrid();
+        // autoMoving.setDestination(x, y);
+        entity.removeComponent(AutoMoving);
         return;
       }
 

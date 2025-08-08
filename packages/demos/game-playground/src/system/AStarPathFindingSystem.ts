@@ -1,12 +1,15 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
-import { Grid, PositionOnGrid } from "@serbanghita-gamedev/grid";
+import { Grid, PositionOnGrid, getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid";
 import { AStarPathFinding, AStarPathFindingSearchType, AStarPathFindingResultType, MinHeapNode, EuclideanDistance } from "@serbanghita-gamedev/pathfinding";
 import TileIsInThePathFound from "../component/TileIsInThePathFound";
 import TileToBeExplored from "../component/TileToBeExplored";
 import DebugRenderedInForeground from "../component/DebugRenderedInForeground";
+import AutoMoving from "../component/AutoMoving";
 
 export default class AStarPathFindingSystem extends System {
   private aStar: AStarPathFinding;
+  private tilesToWalkTo: number[] = [];
+  private pathWasFound: boolean = false;
 
   public constructor(
     public world: World,
@@ -27,7 +30,7 @@ export default class AStarPathFindingSystem extends System {
       matrixWidth: gridComp.width,
       matrixHeight: gridComp.height,
       searchType: AStarPathFindingSearchType.BY_STEP,
-      resultType: AStarPathFindingResultType.FULL_PATH_ARRAY,
+      resultType: AStarPathFindingResultType.WAYPOINT_PATH_ARRAY,
       startCoordinates: startGridCoordinates,
       finishCoordinates: endGridCoordinates,
       // distanceStrategy: new EuclideanDistance(),
@@ -40,7 +43,8 @@ export default class AStarPathFindingSystem extends System {
         }
       },
       onSuccess: () => {
-        console.log("path", this.aStar.path);
+        //console.log("path", this.aStar.path);
+        this.tilesToWalkTo = this.aStar.path;
         this.aStar.path.forEach((tileValue) => {
           const tileEntity = this.world.getEntity(`tile-${tileValue}`);
           if (tileEntity) {
@@ -53,9 +57,21 @@ export default class AStarPathFindingSystem extends System {
   }
 
   public update(): void {
-    const found = this.aStar.search();
-    if (found) {
-      console.log('search again');
+    if (this.pathWasFound) {
+      const dinoBoss = this.world.getEntity('dino-boss') as Entity;
+
+      if (this.tilesToWalkTo.length > 0 && !dinoBoss.hasComponent(AutoMoving)) {
+        // Walk to the next point.
+        const gridComp = this.map.getComponent(Grid);
+        const nextTile = this.tilesToWalkTo.shift();
+        if (typeof nextTile !== 'undefined') {
+          const {x: destinationX, y: destinationY} = getGridCoordinatesFromTile(nextTile, gridComp.config);
+          dinoBoss.addComponent(AutoMoving, {destinationX, destinationY});
+        }
+
+      }
+    } else {
+      this.pathWasFound = this.aStar.search();
     }
   }
 }

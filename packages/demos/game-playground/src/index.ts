@@ -151,8 +151,8 @@ async function setup() {
   // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   // world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
 
-  // const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
-  // world.createSystem(AutoMoveSystem, AutoMoveQuery);
+  const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
+  world.createSystem(AutoMoveSystem, AutoMoveQuery);
 
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, GridTile] });
   world.createSystem(RenderingSystem, RenderableQuery, animationRegistry, $ctxForeground);

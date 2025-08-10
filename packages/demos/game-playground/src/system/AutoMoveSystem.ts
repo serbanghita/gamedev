@@ -1,7 +1,7 @@
 import { System, Query, World, Entity } from "@serbanghita-gamedev/ecs";
 import { randomInt } from "../utils";
 import { Direction, Directions, PositionOnScreen } from "@serbanghita-gamedev/component";
-import { getTileFromPixelCoordinates, getPixelCoordinatesFromTile, getTileFromGridCoordinates, GridTile, Grid, PositionOnGrid } from "@serbanghita-gamedev/grid";
+import { getTileFromPixelCoordinates, getPixelCoordinatesFromTile, getTileFromGridCoordinates, GridTile, Grid, PositionOnGrid, getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid";
 import { Walking } from "../component/Walking";
 import AutoMoving from "../component/AutoMoving";
 
@@ -39,7 +39,8 @@ export default class AutoMoveSystem extends System {
     this.query.execute().forEach((entity) => {
       // console.log(entity.id);
       const tileComp = entity.getComponent(GridTile);
-      const position = entity.getComponent(PositionOnScreen);
+      const positionOnScreen = entity.getComponent(PositionOnScreen);
+      const positionOnGrid = entity.getComponent(PositionOnGrid);
       const direction = entity.getComponent(Direction);
       const autoMoving = entity.getComponent(AutoMoving);
 
@@ -54,7 +55,10 @@ export default class AutoMoveSystem extends System {
       let gridDestinationY = autoMoving.destinationY;
       // let destinationTile = getTileFromPixelCoordinates(destinationX, destinationY, this.grid.config);
       let destinationTile = getTileFromGridCoordinates(gridDestinationX, gridDestinationY, this.grid.config);
-      let { x: destinationX, y: destinationY } = getPixelCoordinatesFromTile(destinationTile, this.grid.config);
+      // let { x: destinationX, y: destinationY } = getPixelCoordinatesFromTile(destinationTile, this.grid.config);
+      let { x: destinationX, y: destinationY } = getGridCoordinatesFromTile(destinationTile, this.grid.config);
+      // console.log('destination', destinationX, destinationY);
+      // console.log('positionOnScreen', positionOnScreen.x, positionOnScreen.y);
 
       /**
        * Stop if destination is reached.
@@ -70,22 +74,28 @@ export default class AutoMoveSystem extends System {
         return;
       }
 
+      /**
+       * Walking continues. Compute direction.
+       */
       if (destinationTile > 0 && this.grid.matrix[destinationTile] !== 1) {
-        // Compute the direction.
-        if (destinationX < Math.round(position.x)) {
+        // Compute the X direction.
+        if (destinationX < positionOnGrid.x) {
           direction.setX(Directions.LEFT);
-        } else if (destinationX > Math.round(position.x)) {
+        } else if (destinationX > positionOnGrid.x) {
           direction.setX(Directions.RIGHT);
         } else {
           direction.setX(Directions.NONE);
         }
-        if (destinationY < Math.round(position.y)) {
+
+        // Compute the X direction.
+        if (destinationY < positionOnGrid.y) {
           direction.setY(Directions.UP);
-        } else if (destinationY > Math.round(position.y)) {
+        } else if (destinationY > positionOnGrid.y) {
           direction.setY(Directions.DOWN);
         } else {
           direction.setY(Directions.NONE);
         }
+
         // Start the movement.
         if (!entity.hasComponent(Walking)) {
           entity.addComponent(Walking, Walking.defaultProps);

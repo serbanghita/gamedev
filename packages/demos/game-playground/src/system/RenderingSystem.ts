@@ -81,9 +81,9 @@ export default class RenderingSystem extends System {
         animationFrame.height,
       );
 
-      rectangle(this.ctx, destPositionX, destPositionY, animationFrame.width, animationFrame.height, "#cccccc");
-
-      rectangle(this.ctx, destPositionX + hitboxOffset.x, destPositionY + hitboxOffset.y, 16, 16, "red");
+      // rectangle(this.ctx, destPositionX, destPositionY, animationFrame.width, animationFrame.height, "#cccccc");
+      //
+      // rectangle(this.ctx, destPositionX + hitboxOffset.x, destPositionY + hitboxOffset.y, 16, 16, "red");
     });
 
     // text(this.ctx, `entities: ${this.world.entities.size}`, 440, 400, "16", "serif", "", "black");

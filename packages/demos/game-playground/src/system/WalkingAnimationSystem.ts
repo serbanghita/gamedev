@@ -15,16 +15,16 @@ export default class WalkingAnimationSystem extends System {
       /**
        * Animation
        */
-      if (direction.y === Directions.UP) {
-        component.properties.animationStateName = "walk_up";
-      } else if (direction.y === Directions.DOWN) {
-        component.properties.animationStateName = "walk_down";
-      }
-
       if (direction.x === Directions.LEFT) {
         component.properties.animationStateName = "walk_left";
       } else if (direction.x === Directions.RIGHT) {
         component.properties.animationStateName = "walk_right";
+      }
+
+      if (direction.y === Directions.UP) {
+        component.properties.animationStateName = "walk_up";
+      } else if (direction.y === Directions.DOWN) {
+        component.properties.animationStateName = "walk_down";
       }
 
       // console.log(this.world.now, component.properties.lastFrameTime);

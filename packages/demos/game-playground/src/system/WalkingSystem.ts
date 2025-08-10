@@ -3,6 +3,7 @@ import { System, Entity, World, Query } from "@serbanghita-gamedev/ecs";
 import { Walking } from "../component/Walking";
 import { StateStatus } from "../state";
 import { getTileFromPixelCoordinates, GridTile, Grid, PositionOnGrid, getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid";
+import {roundWithTwoDecimals} from "../utils";
 
 export default class WalkingSystem extends System {
   private grid!: Grid;
@@ -33,7 +34,8 @@ export default class WalkingSystem extends System {
     const positionOnGrid = entity.getComponent(PositionOnGrid);
     const positionOnScreen = entity.getComponent(PositionOnScreen);
     const speed = 100;
-    const movementAmount = speed * (deltaTime / 1000);
+    // Round to two decimals (e.g. 10.45)
+    let movementAmount = speed * (deltaTime / 1000);
 
     let futureX = positionOnScreen.x;
     let futureY = positionOnScreen.y;
@@ -54,10 +56,20 @@ export default class WalkingSystem extends System {
       direction.setX(Directions.NONE);
     }
 
-    const currentTile = gridTile.tile;
-    const futureTile = getTileFromPixelCoordinates(Math.round(futureX), Math.round(futureY), this.grid.config);
+    // futureX = roundWithTwoDecimals(futureX);
+    // futureY = roundWithTwoDecimals(futureY);
 
-    //console.log(currentTile, futureTile);
+    const currentTile = gridTile.tile;
+    let futureTile = currentTile;
+    try {
+      // Try/catch is for frames being skipped (maybe slow computer).
+      futureTile = getTileFromPixelCoordinates(Math.round(futureX), Math.round(futureY), this.grid.config);
+    } catch (e) {
+      console.warn(e);
+      return;
+    }
+
+    // @todo: Need to check for max travel distance. So I can avoid Entity skipping across screen.
 
     // Allow movement if tile is free.
     if (currentTile === futureTile || this.grid.matrix[futureTile] === 0) {

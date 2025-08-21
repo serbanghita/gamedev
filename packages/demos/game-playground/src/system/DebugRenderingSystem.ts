@@ -5,6 +5,8 @@ import { dot, text, rectangle } from "@serbanghita-gamedev/renderer";
 import TileIsInThePathFound from "../component/TileIsInThePathFound";
 import TileToBeExplored from "../component/TileToBeExplored";
 import Player from "../component/Player";
+import NPC from "../component/NPC";
+import { PositionOnScreen } from "@serbanghita-gamedev/component";
 
 export default class DebugRenderingSystem extends System {
   public constructor(
@@ -22,10 +24,10 @@ export default class DebugRenderingSystem extends System {
 
     this.query.execute().forEach((entity) => {
       const tileComp = entity.getComponent(GridTile);
-      const tileCompPixelCoords = getPixelCoordinatesFromTile(tileComp.tile, grid.config);
 
-      if (entity.hasComponent(Player)) {
-        rectangle(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, 16, 16, "red", "black");
+      if (entity.hasComponent(Player) || entity.hasComponent(NPC)) {
+        const positionOnScreen = entity.getComponent(PositionOnScreen);
+        rectangle(this.ctx, positionOnScreen.x, positionOnScreen.y, 16, 16, "red", "white");
       }
 
       // if (entity.hasComponent(TileToBeExplored)) {
@@ -36,6 +38,7 @@ export default class DebugRenderingSystem extends System {
       //   rectangle(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, 16, 16, "grey");
       // }
       if (entity.hasComponent(TileIsInThePathFound)) {
+        const tileCompPixelCoords = getPixelCoordinatesFromTile(tileComp.tile, grid.config);
         //dot(this.ctx, tileCompPixelCoords.x + 5, tileCompPixelCoords.y + 10, "rgb(0,0,0)", 10);
         rectangle(this.ctx, tileCompPixelCoords.x, tileCompPixelCoords.y, 16, 16, "rgba(0,0,0,0.5)", "rgba(0,255,0,0.5)");
       }

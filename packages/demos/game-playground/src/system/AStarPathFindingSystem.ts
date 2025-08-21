@@ -30,7 +30,7 @@ export default class AStarPathFindingSystem extends System {
       matrixWidth: gridComp.width,
       matrixHeight: gridComp.height,
       searchType: AStarPathFindingSearchType.BY_STEP,
-      resultType: AStarPathFindingResultType.FULL_PATH_ARRAY,
+      resultType: AStarPathFindingResultType.WAYPOINT_PATH_ARRAY,
       startCoordinates: startGridCoordinates,
       finishCoordinates: endGridCoordinates,
       // distanceStrategy: new EuclideanDistance(),

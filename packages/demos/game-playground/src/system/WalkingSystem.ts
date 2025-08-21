@@ -45,7 +45,7 @@ export default class WalkingSystem extends System {
     } else if (direction.y === Directions.DOWN) {
       futureY += movementAmount;
     } else {
-      direction.setY(Directions.NONE);
+      //direction.setY(Directions.NONE);
     }
 
     if (direction.x === Directions.LEFT) {
@@ -53,7 +53,7 @@ export default class WalkingSystem extends System {
     } else if (direction.x === Directions.RIGHT) {
       futureX += movementAmount;
     } else {
-      direction.setX(Directions.NONE);
+      //direction.setX(Directions.NONE);
     }
 
     // futureX = roundWithTwoDecimals(futureX);

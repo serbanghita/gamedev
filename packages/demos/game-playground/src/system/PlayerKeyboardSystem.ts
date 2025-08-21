@@ -33,6 +33,9 @@ export default class PlayerKeyboardSystem extends System {
     } else {
       direction.setX(Directions.NONE);
     }
+
+    //console.log(direction.literal);
+
   }
 
   private doAction1(entity: Entity) {
@@ -72,29 +75,6 @@ export default class PlayerKeyboardSystem extends System {
     }
 
     this.setDirectionFromKeyboardActions(entity);
-
-    // const position = entity.getComponent(Position);
-    // const speed = 1;
-    //
-    // if (this.directionsFromInput.has(Directions.UP)) {
-    //   position.point.y -= speed;
-    //   direction.y = Directions.UP;
-    // } else if (this.directionsFromInput.has(Directions.DOWN)) {
-    //   position.point.y += speed;
-    //   direction.y = Directions.DOWN;
-    // } else {
-    //   direction.y = Directions.NONE;
-    // }
-    //
-    // if (this.directionsFromInput.has(Directions.LEFT)) {
-    //   position.point.x -= speed;
-    //   direction.x = Directions.LEFT;
-    // } else if (this.directionsFromInput.has(Directions.RIGHT)) {
-    //   position.point.x += speed;
-    //   direction.x = Directions.RIGHT;
-    // } else {
-    //   direction.x = Directions.NONE;
-    // }
   }
 
   private onExit(entity: Entity, component: Walking) {
@@ -126,7 +106,9 @@ export default class PlayerKeyboardSystem extends System {
         if (entity.hasComponent(Walking)) {
           //console.log('no keys pressed, remove Walking, add Idle');
           entity.removeComponent(Walking);
-          entity.addComponent(Idle, Idle.defaultProps);
+          const direction = entity.getComponent(Direction);
+          //console.log(direction.literal);
+          entity.addComponent(Idle, { ...Idle.defaultProps, animationStateName: `idle_${direction.literal}` });
         }
         return;
       }

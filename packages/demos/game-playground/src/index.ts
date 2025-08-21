@@ -22,6 +22,7 @@ import TileIsInThePathFound from "./component/TileIsInThePathFound";
 import DebugRenderingSystem from "./system/DebugRenderingSystem";
 import DebugRenderedInForeground from "./component/DebugRenderedInForeground";
 import TileToBeExplored from "./component/TileToBeExplored";
+import NPC from "./component/NPC";
 
 async function setup() {
   /************************************************************
@@ -69,6 +70,7 @@ async function setup() {
   world.registerComponent(Renderable);
   world.registerComponent(SpriteSheet);
   world.registerComponent(Player);
+  world.registerComponent(NPC);
   world.registerComponent(Idle);
   world.registerComponent(Walking);
   world.registerComponent(AttackingWithClub);
@@ -151,8 +153,8 @@ async function setup() {
   // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   // world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
 
-  // const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
-  // world.createSystem(AutoMoveSystem, AutoMoveQuery);
+  const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
+  world.createSystem(AutoMoveSystem, AutoMoveQuery);
 
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, GridTile] });
   world.createSystem(RenderingSystem, RenderableQuery, animationRegistry, $ctxForeground);

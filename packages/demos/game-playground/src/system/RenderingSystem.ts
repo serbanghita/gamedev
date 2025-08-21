@@ -59,8 +59,8 @@ export default class RenderingSystem extends System {
       const animationFrame = animation.frames[component.properties.animationTick];
       const hitboxOffset = animation.hitboxOffset;
 
-      const destPositionX = hitboxOffset?.x ? position.x - hitboxOffset.x : position.x;
-      const destPositionY = hitboxOffset?.y ? position.y - hitboxOffset.y : position.y;
+      const destPositionX = hitboxOffset?.x ? Math.round(position.x) - hitboxOffset.x : Math.round(position.x);
+      const destPositionY = hitboxOffset?.y ? Math.round(position.y) - hitboxOffset.y : Math.round(position.y);
 
       if (!animationFrame) {
         throw new Error(`Cannot find animation frame ${component.properties.animationTick} for "${component.properties.animationStateName}".`);

@@ -12,6 +12,8 @@ export default class IdleSystem extends System {
   private onUpdate(entity: Entity, component: Idle) {
     const direction = entity.getComponent(Direction);
 
+    // console.log(direction);
+
     component.properties.animationStateName = direction.literal ? `idle_${direction.literal}` : "idle";
 
     if (this.world.now - component.properties.lastFrameTime >= 120) {

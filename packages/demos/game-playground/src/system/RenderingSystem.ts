@@ -52,7 +52,8 @@ export default class RenderingSystem extends System {
         );
       }
 
-      if (component.properties.animationTick >= animation.frames.length) {
+      if (component.properties.animationTick >= animation.frames.length - 1) {
+        // console.log(component.properties.animationTick);
         component.properties.animationTick = 0;
       }
 

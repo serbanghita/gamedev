@@ -4,12 +4,24 @@ import { AStarPathFinding, AStarPathFindingSearchType, AStarPathFindingResultTyp
 import TileIsInThePathFound from "../component/TileIsInThePathFound";
 import TileToBeExplored from "../component/TileToBeExplored";
 import DebugRenderedInForeground from "../component/DebugRenderedInForeground";
-import AutoMoving from "../component/AutoMoving";
+import WalkingToDestination from "../component/WalkingToDestination";
+
+type SearchRegistryItem = {
+  aStarInstance: AStarPathFinding;
+  entity: Entity;
+  startGridCoordinates: {x: number, y: number};
+  finishGridCoordinates: {x: number, y: number};
+  tilesToWalkTo: number[];
+  pathWasFound: boolean;
+  destinationWasReached: boolean;
+};
 
 export default class AStarPathFindingSystem extends System {
-  private aStar: AStarPathFinding;
-  private tilesToWalkTo: number[] = [];
-  private pathWasFound: boolean = false;
+  private grid: Grid;
+
+  // A Map with entity => Search item
+  // Each Entity is entitled to one A* instance.
+  private searchRegistry: Map<string, SearchRegistryItem> = new Map();
 
   public constructor(
     public world: World,
@@ -18,21 +30,19 @@ export default class AStarPathFindingSystem extends System {
   ) {
     super(world, query);
 
-    const gridComp = this.map.getComponent(Grid);
-    const dinoBoss = this.world.getEntity('dino-boss') as Entity;
-    const player = this.world.getEntity('player') as Entity;
+    this.grid =  this.map.getComponent(Grid);
+  }
 
-    const startGridCoordinates: { x: number; y: number } = dinoBoss.getComponent(PositionOnGrid);
-    const endGridCoordinates: { x: number; y: number } = player.getComponent(PositionOnGrid);
+  public initSearchFor(entity: Entity, startCoordinates: { x: number; y: number }, finishCoordinates: { x: number; y: number }) {
 
-    this.aStar = new AStarPathFinding({
-      matrix1D: gridComp.matrix,
-      matrixWidth: gridComp.width,
-      matrixHeight: gridComp.height,
+    const aStarInstance = new AStarPathFinding({
+      matrix1D: this.grid.matrix,
+      matrixWidth: this.grid.width,
+      matrixHeight: this.grid.height,
       searchType: AStarPathFindingSearchType.BY_STEP,
       resultType: AStarPathFindingResultType.WAYPOINT_PATH_ARRAY,
-      startCoordinates: startGridCoordinates,
-      finishCoordinates: endGridCoordinates,
+      startCoordinates,
+      finishCoordinates,
       // distanceStrategy: new EuclideanDistance(),
       onInsertQueue: (node: MinHeapNode) => {
         const tileValue = node.value;
@@ -44,34 +54,66 @@ export default class AStarPathFindingSystem extends System {
       },
       onSuccess: () => {
         //console.log("path", this.aStar.path);
-        this.tilesToWalkTo = this.aStar.path;
-        this.aStar.path.forEach((tileValue) => {
-          const tileEntity = this.world.getEntity(`tile-${tileValue}`);
-          if (tileEntity) {
-            tileEntity.addComponent(TileIsInThePathFound);
-            tileEntity.addComponent(DebugRenderedInForeground);
-          }
-        });
+        const registryItem = this.searchRegistry.get(entity.id);
+
+        if (registryItem) {
+          registryItem.pathWasFound = true;
+          registryItem.tilesToWalkTo = aStarInstance.path;
+        }
+
+        // aStarInstance.path.forEach((tileValue) => {
+        //   const tileEntity = this.world.getEntity(`tile-${tileValue}`);
+        //   if (tileEntity) {
+        //     tileEntity.addComponent(TileIsInThePathFound);
+        //     tileEntity.addComponent(DebugRenderedInForeground);
+        //   }
+        // });
       },
     });
+
+    this.searchRegistry.set(entity.id, {
+      aStarInstance,
+      entity,
+      startGridCoordinates: startCoordinates,
+      finishGridCoordinates: finishCoordinates,
+      destinationWasReached: false, pathWasFound: false, tilesToWalkTo: [],
+    });
+
+  }
+
+  public initPlayerSearch(entity: Entity) {
+    const positionOnGridEntity = entity.getComponent(PositionOnGrid);
+
+    const player = this.world.getEntity('player') as Entity;
+    const positionOnGridPlayer = player.getComponent(PositionOnGrid);
+
+    this.initSearchFor(entity, positionOnGridEntity, positionOnGridPlayer);
   }
 
   public update(): void {
-    if (this.pathWasFound) {
-      const dinoBoss = this.world.getEntity('dino-boss') as Entity;
-
-      if (this.tilesToWalkTo.length > 0 && !dinoBoss.hasComponent(AutoMoving)) {
-        // Walk to the next point.
-        const gridComp = this.map.getComponent(Grid);
-        const nextTile = this.tilesToWalkTo.shift();
-        if (typeof nextTile !== 'undefined') {
-          const {x: destinationX, y: destinationY} = getGridCoordinatesFromTile(nextTile, gridComp.config);
-          dinoBoss.addComponent(AutoMoving, {destinationX, destinationY});
-        }
-
+    this.query.execute().forEach((entity) => {
+      if (!this.searchRegistry.has(entity.id)) {
+        this.initPlayerSearch(entity);
       }
-    } else {
-      this.pathWasFound = this.aStar.search();
-    }
+      const registryItem = this.searchRegistry.get(entity.id) as SearchRegistryItem;
+
+      if (registryItem.pathWasFound) {
+        // Re-start the seek n destroy.
+        if (registryItem.tilesToWalkTo.length === 0) {
+          this.initPlayerSearch(entity);
+        } else if (!entity.hasComponent(WalkingToDestination)) {
+          // Walk to the next tile.
+          const nextTile = registryItem.tilesToWalkTo.shift();
+          if (typeof nextTile !== 'undefined') {
+            const {x: destinationX, y: destinationY} = getGridCoordinatesFromTile(nextTile, this.grid.config);
+            entity.addComponent(WalkingToDestination, {destinationX, destinationY});
+          }
+        }
+      } else {
+        registryItem.pathWasFound = registryItem.aStarInstance.search();
+        // console.log(registryItem);
+      }
+
+    });
   }
 }

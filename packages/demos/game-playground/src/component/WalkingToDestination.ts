@@ -1,12 +1,12 @@
 import {Component} from "@serbanghita-gamedev/ecs";
 
-export type AutoMovingProps = {
+export type WalkingToDestinationProps = {
   destinationX: number;
   destinationY: number;
 }
 
-export default class AutoMoving extends Component<AutoMovingProps> {
-  constructor(public properties: AutoMovingProps) {
+export default class WalkingToDestination extends Component<WalkingToDestinationProps> {
+  constructor(public properties: WalkingToDestinationProps) {
     super(properties);
   }
 

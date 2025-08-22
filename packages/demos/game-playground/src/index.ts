@@ -14,8 +14,8 @@ import { createHtmlUiElements, RenderTiledMapTerrainSystem, loadAnimationRegistr
 import { TiledMap, TiledMapFile } from "@serbanghita-gamedev/tiled";
 import { getPixelCoordinatesFromTile, getGridCoordinatesFromTile, getTileFromPixelCoordinates, Grid, GridTile, GridTileType, PositionOnGrid } from "@serbanghita-gamedev/grid";
 import Player from "./component/Player";
-import AutoMoveSystem from "./system/AutoMoveSystem";
-import AutoMoving from "./component/AutoMoving";
+import WalkingToDestinationSystem from "./system/WalkingToDestinationSystem";
+import WalkingToDestination from "./component/WalkingToDestination";
 import WalkingAnimationSystem from "./system/WalkingAnimationSystem";
 import AStarPathFindingSystem from "./system/AStarPathFindingSystem";
 import TileIsInThePathFound from "./component/TileIsInThePathFound";
@@ -23,6 +23,7 @@ import DebugRenderingSystem from "./system/DebugRenderingSystem";
 import DebugRenderedInForeground from "./component/DebugRenderedInForeground";
 import TileToBeExplored from "./component/TileToBeExplored";
 import NPC from "./component/NPC";
+import CanSeekTarget from "./component/CanSeekTarget";
 
 async function setup() {
   /************************************************************
@@ -73,13 +74,14 @@ async function setup() {
   world.registerComponent(NPC);
   world.registerComponent(Idle);
   world.registerComponent(Walking);
+  world.registerComponent(CanSeekTarget);
   world.registerComponent(AttackingWithClub);
   world.registerComponent(TiledMapFile);
   world.registerComponent(Grid);
   world.registerComponent(GridTile);
   world.registerComponent(PositionOnScreen);
   world.registerComponent(PositionOnGrid);
-  world.registerComponent(AutoMoving);
+  world.registerComponent(WalkingToDestination);
   world.registerComponent(TileIsInThePathFound);
   world.registerComponent(TileToBeExplored);
   world.registerComponent(DebugRenderedInForeground);
@@ -153,19 +155,19 @@ async function setup() {
   // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   // world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
 
-  const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [AutoMoving] });
-  world.createSystem(AutoMoveSystem, AutoMoveQuery);
+  const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [WalkingToDestination] });
+  world.createSystem(WalkingToDestinationSystem, AutoMoveQuery);
 
-  const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet, GridTile] });
+  const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet] }); // GridTile
   world.createSystem(RenderingSystem, RenderableQuery, animationRegistry, $ctxForeground);
 
-  const DebugRenderableQuery = world.createQuery("DebugRenderableQuery", { all: [DebugRenderedInForeground] });
-  world.createSystem(DebugRenderingSystem, DebugRenderableQuery, $ctxForeground);
+  // const DebugRenderableQuery = world.createQuery("DebugRenderableQuery", { all: [DebugRenderedInForeground] });
+  // world.createSystem(DebugRenderingSystem, DebugRenderableQuery, $ctxForeground);
 
   /**
    * System that computes the path finding.
    */
-  const PathFindingQuery = world.createQuery("PathFindingQuery", { all: [GridTile] });
+  const PathFindingQuery = world.createQuery("PathFindingQuery", { all: [CanSeekTarget] });
   world.createSystem(AStarPathFindingSystem, PathFindingQuery, map);
 
   world.start(/*{fpsCap: 60}*/);

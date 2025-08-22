@@ -41,20 +41,20 @@ export default class RenderTiledMapTerrainSystem extends System {
       }
     });
 
-    tiledMap.getCollisionLayers().forEach((layer) => {
-      for (let j = 0; j < layer.data.length; j++) {
-        // Don't draw empty cells.
-        if (layer.data[j] === 0) {
-          continue;
-        }
-
-        const tileCoordinates = getPixelCoordinatesFromTile(j, { width: tiledMap.getWidthInTiles(), height: tiledMap.getHeightInTiles(), tileSize: tiledMap.getTileWidth() });
-
-        rectangle(this.ctx, tileCoordinates.x, tileCoordinates.y, tiledMap.getTileWidth(), tiledMap.getTileHeight(), "rgb(125,0,0)", "rgba(255,0,0,0.1)");
-        // j,
-        //   layer.data[j],
-      }
-    });
+    // tiledMap.getCollisionLayers().forEach((layer) => {
+    //   for (let j = 0; j < layer.data.length; j++) {
+    //     // Don't draw empty cells.
+    //     if (layer.data[j] === 0) {
+    //       continue;
+    //     }
+    //
+    //     const tileCoordinates = getPixelCoordinatesFromTile(j, { width: tiledMap.getWidthInTiles(), height: tiledMap.getHeightInTiles(), tileSize: tiledMap.getTileWidth() });
+    //
+    //     rectangle(this.ctx, tileCoordinates.x, tileCoordinates.y, tiledMap.getTileWidth(), tiledMap.getTileHeight(), "rgb(125,0,0)", "rgba(255,0,0,0.1)");
+    //     // j,
+    //     //   layer.data[j],
+    //   }
+    // });
   }
 
   public update(now: number): void {

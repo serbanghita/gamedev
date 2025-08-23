@@ -44,7 +44,11 @@ export async function loadAssets(): Promise<Assets> {
         [key: string]: SpriteSheetAnimation;
       },
     },
-    "entities/declarations": require("./assets/entities.json") as EntityDeclaration[],
+    "entities/declarations": {
+      "player": require("./assets/entities/player.json") as EntityDeclaration,
+      "dino-boss": require("./assets/entities/dino-boss.json") as EntityDeclaration,
+      "anky-boss": require("./assets/entities/anky-boss.json") as EntityDeclaration,
+    },
     "maps/images": {
       "./assets/sprites/terrain.png": await loadLocalImage(require("./assets/sprites/terrain.png")),
     },

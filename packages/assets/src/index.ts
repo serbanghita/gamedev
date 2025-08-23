@@ -1,4 +1,4 @@
-import { PhysicsBodyPropsDeclaration, SpriteSheetAnimation, SpriteSheetPropsDeclaration } from "@serbanghita-gamedev/component";
+import { SpriteSheetAnimation, SpriteSheetPropsDeclaration } from "@serbanghita-gamedev/component";
 import { TiledMapFileContents } from "@serbanghita-gamedev/tiled";
 
 export async function loadLocalImage(data: string): Promise<HTMLImageElement> {
@@ -33,7 +33,7 @@ export async function loadTileMapFile(path: string): Promise<TiledMapFileContent
 export type Assets = {
   "entities/images": { [key: string]: HTMLImageElement };
   "entities/animations": { [key: string]: { [key: string]: SpriteSheetAnimation } };
-  "entities/declarations": EntityDeclaration[];
+  "entities/declarations": { [key: string] : EntityDeclaration };
   "maps/images": { [key: string]: HTMLImageElement };
   "maps/declarations": { [key: string]: TiledMapFileContents };
 };
@@ -42,8 +42,6 @@ export type EntityDeclaration = {
   id: string;
   components: {
     [componentName: string]: object;
-
-    PhysicsBody: PhysicsBodyPropsDeclaration;
     SpriteSheet: SpriteSheetPropsDeclaration;
   };
 };

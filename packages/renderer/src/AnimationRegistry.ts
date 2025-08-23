@@ -20,7 +20,10 @@ export default class AnimationRegistry {
   public constructor(public assets: Assets) {}
 
   public load() {
-    this.assets["entities/declarations"].forEach((entityDeclaration) => this.setAnimationFramesForSpriteSheet(entityDeclaration));
+    for (let entityName in this.assets["entities/declarations"]) {
+      const entityDeclaration = this.assets["entities/declarations"][entityName];
+      this.setAnimationFramesForSpriteSheet(entityDeclaration)
+    }
   }
 
   public getAnimationsFor(spriteSheetAnimationsPath: string)

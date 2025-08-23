@@ -119,19 +119,31 @@ async function setup() {
   });
 
   /**
-   * Create all actor entities automatically from "entities.json" declaration file.
+   * Create all actor entities automatically from
+   * 1. "entities" layer from the Tiled map
+   * 2. "entities.json" declaration file.
    */
-  assets["entities/declarations"].forEach((entityDeclaration) => {
-    const entity = world.createEntityFromDeclaration(entityDeclaration);
-    // Entity Tile is depending on Position and Grid.
-    if (entityDeclaration.components["GridTile"]  && entityDeclaration.components["PositionOnGrid"]) {
-      const position = entity.getComponent(PositionOnScreen);
+  console.log();
 
-      const tileIndex = getTileFromPixelCoordinates(position.x, position.y, gridConfig);
-      entity.addComponent(GridTile, {tile: tileIndex, type: GridTileType.FREE });
+  tiledMap.getObjects().forEach(tiledObject => {
+    const entityDeclaration = assets["entities/declarations"][tiledObject.name];
+    if (entityDeclaration) {
+      const entity = world.createEntityFromDeclaration(entityDeclaration);
+      // Entity Tile is depending on Position and Grid.
+      if (entityDeclaration.components["GridTile"]  && entityDeclaration.components["PositionOnGrid"]) {
 
-      const gridCoordinates = getGridCoordinatesFromTile(tileIndex, gridConfig);
-      entity.addComponent(PositionOnGrid, {...gridCoordinates });
+        // 1. Set the position based on the TiledMap object properties.
+        const position = entity.getComponent(PositionOnScreen);
+        position.setXY(tiledObject.x, tiledObject.y);
+
+        // 2. Set GridTile component.
+        const tileIndex = getTileFromPixelCoordinates(position.x, position.y, gridConfig);
+        entity.addComponent(GridTile, {tile: tileIndex, type: GridTileType.FREE });
+
+        // 3. Set PositionOnGrid (x,y)
+        const gridCoordinates = getGridCoordinatesFromTile(tileIndex, gridConfig);
+        entity.addComponent(PositionOnGrid, {...gridCoordinates });
+      }
     }
   });
 

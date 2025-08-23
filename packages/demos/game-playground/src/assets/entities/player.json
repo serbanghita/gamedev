@@ -1,0 +1,22 @@
+{
+  "id": "player",
+  "components": {
+    "Idle": {},
+    "Body": { "width": 16, "height": 16 },
+    "PositionOnScreen": { "x": 0, "y": 0 },
+    "PositionOnGrid": { "x": 0, "y": 0 },
+    "GridTile": {},
+    "Player": {},
+    "Direction": { "x": 0, "y": 0 },
+    "Keyboard": { "up": "w", "down": "s", "left": "a", "right": "d", "action_1": "f" },
+    "Renderable": {},
+    "DebugRenderedInForeground": {},
+    "SpriteSheet": {
+      "name": "kil",
+      "offset_x": 128,
+      "offset_y": 0,
+      "spriteSheetImgPath": "./assets/sprites/kil.png",
+      "spriteSheetAnimationsPath": "./assets/sprites/kil.animations.json"
+    }
+  }
+}

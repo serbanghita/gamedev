@@ -1,28 +1,12 @@
-import { Component } from "@serbanghita-gamedev/ecs";
-import { StateStatus } from "../state";
+import RenderingStateComponent from "./common/RenderingStateComponent";
 
-export interface IdleProps {
-  stateName: string;
-  animationStateName: string;
-  animationTick: number;
-  status: StateStatus;
-  lastFrameTime: DOMHighResTimeStamp;
-}
-
-export class Idle extends Component<IdleProps> {
+export class Idle extends RenderingStateComponent {
   static defaultProps = {
+    ...super.defaultProps,
     stateName: 'idle',
     animationStateName: 'idle_down',
-    animationTick: 0,
-    status: StateStatus.STARTED,
-    lastFrameTime: 0,
+    isContinuous: true
   };
-
-  public constructor(props: IdleProps) {
-    super(props);
-
-    this.init();
-  }
 
   public init() {
     this.properties = {...Idle.defaultProps};

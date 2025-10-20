@@ -10,13 +10,6 @@
     "baseUrl": "src",
     "sourceMap": true,
     "paths": {
-        "@serbanghita-gamedev/assets/*": ["../../assets/src/*"],
-        "@serbanghita-gamedev/bitmask/*": ["../../bitmask/src/*"],
-        "@serbanghita-gamedev/component/*": ["../../component/src/*"],
-        "@serbanghita-gamedev/ecs/*": ["../../ecs/src/*"],
-        "@serbanghita-gamedev/input/*": ["../../input/src/*"],
-        "@serbanghita-gamedev/renderer/*": ["../../renderer/src/*"],
-        "@serbanghita-gamedev/grid/*": ["../../grid/src/*"]
     }
   },
   "include": [

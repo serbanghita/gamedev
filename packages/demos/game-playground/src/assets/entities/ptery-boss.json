@@ -1,5 +1,5 @@
 {
-  "id": "anky-boss",
+  "id": "ptery-boss",
   "components": {
     "CanSeekTarget": {},
     "NPC": {},
@@ -21,12 +21,13 @@
 
     "Renderable": {},
     "DebugRenderedInForeground": {},
+
     "SpriteSheet": {
-      "name": "ankyd-boss",
-      "offset_x": 128,
-      "offset_y": 0,
-      "spriteSheetImgPath": "./assets/sprites/anky-boss.png",
-      "spriteSheetAnimationsPath": "./assets/sprites/anky-boss.animations.json"
+      "name": "ptery-boss",
+      "offset_x": 144,
+      "offset_y": 96,
+      "spriteSheetImgPath": "./assets/sprites/ptery-boss.png",
+      "spriteSheetAnimationsPath": "./assets/sprites/ptery-boss.animations.json"
     }
   }
 }

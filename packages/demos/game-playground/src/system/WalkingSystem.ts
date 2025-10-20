@@ -3,7 +3,7 @@ import { System, Entity, World, Query } from "@serbanghita-gamedev/ecs";
 import { Walking } from "../component/Walking";
 import { StateStatus } from "../state";
 import { getTileFromPixelCoordinates, GridTile, Grid, PositionOnGrid, getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid";
-import {roundWithTwoDecimals} from "../utils";
+import {Idle} from "../component/Idle";
 
 export default class WalkingSystem extends System {
   private grid!: Grid;
@@ -85,26 +85,9 @@ export default class WalkingSystem extends System {
     }
   }
 
-  private onExit(entity: Entity, component: Walking) {
-    component.properties.status = StateStatus.FINISHED;
-  }
-
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
-      const component = entity.getComponent(Walking);
 
-      if (component.properties.status === StateStatus.FINISHED) {
-        // console.log('FINISHED');
-        entity.removeComponent(Walking);
-        return;
-      }
-
-      if (component.properties.status === StateStatus.NOT_STARTED) {
-        //console.log('NOT_STARTED');
-        this.onEnter(entity, component);
-      }
-
-      // console.log('onUpdate');
       this.onUpdate(entity);
 
       return true;

@@ -48,6 +48,10 @@ export async function loadAssets(): Promise<Assets> {
       "player": require("./assets/entities/player.json") as EntityDeclaration,
       "dino-boss": require("./assets/entities/dino-boss.json") as EntityDeclaration,
       "anky-boss": require("./assets/entities/anky-boss.json") as EntityDeclaration,
+      "dino-minion": require("./assets/entities/dino-minion.json") as EntityDeclaration,
+      "anky-minion": require("./assets/entities/anky-minion.json") as EntityDeclaration,
+      "ptery-boss": require("./assets/entities/ptery-boss.json") as EntityDeclaration,
+      "ptery-minion": require("./assets/entities/ptery-minion.json") as EntityDeclaration,
     },
     "maps/images": {
       "./assets/sprites/terrain.png": await loadLocalImage(require("./assets/sprites/terrain.png")),

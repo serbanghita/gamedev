@@ -8,5 +8,16 @@
     "test": "echo \"Error: no test specified for glhf-demo yet.\""
   },
   "author": "Serban Ghita <serbanghita@gmail.com> (https://ghita.org)",
-  "license": "All code is MIT, the assets are copywritten."
+  "license": "All code is MIT, the assets are copywritten.",
+  "devDependencies": {
+    "@serbanghita-gamedev/pathfinding": "file:../../../../gamedev-published-repos/pathfinding",
+    "@serbanghita-gamedev/ecs": "file:../../../../gamedev-published-repos/ecs",
+    "@serbanghita-gamedev/bitmask": "file:../../../../gamedev-published-repos/bitmask",
+    "@serbanghita-gamedev/assets": "file:../../assets",
+    "@serbanghita-gamedev/component": "file:../../component",
+    "@serbanghita-gamedev/tiled": "file:../../tiled",
+    "@serbanghita-gamedev/input": "file:../../input",
+    "@serbanghita-gamedev/renderer": "file:../../renderer",
+    "@serbanghita-gamedev/grid": "file:../../grid"
+  }
 }

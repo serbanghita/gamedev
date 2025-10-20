@@ -16,7 +16,7 @@ import { getPixelCoordinatesFromTile, getGridCoordinatesFromTile, getTileFromPix
 import Player from "./component/Player";
 import WalkingToDestinationSystem from "./system/WalkingToDestinationSystem";
 import WalkingToDestination from "./component/WalkingToDestination";
-import WalkingAnimationSystem from "./system/WalkingAnimationSystem";
+import RenderingStateAnimationSystem from "./system/RenderingStateAnimationSystem";
 import AStarPathFindingSystem from "./system/AStarPathFindingSystem";
 import TileIsInThePathFound from "./component/TileIsInThePathFound";
 import DebugRenderingSystem from "./system/DebugRenderingSystem";
@@ -24,6 +24,10 @@ import DebugRenderedInForeground from "./component/DebugRenderedInForeground";
 import TileToBeExplored from "./component/TileToBeExplored";
 import NPC from "./component/NPC";
 import CanSeekTarget from "./component/CanSeekTarget";
+import {createEntityFromDeclaration, deepClonePlainObject} from "./utils";
+import CanAttackWithClub from "./component/CanAttackWithClub";
+import CurrentRenderingState from "./component/CurrentRenderingState";
+
 
 async function setup() {
   /************************************************************
@@ -63,6 +67,7 @@ async function setup() {
 
   // Create the current "World" (scene).
   const world = new World();
+  const reg = world.declarations.components;
 
   // Register "Components".
   world.registerComponent(Body);
@@ -75,6 +80,7 @@ async function setup() {
   world.registerComponent(Idle);
   world.registerComponent(Walking);
   world.registerComponent(CanSeekTarget);
+  world.registerComponent(CanAttackWithClub);
   world.registerComponent(AttackingWithClub);
   world.registerComponent(TiledMapFile);
   world.registerComponent(Grid);
@@ -85,6 +91,10 @@ async function setup() {
   world.registerComponent(TileIsInThePathFound);
   world.registerComponent(TileToBeExplored);
   world.registerComponent(DebugRenderedInForeground);
+  world.registerComponent(CurrentRenderingState);
+
+  reg.registerComponentGroup('StateComponents', [Idle, Walking, AttackingWithClub], { mutuallyExclusive: true });
+
 
   /**
    * Create the globally known Map entity.
@@ -123,12 +133,13 @@ async function setup() {
    * 1. "entities" layer from the Tiled map
    * 2. "entities.json" declaration file.
    */
-  console.log();
 
   tiledMap.getObjects().forEach(tiledObject => {
-    const entityDeclaration = assets["entities/declarations"][tiledObject.name];
+    const entityDeclaration = deepClonePlainObject(assets["entities/declarations"][tiledObject.type]);
     if (entityDeclaration) {
-      const entity = world.createEntityFromDeclaration(entityDeclaration);
+      // ${tiledObject.name}-${tiledObject.id}
+      const entity = createEntityFromDeclaration(world, tiledObject.name, entityDeclaration);
+      entity.addComponent(CurrentRenderingState, { component: Idle });
       // Entity Tile is depending on Position and Grid.
       if (entityDeclaration.components["GridTile"]  && entityDeclaration.components["PositionOnGrid"]) {
 
@@ -144,6 +155,8 @@ async function setup() {
         const gridCoordinates = getGridCoordinatesFromTile(tileIndex, gridConfig);
         entity.addComponent(PositionOnGrid, {...gridCoordinates });
       }
+    } else {
+      console.warn(`Entity declaration is missing for ${tiledObject.name}`);
     }
   });
 
@@ -162,13 +175,19 @@ async function setup() {
 
   const WalkingQuery = world.createQuery("WalkingQuery", { all: [Walking] });
   world.createSystem(WalkingSystem, WalkingQuery);
-  world.createSystem(WalkingAnimationSystem, WalkingQuery);
+  //world.createSystem(RenderingStateAnimationSystem, WalkingQuery);
 
   // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
   // world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
 
-  const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [WalkingToDestination] });
-  world.createSystem(WalkingToDestinationSystem, AutoMoveQuery);
+  // const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [WalkingToDestination] });
+  // world.createSystem(WalkingToDestinationSystem, AutoMoveQuery);
+
+  world.createSystem(
+    RenderingStateAnimationSystem,
+    world.createQuery("EntitiesWithRenderingStateComponent", { any: [Idle, Walking, AttackingWithClub] }),
+    animationRegistry
+  );
 
   const RenderableQuery = world.createQuery("RenderableQuery", { all: [Renderable, SpriteSheet] }); // GridTile
   world.createSystem(RenderingSystem, RenderableQuery, animationRegistry, $ctxForeground);

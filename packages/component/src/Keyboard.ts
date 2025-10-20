@@ -1,4 +1,4 @@
-import Component from "../../ecs/src/Component";
+import { Component } from "@serbanghita-gamedev/ecs";
 
 export interface KeyboardProps {
     up: string;

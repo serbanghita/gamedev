@@ -54,12 +54,7 @@ export default class PlayerKeyboardSystem extends System {
     // });
     //
     // // @todo: make dynamic from Keyboard settings.
-    // entity.addComponent(AttackingWithClub, {
-    //     state: 'AttackingWithClub',
-    //     animationState: `club_swipe_down_from_${this.directionLiteral}`,
-    //     stateTick: 0,
-    //     animationTick: 0
-    // });
+    entity.addComponent(AttackingWithClub, AttackingWithClub.defaultProps);
 
     return true;
   }
@@ -78,7 +73,7 @@ export default class PlayerKeyboardSystem extends System {
   }
 
   private onExit(entity: Entity, component: Walking) {
-    component.properties.status = StateStatus.FINISHED;
+    // component.properties.status = StateStatus.FINISHED;
     if (entity.hasComponent(Walking)) {
       entity.removeComponent(Walking);
     }
@@ -86,21 +81,21 @@ export default class PlayerKeyboardSystem extends System {
 
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
-      // if (this.input.ongoingActions.has(InputActions.ACTION_1)) {
+      if (this.input.ongoingActions.has(InputActions.ACTION_1)) {
       //   if (!entity.getComponent(Keyboard).keys.action_1) {
       //     return;
       //   }
       //
       //   console.log('PlayerKeyboardSystem -> action_1');
       //
-      //   if (entity.hasComponent(Walking)) {
-      //     entity.removeComponent(Walking);
-      //   }
-      //   if (!entity.hasComponent(AttackingWithClub)) {
-      //     entity.addComponent(AttackingWithClub);
-      //   }
-      //   return;
-      // }
+        if (entity.hasComponent(Walking)) {
+          entity.removeComponent(Walking);
+        }
+        if (!entity.hasComponent(AttackingWithClub)) {
+          entity.addComponent(AttackingWithClub);
+        }
+        return;
+      }
 
       if (!this.input.areMovementKeysPressed()) {
         if (entity.hasComponent(Walking)) {
@@ -116,21 +111,22 @@ export default class PlayerKeyboardSystem extends System {
       if (!entity.hasComponent(Walking)) {
         //console.log('add Walking');
         entity.addComponent(Walking, Walking.defaultProps);
-        // entity.removeComponent(IsIdle);
+        // Remove all other interfering components.
+        entity.removeComponent(Idle);
       }
 
       const component = entity.getComponent(Walking);
 
-      if (component.properties.status === StateStatus.FINISHED) {
-        //console.log('FINISHED, remove Walking');
-        entity.removeComponent(Walking);
-        return;
-      }
-
-      if (component.properties.status === StateStatus.NOT_STARTED) {
-        //console.log('NOT_STARTED, onEnter');
-        this.onEnter(entity, component);
-      }
+      // if (component.properties.status === StateStatus.FINISHED) {
+      //   //console.log('FINISHED, remove Walking');
+      //   entity.removeComponent(Walking);
+      //   return;
+      // }
+      //
+      // if (component.properties.status === StateStatus.NOT_STARTED) {
+      //   //console.log('NOT_STARTED, onEnter');
+      //   this.onEnter(entity, component);
+      // }
 
       //console.log('onUpdate');
       this.onUpdate(entity, component);

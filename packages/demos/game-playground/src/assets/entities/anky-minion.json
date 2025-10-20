@@ -1,0 +1,21 @@
+{
+  "id": "anky-minion",
+  "components": {
+    "CanSeekTarget": {},
+    "NPC": {},
+    "Idle": {},
+    "Body": { "width": 16, "height": 16 },
+    "PositionOnScreen": { "x": 0, "y": 0 },
+    "PositionOnGrid": { "x": 0, "y": 0 },
+    "GridTile": {},
+    "Direction": { "x": 0, "y": 0 },
+    "Renderable": {},
+    "SpriteSheet": {
+      "name": "anky-minion",
+      "offset_x": 48,
+      "offset_y": 0,
+      "spriteSheetImgPath": "./assets/sprites/anky-minion.png",
+      "spriteSheetAnimationsPath": "./assets/sprites/anky-minion.animations.json"
+    }
+  }
+}

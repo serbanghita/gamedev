@@ -1,0 +1,21 @@
+{
+  "id": "dino-minion",
+  "components": {
+    "CanSeekTarget": {},
+    "NPC": {},
+    "Idle": {},
+    "Body": { "width": 16, "height": 16 },
+    "PositionOnScreen": { "x": 0, "y": 0 },
+    "PositionOnGrid": { "x": 0, "y": 0 },
+    "GridTile": {},
+    "Direction": { "x": 0, "y": 0 },
+    "Renderable": {},
+    "SpriteSheet": {
+      "name": "dino-minion",
+      "offset_x": 0,
+      "offset_y": 0,
+      "spriteSheetImgPath": "./assets/sprites/dino-minion.png",
+      "spriteSheetAnimationsPath": "./assets/sprites/dino-minion.animations.json"
+    }
+  }
+}

@@ -30,16 +30,16 @@ export default class WalkingToDestinationSystem extends System {
         return;
       }
 
-      let gridDestinationX = autoMoving.destinationX;
-      let gridDestinationY = autoMoving.destinationY;
-      let destinationTile = getTileFromGridCoordinates(gridDestinationX, gridDestinationY, this.grid.config);
-      let { x: destinationX, y: destinationY } = getGridCoordinatesFromTile(destinationTile, this.grid.config);
+      const gridDestinationX = autoMoving.destinationX;
+      const gridDestinationY = autoMoving.destinationY;
+      const destinationTile = getTileFromGridCoordinates(gridDestinationX, gridDestinationY, this.grid.config);
+      const { x: destinationX, y: destinationY } = getGridCoordinatesFromTile(destinationTile, this.grid.config);
 
       /**
        * Stop if destination is reached.
        */
       if (tileComp.tile === destinationTile) {
-        console.log('Destination tile reached');
+        // console.log('Destination tile reached');
         if (entity.hasComponent(Walking)) {
           entity.removeComponent(Walking);
         }

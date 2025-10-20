@@ -1,11 +1,11 @@
-import Component from "../../ecs/src/Component";
+import { Component } from "@serbanghita-gamedev/ecs";
 
-export interface IStateProps {
+export type StateProps = {
     name: string;
 }
 
-export default class State extends Component {
-    constructor(public properties: IStateProps) {
+export default class State extends Component<StateProps> {
+    constructor(public properties: StateProps) {
         super(properties);
     }
 }

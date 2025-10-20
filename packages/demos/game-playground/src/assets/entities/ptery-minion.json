@@ -1,0 +1,21 @@
+{
+  "id": "ptery-minion",
+  "components": {
+    "CanSeekTarget": {},
+    "NPC": {},
+    "Idle": {},
+    "Body": { "width": 16, "height": 16 },
+    "PositionOnScreen": { "x": 0, "y": 0 },
+    "PositionOnGrid": { "x": 0, "y": 0 },
+    "GridTile": {},
+    "Direction": { "x": 0, "y": 0 },
+    "Renderable": {},
+    "SpriteSheet": {
+      "name": "ptery-minion",
+      "offset_x": 0,
+      "offset_y": 0,
+      "spriteSheetImgPath": "./assets/sprites/ptery-minion.png",
+      "spriteSheetAnimationsPath": "./assets/sprites/ptery-minion.animations.json"
+    }
+  }
+}

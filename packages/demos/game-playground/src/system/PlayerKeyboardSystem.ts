@@ -82,15 +82,10 @@ export default class PlayerKeyboardSystem extends System {
   public update(now: number): void {
     this.query.execute().forEach((entity) => {
       if (this.input.ongoingActions.has(InputActions.ACTION_1)) {
-      //   if (!entity.getComponent(Keyboard).keys.action_1) {
-      //     return;
-      //   }
-      //
-      //   console.log('PlayerKeyboardSystem -> action_1');
-      //
-        if (entity.hasComponent(Walking)) {
-          entity.removeComponent(Walking);
-        }
+        // if (!entity.getComponent(Keyboard).keys.action_1) {
+        //   return;
+        // }
+
         if (!entity.hasComponent(AttackingWithClub)) {
           entity.addComponent(AttackingWithClub);
         }

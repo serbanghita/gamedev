@@ -30,12 +30,21 @@ export default class RenderingSystem extends System {
       const currentRenderingStateComp = entity.getComponent(CurrentRenderingState);
       const componentDeclaration = currentRenderingStateComp.properties.component;
 
+      if (!entity.hasComponent(componentDeclaration)) {
+        console.warn(`Entity ${entity.id} does not have component ${componentDeclaration.name}. Skipping ...`);
+        return;
+      }
+
       const component = entity.getComponent(componentDeclaration);
       const animation = component.properties.animation;
 
+      if (!animation) {
+        console.warn(`Entity ${entity.id} does not have an animation for ${componentDeclaration.name}. Skipping ...`);
+        return;
+      }
 
-      if (!component || !animation) {
-        throw new Error(`CurrentAnimationState has no component or animation`);
+      if (component.properties.hasFinished) {
+        console.warn(`Entity ${entity.id} animation ${componentDeclaration.name} has finished but was still sent for render.`);
       }
 
       // Draw the animation sprite.

@@ -90,7 +90,7 @@ export default class RenderingStateAnimationSystem extends System {
       stateComponent.properties.animationTick = frameIndex;
 
       // Reset animation time when the animation completes one cycle
-      if (elapsedTime >= FRAME_DURATION * TOTAL_FRAMES) {
+      if (elapsedTime >= FRAME_DURATION * TOTAL_FRAMES || frameIndex === TOTAL_FRAMES - 1) {
         stateComponent.properties.animationTime = 0;
         if (!stateComponent.properties.isContinuous) {
           // In our case we need to stop the animation + the action later in the System.

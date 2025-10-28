@@ -1,10 +1,7 @@
 {
   "id": "dino-boss",
   "components": {
-    "Idle": {
-      "stateName": "idle",
-      "animationStateName": "idle_down"
-    },
+    "Idle": {},
     "Body": {
       "width": 16,
       "height": 16

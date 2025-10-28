@@ -3,6 +3,7 @@ import { Direction, Directions, PositionOnScreen } from "@serbanghita-gamedev/co
 import { getTileFromGridCoordinates, GridTile, Grid, PositionOnGrid, getGridCoordinatesFromTile } from "@serbanghita-gamedev/grid";
 import { Walking } from "../component/Walking";
 import WalkingToDestination from "../component/WalkingToDestination";
+import {Idle} from "../component/Idle";
 
 export default class WalkingToDestinationSystem extends System {
   private grid!: Grid;
@@ -40,9 +41,10 @@ export default class WalkingToDestinationSystem extends System {
        */
       if (tileComp.tile === destinationTile) {
         // console.log('Destination tile reached');
-        if (entity.hasComponent(Walking)) {
-          entity.removeComponent(Walking);
-        }
+        entity.addComponent(Idle);
+        // if (entity.hasComponent(Walking)) {
+        //   entity.removeComponent(Walking);
+        // }
         // direction.setX(Directions.NONE);
         // direction.setY(Directions.NONE);
         autoMoving.clearDestination();

@@ -177,11 +177,11 @@ async function setup() {
   world.createSystem(WalkingSystem, WalkingQuery);
   //world.createSystem(RenderingStateAnimationSystem, WalkingQuery);
 
-  // const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
-  // world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
+  const AttackingWithClubQuery = world.createQuery("AttackingWithClubQuery", { all: [AttackingWithClub] });
+  world.createSystem(AttackingWithClubSystem, AttackingWithClubQuery);
 
-  // const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [WalkingToDestination] });
-  // world.createSystem(WalkingToDestinationSystem, AutoMoveQuery);
+  const AutoMoveQuery = world.createQuery("AutoMoveQuery", { all: [WalkingToDestination] });
+  world.createSystem(WalkingToDestinationSystem, AutoMoveQuery);
 
   world.createSystem(
     RenderingStateAnimationSystem,

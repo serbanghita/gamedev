@@ -353,7 +353,7 @@
                         }],
                  "rotation":0,
                  "type":"dino-boss",
-                 "visible":false,
+                 "visible":true,
                  "width":16,
                  "x":32,
                  "y":432
